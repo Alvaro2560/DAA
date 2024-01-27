@@ -7,125 +7,102 @@
  * @author Álvaro Fontenla León
  * @since Jan 27 2024
  * @brief
- * @see
+ * 
+ * @see https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design
+ * @see https://refactoring.guru/design-patterns/strategy
  */
+
+class ProductoMatrices {
+  public:
+    virtual void multiplicarMatrices(
+        const std::vector<std::vector<int>>& matrix1,
+        const std::vector<std::vector<int>>& matrix2,
+        std::vector<std::vector<int>>& resultado) = 0;
+};
+
+class ProductoFilas : public ProductoMatrices {
+public:
+    void multiplicarMatrices(const std::vector<std::vector<int>>& matrix1,
+        const std::vector<std::vector<int>>& matrix2,
+        std::vector<std::vector<int>>& resultado) override {
+      resultado.resize(matrix1.size(), std::vector<int>(matrix2[0].size(), 0));
+      for (size_t i = 0; i < matrix1.size(); ++i) {
+          for (size_t j = 0; j < matrix2[0].size(); ++j) {
+              for (size_t k = 0; k < matrix1[0].size(); ++k) {
+                  resultado[i][j] += matrix1[i][k] * matrix2[k][j];
+              }
+          }
+      }
+    }
+};
+
+class ProductoColumnas : public ProductoMatrices {
+  public:
+    void multiplicarMatrices(const std::vector<std::vector<int>>& matrix1,
+        const std::vector<std::vector<int>>& matrix2,
+        std::vector<std::vector<int>>& resultado) override {
+      resultado.resize(matrix1.size(), std::vector<int>(matrix2[0].size(), 0));
+      for (size_t j = 0; j < matrix2[0].size(); ++j) {
+          for (size_t i = 0; i < matrix1.size(); ++i) {
+              for (size_t k = 0; k < matrix1[0].size(); ++k) {
+                  resultado[i][j] += matrix1[i][k] * matrix2[k][j];
+              }
+          }
+      }
+    }
+};
+
+class Contexto {
+  public:
+    Contexto(ProductoMatrices* estrategia) : estrategia_(estrategia) { }
+    void ejecutarProductoMatrices(const std::vector<std::vector<int>>& matrix1,
+        const std::vector<std::vector<int>>& matrix2,
+        std::vector<std::vector<int>>& resultado) const {
+        estrategia_->multiplicarMatrices(matrix1, matrix2, resultado);
+    }
+  private:
+    ProductoMatrices* estrategia_;
+};
 
 #include <iostream>
 #include <vector>
+#include <random>
 
-// Interfaz para la estrategia de producto de matrices
-class EstrategiaProductoMatrices {
-public:
-    virtual void multiplicarMatrices(const std::vector<std::vector<int>>& matriz1,
-                                      const std::vector<std::vector<int>>& matriz2,
-                                      std::vector<std::vector<int>>& resultado) const = 0;
-
-    virtual ~EstrategiaProductoMatrices() {}
-};
-
-// Estrategia concreta: producto por filas
-class EstrategiaProductoFilas : public EstrategiaProductoMatrices {
-public:
-    void multiplicarMatrices(const std::vector<std::vector<int>>& matriz1,
-                             const std::vector<std::vector<int>>& matriz2,
-                             std::vector<std::vector<int>>& resultado) const override {
-        // Verificar si las matrices son multiplicables
-        if (matriz1[0].size() != matriz2.size()) {
-            std::cerr << "No se pueden multiplicar las matrices. Dimensiones incorrectas." << std::endl;
-            return;
-        }
-
-        // Inicializar la matriz de resultado
-        resultado.resize(matriz1.size(), std::vector<int>(matriz2[0].size(), 0));
-
-        // Realizar la multiplicación por filas
-        for (size_t i = 0; i < matriz1.size(); ++i) {
-            for (size_t j = 0; j < matriz2[0].size(); ++j) {
-                for (size_t k = 0; k < matriz1[0].size(); ++k) {
-                    resultado[i][j] += matriz1[i][k] * matriz2[k][j];
-                }
-            }
-        }
+void FillMatrix(std::vector<std::vector<int>>& matrix, 
+    const int& rows, const int& cols) {
+  for (int i = 0; i < rows; i++) {
+    matrix[i].resize(cols);
+    for (int j = 0; j < cols; j++) {
+      matrix[i][j] = (rand() % 100) + 1;
     }
-};
-
-// Estrategia concreta: producto por columnas
-class EstrategiaProductoColumnas : public EstrategiaProductoMatrices {
-public:
-    void multiplicarMatrices(const std::vector<std::vector<int>>& matriz1,
-                             const std::vector<std::vector<int>>& matriz2,
-                             std::vector<std::vector<int>>& resultado) const override {
-        // Verificar si las matrices son multiplicables
-        if (matriz1[0].size() != matriz2.size()) {
-            std::cerr << "No se pueden multiplicar las matrices. Dimensiones incorrectas." << std::endl;
-            return;
-        }
-
-        // Inicializar la matriz de resultado
-        resultado.resize(matriz1.size(), std::vector<int>(matriz2[0].size(), 0));
-
-        // Realizar la multiplicación por columnas
-        for (size_t j = 0; j < matriz2[0].size(); ++j) {
-            for (size_t i = 0; i < matriz1.size(); ++i) {
-                for (size_t k = 0; k < matriz1[0].size(); ++k) {
-                    resultado[i][j] += matriz1[i][k] * matriz2[k][j];
-                }
-            }
-        }
-    }
-};
-
-// Contexto que utiliza la estrategia de producto de matrices
-class ContextoProductoMatrices {
-private:
-    EstrategiaProductoMatrices* estrategia;
-
-public:
-    ContextoProductoMatrices(EstrategiaProductoMatrices* estrategia) : estrategia(estrategia) {}
-
-    void ejecutarProductoMatrices(const std::vector<std::vector<int>>& matriz1,
-                                  const std::vector<std::vector<int>>& matriz2,
-                                  std::vector<std::vector<int>>& resultado) const {
-        estrategia->multiplicarMatrices(matriz1, matriz2, resultado);
-    }
-};
-
-int main() {
-    // Ejemplo de uso
-
-    // Definir las matrices
-    std::vector<std::vector<int>> matriz1 = {{1, 2, 3}, {4, 5, 6}};
-    std::vector<std::vector<int>> matriz2 = {{7, 8}, {9, 10}, {11, 12}};
-
-    // Uso de la estrategia de producto por filas
-    EstrategiaProductoFilas estrategiaFilas;
-    ContextoProductoMatrices contextoFilas(&estrategiaFilas);
-    std::vector<std::vector<int>> resultadoFilas;
-    contextoFilas.ejecutarProductoMatrices(matriz1, matriz2, resultadoFilas);
-
-    // Uso de la estrategia de producto por columnas
-    EstrategiaProductoColumnas estrategiaColumnas;
-    ContextoProductoMatrices contextoColumnas(&estrategiaColumnas);
-    std::vector<std::vector<int>> resultadoColumnas;
-    contextoColumnas.ejecutarProductoMatrices(matriz1, matriz2, resultadoColumnas);
-
-    // Mostrar los resultados
-    std::cout << "Resultado del producto por filas:" << std::endl;
-    for (const auto& row : resultadoFilas) {
-        for (int val : row) {
-            std::cout << val << " ";
-        }
-        std::cout << std::endl;
-    }
-
-    std::cout << "Resultado del producto por columnas:" << std::endl;
-    for (const auto& row : resultadoColumnas) {
-        for (int val : row) {
-            std::cout << val << " ";
-        }
-        std::cout << std::endl;
-    }
-
-    return 0;
+  }
 }
 
+int main(int argc, char** argv) {
+  int rows1, cols1, rows2, cols2;
+  if (argc != 4) {
+    // Help();
+    do {
+      std::cout << "Introduce el número de filas de la primera matriz: ";
+      std::cin >> rows1;
+      std::cout << "Introduce el número de columnas de la primera matriz: ";
+      std::cin >> cols1;
+    } while (rows1 <= 0 || cols1 <= 0);
+    rows2 = cols1;
+    do {
+      std::cout << "Introduce el número de columnas de la segunda matriz: ";
+      std::cin >> cols2;
+    } while (cols2 <= 0);
+  } else {
+    rows1 = std::atoi(argv[1]);
+    cols1 = std::atoi(argv[2]);
+    rows2 = cols1;
+    cols2 = std::atoi(argv[3]);
+  }
+  srand(time(nullptr));
+  std::vector<std::vector<int>> matrix1(rows1);
+  FillMatrix(matrix1, rows1, cols1);
+  std::vector<std::vector<int>> matrix2(rows2);
+  FillMatrix(matrix2, rows2, cols2);
+  return 0;
+}
