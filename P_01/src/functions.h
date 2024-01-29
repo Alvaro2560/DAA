@@ -17,7 +17,7 @@
 #include <fstream>
 
 void Help(void) {
-  std::cout << "Usage: ./matrix_product <rows1> <cols1> <cols2> <selection>\n";
+  std::cout << "Usage: ./pr_01 <rows1> <cols1> <cols2> <selection>\n";
   std::cout << "selection: 1 recorrer por filas, 2 recorrer por columnas.\n";
 }
 
