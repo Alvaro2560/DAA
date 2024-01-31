@@ -19,9 +19,21 @@
 #include <iostream>
 #include <vector>
 
+class Instruction;
+class Tape;
+class ALCU;
+
+/**
+ * @brief Class that represents the RAM.
+ */
 class RAM {
   public:
     RAM(void);
     ~RAM(void);
   private:
+    std::vector<Instruction*> program_memory_;
+    std::vector<int> data_memory_;
+    ALCU* alcu_;
+    Tape* input_tape_;
+    Tape* output_tape_;
 };
