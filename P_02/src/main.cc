@@ -15,15 +15,23 @@
  */
 
 #include "../include/functions.h"
+#include "../include/ram.h"
 
 #include <iostream>
 
 int main(int argc, char** argv) {
   try {
-    std::vector<std::string> lines = ReadFile(argv[1]);
-    for (int i = 0; i < lines.size(); i++) {
-      std::cout << lines[i] << std::endl;
+    if (argc != 4) {
+      PrintHelp();
+      return 1;
     }
+    std::vector<std::string> file_content = ReadFile(argv[1]);
+    std::vector<Instruction*> instructions;
+    std::unordered_map<std::string, Instruction*> labels;
+    FormatInstructions(file_content, instructions, labels);
+    std::vector<int> input_tape = FormatTape(argv[2]);
+    RAM ram(input_tape, instructions, labels);
+    ram.run();
   } catch(const std::exception& e) {
     std::cerr << e.what() << '\n';
   }

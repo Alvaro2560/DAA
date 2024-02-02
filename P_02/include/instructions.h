@@ -17,17 +17,25 @@
 #pragma once
 
 #include <vector>
+#include <string>
+
+enum AddressingMode {
+  CONSTANT,
+  DIRECT,
+  INDIRECT
+};
 
 /**
  * @brief Class that represents an instruction.
  */
 class Instruction {
   public:
-    Instruction(void);
-    virtual int execute(std::vector<int>& data_memory) = 0;
-    ~Instruction(void);
+    Instruction(void) = default;
+    virtual int execute(std::vector<int>& data_memory);
+    virtual void execute(std::vector<int>& data_memory, const int& input);
+    virtual void execute(std::vector<int>& data_memory, std::vector<int>& output);
   protected:
-    int opcode_;
+    AddressingMode addressing_mode_;
     int operand_;
 };
 
@@ -36,9 +44,8 @@ class Instruction {
  */
 class LOAD : public Instruction {
   public:
-    LOAD(void);
-    int execute(std::vector<int>& data_memory);
-    ~LOAD(void);
+    LOAD(const int& operand);
+    int execute(std::vector<int>& data_memory) override;
 };
 
 /**
@@ -46,9 +53,8 @@ class LOAD : public Instruction {
  */
 class STORE : public Instruction {
   public:
-    STORE(void);
-    int execute(std::vector<int>& data_memory);
-    ~STORE(void);
+    STORE(const int& operand);
+    int execute(std::vector<int>& data_memory) override;
 };
 
 /**
@@ -56,9 +62,8 @@ class STORE : public Instruction {
  */
 class ADD : public Instruction {
   public:
-    ADD(void);
-    int execute(std::vector<int>& data_memory);
-    ~ADD(void);
+    ADD(const AddressingMode& addressing_mode, const int& operand);
+    int execute(std::vector<int>& data_memory) override;
 };
 
 /**
@@ -66,9 +71,8 @@ class ADD : public Instruction {
  */
 class SUB : public Instruction {
   public:
-    SUB(void);
-    int execute(std::vector<int>& data_memory);
-    ~SUB(void);
+    SUB(const AddressingMode& addressing_mode, const int& operand);
+    int execute(std::vector<int>& data_memory) override;
 };
 
 /**
@@ -76,9 +80,8 @@ class SUB : public Instruction {
  */
 class MUL : public Instruction {
   public:
-    MUL(void);
-    int execute(std::vector<int>& data_memory);
-    ~MUL(void);
+    MUL(const AddressingMode& addressing_mode, const int& operand);
+    int execute(std::vector<int>& data_memory) override;
 };
 
 /**
@@ -86,9 +89,8 @@ class MUL : public Instruction {
  */
 class DIV : public Instruction {
   public:
-    DIV(void);
-    int execute(std::vector<int>& data_memory);
-    ~DIV(void);
+    DIV(const AddressingMode& addressing_mode, const int& operand);
+    int execute(std::vector<int>& data_memory) override;
 };
 
 /**
@@ -96,9 +98,8 @@ class DIV : public Instruction {
  */
 class READ : public Instruction {
   public:
-    READ(void);
-    int execute(std::vector<int>& data_memory);
-    ~READ(void);
+    READ(const AddressingMode& addressing_mode, const int& operand);
+    void execute(std::vector<int>& data_memory, const int& input) override;
 };
 
 /**
@@ -106,47 +107,45 @@ class READ : public Instruction {
  */
 class WRITE : public Instruction {
   public:
-    WRITE(void);
-    int execute(std::vector<int>& data_memory);
-    ~WRITE(void);
+    WRITE(const AddressingMode& addressing_mode, const int& operand);
+    int execute(std::vector<int>& data_memory) override;
 };
 
-/**
- * @brief Class that represents the JUMP instruction.
- */
-class JUMP : public Instruction {
-  public:
-    JUMP(void);
-    int execute(std::vector<int>& data_memory);
-    ~JUMP(void);
-};
+// /**
+//  * @brief Class that represents the JUMP instruction.
+//  */
+// class JUMP : public Instruction {
+//   public:
+//     JUMP(void) = default;
+//     JUMP(const std::string& label);
+//     int execute(std::vector<int>& data_memory);
+//   protected:
+//     std::string label_;
+// };
 
-/**
- * @brief Class that represents the JGTZ instruction.
- */
-class JZERO : public Instruction {
-  public:
-    JZERO(void);
-    int execute(std::vector<int>& data_memory);
-    ~JZERO(void);
-};
+// /**
+//  * @brief Class that represents the JGTZ instruction.
+//  */
+// class JZERO : public Instruction, public JUMP {
+//   public:
+//     JZERO(const std::string& label);
+//     int execute(std::vector<int>& data_memory);
+// };
 
-/**
- * @brief Class that represents the JGTZ instruction.
- */
-class JGTZ : public Instruction {
-  public:
-    JGTZ(void);
-    int execute(std::vector<int>& data_memory);
-    ~JGTZ(void);
-};
+// /**
+//  * @brief Class that represents the JGTZ instruction.
+//  */
+// class JGTZ : public Instruction, public JUMP {
+//   public:
+//     JGTZ(const std::string& label);
+//     int execute(std::vector<int>& data_memory);
+// };
 
 /**
  * @brief Class that represents the HALT instruction.
  */
 class HALT : public Instruction {
   public:
-    HALT(void);
-    int execute(std::vector<int>& data_memory);
-    ~HALT(void);
+    HALT(void) = default;
+    int execute(std::vector<int>& data_memory) override;
 };

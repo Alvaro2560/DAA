@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 class Instruction;
 class ALCU;
@@ -28,12 +29,14 @@ class BaseUnit;
  */
 class RAM {
   public:
-    RAM(const std::vector<std::string>& instructions, 
-        const std::vector<int>& input_tape);
+    RAM(const std::vector<int>& input_tape,
+        const std::vector<Instruction*>& instructions, 
+        const std::unordered_map<std::string, Instruction*>& labels);
     void run(void);
     ~RAM(void);
   private:
     std::vector<Instruction*> program_memory_;
+    std::unordered_map<std::string, Instruction*> labels_;
     std::vector<int> data_memory_;
     ALCU* alcu_;
     BaseUnit* input_unit_;

@@ -19,16 +19,16 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <unordered_map>
 
-/**
- * @brief Prints the help menu.
- */
+class Instruction;
+
 void PrintHelp(void);
 
-/**
- * @brief Reads the content of a file and returns it as a vector of strings.
- * 
- * @param file_name Name of the file to read.
- * @return std::vector<std::string> Content of the file as a vector of strings.
- */
 std::vector<std::string> ReadFile(const std::string& file_name);
+
+void FormatInstructions(const std::vector<std::string>& file_content, 
+                              std::vector<Instruction*>& instructions,
+                              std::unordered_map<std::string, Instruction*>& labels);
+
+std::vector<int> FormatTape(const std::string& file_name);

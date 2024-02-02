@@ -28,7 +28,6 @@ class BaseUnit {
     BaseUnit(void) = default;
     virtual int process(void);
     virtual void process(const int& data);
-    ~BaseUnit(void);
   protected:
     std::vector<int> tape_;
     unsigned short int head_;
@@ -41,7 +40,6 @@ class InputUnit : public BaseUnit {
   public:
     InputUnit(const std::vector<int>& tape);
     int process(void) override;
-    ~InputUnit(void);
 };
 
 /**
@@ -51,5 +49,4 @@ class OutputUnit : public BaseUnit {
   public:
     OutputUnit(void);
     void process(const int& data) override;
-    ~OutputUnit(void);
 };

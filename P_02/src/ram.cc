@@ -24,15 +24,14 @@
  * 
  * @param input_tape 
  */
-RAM::RAM(const std::vector<std::string>& instructions, 
-         const std::vector<int>& input_tape) {
+RAM::RAM(const std::vector<int>& input_tape,
+         const std::vector<Instruction*>& instructions,
+         const std::unordered_map<std::string, Instruction*>& labels) {
   input_unit_ = new InputUnit(input_tape);
   output_unit_ = new OutputUnit();
   data_memory_.emplace_back(0);
-  alcu_ = new ALCU(program_memory_);
-  for (const auto& instruction : instructions) {
-    program_memory_.emplace_back(new Instruction(instruction));
-  }
+  alcu_ = new ALCU(program_memory_, input_unit_, output_unit_);
+  program_memory_ = instructions;
 }
 
 /**
@@ -40,4 +39,13 @@ RAM::RAM(const std::vector<std::string>& instructions,
  */
 void RAM::run(void) {
   alcu_->run(data_memory_);
+}
+
+/**
+ * @brief Destroy the RAM::RAM object
+ */
+RAM::~RAM(void) {
+  delete alcu_;
+  delete input_unit_;
+  delete output_unit_;
 }
