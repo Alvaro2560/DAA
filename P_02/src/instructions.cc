@@ -4,9 +4,9 @@
  * Grado en Ingeniería Informática
  * Programación de Aplicaciones Interactivas 2023-2024
  * 
- * @file tape.cc
+ * @file instructions.cc
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
- * @brief Implementation of the class Tape.
+ * @brief Implementation of the instructions classes.
  * @version 0.1
  * @since Jan 31 2024
  * 
@@ -14,4 +14,4 @@
  * 
  */
 
-#include "../include/tape.h"
+#include "../include/instructions.h"

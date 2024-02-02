@@ -16,11 +16,19 @@
 
 #pragma once
 
+#include <vector>
+
+class Instruction;
+
 /**
  * @brief Class that represents the ALCU.
  */
 class ALCU {
   public:
-    ALCU(void);
+    ALCU(std::vector<Instruction*>& program_memory);
+    void run(std::vector<int>& data_memory);
     ~ALCU(void);
+  private:
+    void processInstruction(std::vector<int>& data_memory);
+    Instruction** program_counter_;
 };

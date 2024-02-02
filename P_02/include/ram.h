@@ -20,20 +20,22 @@
 #include <vector>
 
 class Instruction;
-class Tape;
 class ALCU;
+class BaseUnit;
 
 /**
  * @brief Class that represents the RAM.
  */
 class RAM {
   public:
-    RAM(void);
+    RAM(const std::vector<std::string>& instructions, 
+        const std::vector<int>& input_tape);
+    void run(void);
     ~RAM(void);
   private:
     std::vector<Instruction*> program_memory_;
     std::vector<int> data_memory_;
     ALCU* alcu_;
-    Tape* input_tape_;
-    Tape* output_tape_;
+    BaseUnit* input_unit_;
+    BaseUnit* output_unit_;
 };
