@@ -36,11 +36,29 @@ int InputUnit::process(void) {
 }
 
 /**
+ * @brief Process the input unit.
+ * 
+ * @return int 
+ */
+void InputUnit::process(const int& data) {
+  tape_.emplace_back(data);
+}
+
+/**
  * @brief Construct a new OutputUnit::OutputUnit object
  * 
  */
 OutputUnit::OutputUnit(void) {
   head_ = 0;
+}
+
+/**
+ * @brief Process the output unit.
+ * 
+ * @return int 
+ */
+int OutputUnit::process(void) {
+  return tape_[head_++];
 }
 
 /**

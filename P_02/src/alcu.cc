@@ -19,6 +19,7 @@
 #include "../include/units.h"
 
 #include <typeinfo>
+#include <iostream>
 
 /**
  * @brief Construct a new ALCU::ALCU object
@@ -39,6 +40,7 @@ ALCU::ALCU(std::vector<Instruction*>& program_memory, BaseUnit* input_unit, Base
  */
 void ALCU::run(std::vector<int>& data_memory) {
   while (typeid(*(*program_counter_)) != typeid(HALT)) {
+    std::cout << (*program_counter_)->name() << '\n';
     processInstruction(data_memory);
   }
 }

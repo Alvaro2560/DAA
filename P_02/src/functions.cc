@@ -62,10 +62,14 @@ void FormatInstructions(const std::vector<std::string>& file_content,
                               std::unordered_map<std::string, Instruction*>& labels) {
   for (size_t i = 0; i < file_content.size(); i++) {
     std::string line = file_content[i], word;
+    if (line[0] == '#' || line.empty()) {
+      continue;
+    }
     int counter = 0, operand;
     AddressingMode addressing_mode;
     std::string instruction;
-    while (std::stringstream(line) >> word) {
+    std::stringstream ss(line); 
+    while (ss >> word) {
       if (counter == 0) {
         std::transform(word.begin(), word.end(), word.begin(), ::toupper);
         instruction = word;
@@ -97,6 +101,10 @@ void FormatInstructions(const std::vector<std::string>& file_content,
       instructions.emplace_back(new MUL(addressing_mode, operand));
     } else if (instruction == "DIV") {
       instructions.emplace_back(new DIV(addressing_mode, operand));
+    } else if (instruction == "READ") {
+      instructions.emplace_back(new READ(addressing_mode, operand));
+    } else if (instruction == "WRITE") {
+      instructions.emplace_back(new WRITE(addressing_mode, operand));
     // } else if (instruction == "JUMP") {
     //   instructions.emplace_back(new JUMP(i));
     // } else if (instruction == "JZERO") {
@@ -129,9 +137,9 @@ std::vector<int> FormatTape(const std::string& file_name) {
     while (file >> number) {
       tape.emplace_back(number);
     }
-    file.close();
   } else {
     throw std::runtime_error("Unable to open file.");
   }
+  file.close();
   return tape;
 }

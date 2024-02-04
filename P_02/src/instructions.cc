@@ -32,8 +32,9 @@ LOAD::LOAD(const int& operand) {
  * 
  * @param data_memory 
  */
-int LOAD::execute(std::vector<int>& data_memory) {
+int LOAD::execute(std::vector<int>& data_memory, const int& input = 0) {
   data_memory[0] = data_memory[operand_];
+  return 0;
 }
 
 /**
@@ -50,8 +51,9 @@ STORE::STORE(const int& operand) {
  * 
  * @param data_memory 
  */
-int STORE::execute(std::vector<int>& data_memory) {
+int STORE::execute(std::vector<int>& data_memory, const int& input = 0) {
   data_memory[operand_] = data_memory[0];
+  return 0;
 }
 
 /**
@@ -70,7 +72,7 @@ ADD::ADD(const AddressingMode& addressing_mode, const int& operand) {
  * 
  * @param data_memory 
  */
-int ADD::execute(std::vector<int>& data_memory) {
+int ADD::execute(std::vector<int>& data_memory, const int& input = 0) {
   switch (addressing_mode_) {
     case CONSTANT:
       data_memory[0] += operand_;
@@ -85,6 +87,7 @@ int ADD::execute(std::vector<int>& data_memory) {
       throw std::invalid_argument("Invalid addressing mode");
       break;
   }
+  return 0;
 }
 
 /**
@@ -103,7 +106,7 @@ SUB::SUB(const AddressingMode& addressing_mode, const int& operand) {
  * 
  * @param data_memory 
  */
-int SUB::execute(std::vector<int>& data_memory) {
+int SUB::execute(std::vector<int>& data_memory, const int& input = 0) {
   switch (addressing_mode_) {
     case CONSTANT:
       data_memory[0] -= operand_;
@@ -118,6 +121,7 @@ int SUB::execute(std::vector<int>& data_memory) {
       throw std::invalid_argument("Invalid addressing mode");
       break;
   }
+  return 0;
 }
 
 /**
@@ -136,7 +140,7 @@ MUL::MUL(const AddressingMode& addressing_mode, const int& operand) {
  * 
  * @param data_memory 
  */
-int MUL::execute(std::vector<int>& data_memory) {
+int MUL::execute(std::vector<int>& data_memory, const int& input = 0) {
   switch (addressing_mode_) {
     case CONSTANT:
       data_memory[0] *= operand_;
@@ -151,6 +155,7 @@ int MUL::execute(std::vector<int>& data_memory) {
       throw std::invalid_argument("Invalid addressing mode");
       break;
   }
+  return 0;
 }
 
 /**
@@ -169,7 +174,7 @@ DIV::DIV(const AddressingMode& addressing_mode, const int& operand) {
  * 
  * @param data_memory 
  */
-int DIV::execute(std::vector<int>& data_memory) {
+int DIV::execute(std::vector<int>& data_memory, const int& input = 0) {
   switch (addressing_mode_) {
     case CONSTANT:
       data_memory[0] /= operand_;
@@ -184,6 +189,7 @@ int DIV::execute(std::vector<int>& data_memory) {
       throw std::invalid_argument("Invalid addressing mode");
       break;
   }
+  return 0;
 }
 
 /**
@@ -203,7 +209,7 @@ READ::READ(const AddressingMode& addressing_mode, const int& operand) {
  * @param data_memory 
  * @param input 
  */
-void READ::execute(std::vector<int>& data_memory, const int& input) {
+int READ::execute(std::vector<int>& data_memory, const int& input = 0) {
   switch (addressing_mode_) {
     case DIRECT:
       data_memory[operand_] = input;
@@ -215,6 +221,7 @@ void READ::execute(std::vector<int>& data_memory, const int& input) {
       throw std::invalid_argument("Invalid addressing mode");
       break;
   }
+  return 0;
 }
 
 /**
@@ -232,9 +239,8 @@ WRITE::WRITE(const AddressingMode& addressing_mode, const int& operand) {
  * @brief Execute the instruction.
  * 
  * @param data_memory 
- * @param output 
  */
-int WRITE::execute(std::vector<int>& data_memory) {
+int WRITE::execute(std::vector<int>& data_memory, const int& input = 0) {
   switch (addressing_mode_) {
     case DIRECT:
       return data_memory[operand_];
@@ -246,6 +252,7 @@ int WRITE::execute(std::vector<int>& data_memory) {
       throw std::invalid_argument("Invalid addressing mode");
       break;
   }
+  return 0;
 }
 
 // JUMP::JUMP(const std::string& label) {
@@ -283,6 +290,6 @@ int WRITE::execute(std::vector<int>& data_memory) {
  * 
  * @param data_memory 
  */
-int HALT::execute(std::vector<int>& data_memory) {
+int HALT::execute(std::vector<int>& data_memory, const int& input = 0) {
   return -1;
 }

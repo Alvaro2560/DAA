@@ -30,8 +30,8 @@ RAM::RAM(const std::vector<int>& input_tape,
   input_unit_ = new InputUnit(input_tape);
   output_unit_ = new OutputUnit();
   data_memory_.emplace_back(0);
-  alcu_ = new ALCU(program_memory_, input_unit_, output_unit_);
   program_memory_ = instructions;
+  alcu_ = new ALCU(program_memory_, input_unit_, output_unit_);
 }
 
 /**
