@@ -19,19 +19,19 @@
 #include <vector>
 
 class Instruction;
-class BaseUnit;
+class InputUnit;
+class OutputUnit;
 
 /**
  * @brief Class that represents the ALCU.
  */
 class ALCU {
   public:
-    ALCU(std::vector<Instruction*>& program_memory, BaseUnit* input_unit, BaseUnit* output_unit);
-    void run(std::vector<int>& data_memory);
-    ~ALCU(void);
+    ALCU(std::vector<Instruction*>& program_memory);
+    void run(int* data_memory);
+    ~ALCU(void) = default;
   private:
-    void processInstruction(std::vector<int>& data_memory);
     Instruction** program_counter_;
-    BaseUnit** input_unit_;
-    BaseUnit** output_unit_;
+    InputUnit* input_unit_;
+    OutputUnit* output_unit_;
 };

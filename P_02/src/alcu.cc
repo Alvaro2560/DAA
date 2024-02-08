@@ -18,66 +18,22 @@
 #include "../include/instructions.h"
 #include "../include/units.h"
 
-#include <typeinfo>
 #include <iostream>
 
 /**
  * @brief Construct a new ALCU::ALCU object
  * 
- * @param data_memory 
+ * @param program_memory
  */
-ALCU::ALCU(std::vector<Instruction*>& program_memory, BaseUnit* input_unit, BaseUnit* output_unit) {
+ALCU::ALCU(std::vector<Instruction*>& program_memory) {
   program_counter_ = &program_memory[0];
-  input_unit_ = &input_unit;
-  output_unit_ = &output_unit;
 }
 
 /**
  * @brief Run the ALCU.
  * 
- * @return true 
- * @return false 
- */
-void ALCU::run(std::vector<int>& data_memory) {
-  while (typeid(*(*program_counter_)) != typeid(HALT)) {
-    std::cout << (*program_counter_)->name() << '\n';
-    processInstruction(data_memory);
-  }
-}
-
-/**
- * @brief Process the instruction.
- * 
- * @param program_memory 
  * @param data_memory 
  */
-void ALCU::processInstruction(std::vector<int>& data_memory) {
-  if (typeid(*(*program_counter_)) == typeid(ADD) || 
-      typeid(*(*program_counter_)) == typeid(SUB) || 
-      typeid(*(*program_counter_)) == typeid(MUL) || 
-      typeid(*(*program_counter_)) == typeid(DIV)) {
-    (*program_counter_)->execute(data_memory);
-  } else if (typeid(*(*program_counter_)) == typeid(LOAD) || 
-             typeid(*(*program_counter_)) == typeid(STORE)) {
-    (*program_counter_)->execute(data_memory);
-  // } else if (typeid(*(*program_counter_)) == typeid(JUMP) || 
-  //            typeid(*(*program_counter_)) == typeid(JZERO) || 
-  //            typeid(*(*program_counter_)) == typeid(JGTZ)) {
-  //   (*program_counter_)->execute(data_memory, program_counter_);
-  // }
-  } else if (typeid(*(*program_counter_)) == typeid(READ)) {
-    (*program_counter_)->execute(data_memory, (*input_unit_)->process());
-  } else if (typeid(*(*program_counter_)) == typeid(WRITE)) {
-    (*output_unit_)->process((*program_counter_)->execute(data_memory));
-  }
-  program_counter_++;
-}
-
-/**
- * @brief Destroy the ALCU::ALCU object
- * 
- */
-ALCU::~ALCU(void) {
-  delete input_unit_;
-  delete output_unit_;
+void ALCU::run(int* data_memory) {
+  while ((*(program_counter_++))->execute(data_memory) != -1);
 }

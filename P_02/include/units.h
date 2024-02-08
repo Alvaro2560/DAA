@@ -6,7 +6,7 @@
  * 
  * @file units.h
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
- * @brief Declaration of the classes BaseUnit, InputUnit and OutputUnit.
+ * @brief Declaration of the classes InputUnit and OutputUnit.
  * @version 0.1
  * @since Feb 01 2024
  * 
@@ -17,41 +17,33 @@
 #pragma once
 
 #include <vector>
-
-class Tape;
-
-/**
- * @brief Basic class that represents a unit.
- */
-class BaseUnit {
-  public:
-    BaseUnit(void) = default;
-    virtual int process(void) = 0;
-    virtual void process(const int& data) = 0;
-    virtual ~BaseUnit(void) = default;
-  protected:
-    std::vector<int> tape_;
-    unsigned short int head_;
-};
+#include <iostream>
 
 /**
  * @brief Class that represents the input unit.
  */
-class InputUnit : public BaseUnit {
+class InputUnit {
   public:
     InputUnit(const std::vector<int>& tape);
-    int process(void) override;
-    void process(const int& data) override;
-    ~InputUnit(void) = default;
+    int process(void);
+    ~InputUnit(void);
+  private:
+    int* tape_;
+    int* head_;
 };
 
 /**
  * @brief Class that represents the output unit.
  */
-class OutputUnit : public BaseUnit {
+class OutputUnit {
   public:
     OutputUnit(void);
-    int process(void) override;
-    void process(const int& data) override;
-    ~OutputUnit(void) = default;
+    void process(const int& data);
+    int* getTape(void);
+    size_t getSize(void);
+    ~OutputUnit(void);
+  private:
+    int* tape_;
+    int* head_;
+    size_t size_;
 };

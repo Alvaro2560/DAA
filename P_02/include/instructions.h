@@ -31,8 +31,7 @@ enum AddressingMode {
 class Instruction {
   public:
     Instruction(void) = default;
-    virtual int execute(std::vector<int>& data_memory, const int& input = 0) = 0;
-    virtual std::string name(void) = 0;
+    virtual int execute(int* data_memory, const int& input = 0) = 0;
     virtual ~Instruction(void) = default;
   protected:
     AddressingMode addressing_mode_;
@@ -45,8 +44,7 @@ class Instruction {
 class LOAD : public Instruction {
   public:
     LOAD(const int& operand);
-    int execute(std::vector<int>& data_memory, const int& input) override;
-    std::string name(void) override { return "LOAD"; }
+    int execute(int* data_memory, const int& input) override;
     ~LOAD(void) = default;
 };
 
@@ -56,8 +54,7 @@ class LOAD : public Instruction {
 class STORE : public Instruction {
   public:
     STORE(const int& operand);
-    int execute(std::vector<int>& data_memory, const int& input) override;
-    std::string name(void) override { return "STORE"; }
+    int execute(int* data_memory, const int& input) override;
     ~STORE(void) = default;
 };
 
@@ -67,8 +64,7 @@ class STORE : public Instruction {
 class ADD : public Instruction {
   public:
     ADD(const AddressingMode& addressing_mode, const int& operand);
-    int execute(std::vector<int>& data_memory, const int& input) override;
-    std::string name(void) override { return "ADD"; }
+    int execute(int* data_memory, const int& input) override;
     ~ADD(void) = default;
 };
 
@@ -78,8 +74,7 @@ class ADD : public Instruction {
 class SUB : public Instruction {
   public:
     SUB(const AddressingMode& addressing_mode, const int& operand);
-    int execute(std::vector<int>& data_memory, const int& input) override;
-    std::string name(void) override { return "SUB"; }
+    int execute(int* data_memory, const int& input) override;
     ~SUB(void) = default;
 };
 
@@ -89,8 +84,7 @@ class SUB : public Instruction {
 class MUL : public Instruction {
   public:
     MUL(const AddressingMode& addressing_mode, const int& operand);
-    int execute(std::vector<int>& data_memory, const int& input) override;
-    std::string name(void) override { return "MUL"; }
+    int execute(int* data_memory, const int& input) override;
     ~MUL(void) = default;
 };
 
@@ -100,32 +94,39 @@ class MUL : public Instruction {
 class DIV : public Instruction {
   public:
     DIV(const AddressingMode& addressing_mode, const int& operand);
-    int execute(std::vector<int>& data_memory, const int& input) override;
-    std::string name(void) override { return "DIV"; }
+    int execute(int* data_memory, const int& input) override;
     ~DIV(void) = default;
 };
+
+class InputUnit;
 
 /**
  * @brief Class that represents the READ instruction.
  */
 class READ : public Instruction {
   public:
-    READ(const AddressingMode& addressing_mode, const int& operand);
-    int execute(std::vector<int>& data_memory, const int& input) override;
-    std::string name(void) override { return "READ"; }
+    READ(const AddressingMode& addressing_mode, const int& operand, InputUnit* input_unit);
+    int execute(int* data_memory, const int& input) override;
     ~READ(void) = default;
+  private:
+    InputUnit* input_unit_;
 };
+
+class OutputUnit;
 
 /**
  * @brief Class that represents the WRITE instruction.
  */
 class WRITE : public Instruction {
   public:
-    WRITE(const AddressingMode& addressing_mode, const int& operand);
-    int execute(std::vector<int>& data_memory, const int& input) override;
-    std::string name(void) override { return "WRITE"; }
+    WRITE(const AddressingMode& addressing_mode, const int& operand, OutputUnit* output_unit);
+    int execute(int* data_memory, const int& input) override;
     ~WRITE(void) = default;
+  private:
+    OutputUnit* output_unit_;
 };
+
+// TODO: Implement jump instructions.
 
 // /**
 //  * @brief Class that represents the JUMP instruction.
@@ -134,7 +135,7 @@ class WRITE : public Instruction {
 //   public:
 //     JUMP(void) = default;
 //     JUMP(const std::string& label);
-//     int execute(std::vector<int>& data_memory);
+//     int execute(int* data_memory);
 //   protected:
 //     std::string label_;
 // };
@@ -145,7 +146,7 @@ class WRITE : public Instruction {
 // class JZERO : public Instruction, public JUMP {
 //   public:
 //     JZERO(const std::string& label);
-//     int execute(std::vector<int>& data_memory);
+//     int execute(int* data_memory);
 // };
 
 // /**
@@ -154,7 +155,7 @@ class WRITE : public Instruction {
 // class JGTZ : public Instruction, public JUMP {
 //   public:
 //     JGTZ(const std::string& label);
-//     int execute(std::vector<int>& data_memory);
+//     int execute(int* data_memory);
 // };
 
 /**
@@ -163,7 +164,6 @@ class WRITE : public Instruction {
 class HALT : public Instruction {
   public:
     HALT(void) = default;
-    int execute(std::vector<int>& data_memory, const int& input) override;
-    std::string name(void) override { return "HALT"; }
+    int execute(int* data_memory, const int& input) override;
     ~HALT(void) = default;
 };

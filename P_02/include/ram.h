@@ -20,25 +20,28 @@
 #include <vector>
 #include <unordered_map>
 
-class Instruction;
 class ALCU;
-class BaseUnit;
+class InputUnit;
+class OutputUnit;
+class Instruction;
 
 /**
  * @brief Class that represents the RAM.
  */
 class RAM {
   public:
-    RAM(const std::vector<int>& input_tape,
-        const std::vector<Instruction*>& instructions, 
-        const std::unordered_map<std::string, Instruction*>& labels);
+    RAM(const std::vector<std::string>& instructions, const std::vector<std::string>& input_tape);
     void run(void);
+    void write(const std::string& file_name);
     ~RAM(void);
+  private:
+    void FormatInstructions(const std::vector<std::string>& instructions);
+    std::vector<int> FormatTape(const std::vector<std::string>& file_name);
   private:
     std::vector<Instruction*> program_memory_;
     std::unordered_map<std::string, Instruction*> labels_;
-    std::vector<int> data_memory_;
+    int* data_memory_;
     ALCU* alcu_;
-    BaseUnit* input_unit_;
-    BaseUnit* output_unit_;
+    InputUnit* input_unit_;
+    OutputUnit* output_unit_;
 };

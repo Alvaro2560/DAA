@@ -16,14 +16,20 @@
 
 #include "../include/units.h"
 
+#include <vector>
+#include <iostream>
+
 /**
  * @brief Construct a new InputUnit::InputUnit object
  * 
  * @param tape 
  */
 InputUnit::InputUnit(const std::vector<int>& tape) {
-  tape_ = tape;
-  head_ = 0;
+  tape_ = new int[tape.size()];
+  for (size_t i = 0; i < tape.size(); i++) {
+    tape_[i] = tape[i];
+  }
+  head_ = &tape_[0];
 }
 
 /**
@@ -32,16 +38,15 @@ InputUnit::InputUnit(const std::vector<int>& tape) {
  * @return int 
  */
 int InputUnit::process(void) {
-  return tape_[head_++];
+  return *head_++;
 }
 
 /**
- * @brief Process the input unit.
+ * @brief Destroy the InputUnit::InputUnit object
  * 
- * @return int 
  */
-void InputUnit::process(const int& data) {
-  tape_.emplace_back(data);
+InputUnit::~InputUnit(void) {
+  delete[] tape_;
 }
 
 /**
@@ -49,16 +54,9 @@ void InputUnit::process(const int& data) {
  * 
  */
 OutputUnit::OutputUnit(void) {
-  head_ = 0;
-}
-
-/**
- * @brief Process the output unit.
- * 
- * @return int 
- */
-int OutputUnit::process(void) {
-  return tape_[head_++];
+  tape_ = new int[1];
+  head_ = &tape_[0];
+  size_ = 1;
 }
 
 /**
@@ -67,5 +65,33 @@ int OutputUnit::process(void) {
  * @return int 
  */
 void OutputUnit::process(const int& data) {
-  tape_.emplace_back(data);
+  *head_ = data;
+  head_++;
+  size_++;
+}
+
+/**
+ * @brief Get the tape.
+ * 
+ * @return int* 
+ */
+int* OutputUnit::getTape(void) {
+  return tape_;
+}
+
+/**
+ * @brief Get the size of the tape.
+ * 
+ * @return size_t 
+ */
+size_t OutputUnit::getSize(void) {
+  return size_;
+}
+
+/**
+ * @brief Destroy the OutputUnit::OutputUnit object
+ * 
+ */
+OutputUnit::~OutputUnit(void) {
+  delete[] tape_;
 }

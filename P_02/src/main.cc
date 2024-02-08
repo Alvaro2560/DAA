@@ -25,13 +25,11 @@ int main(int argc, char** argv) {
       PrintHelp();
       return 1;
     }
-    std::vector<std::string> file_content = ReadFile(argv[1]);
-    std::vector<Instruction*> instructions;
-    std::unordered_map<std::string, Instruction*> labels;
-    FormatInstructions(file_content, instructions, labels);
-    std::vector<int> input_tape = FormatTape(argv[2]);
-    RAM ram(input_tape, instructions, labels);
+    std::vector<std::string> instructions = ReadFile(argv[1]),
+                             input_tape = ReadFile(argv[2]);
+    RAM ram(instructions, input_tape);
     ram.run();
+    ram.write(argv[3]);
   } catch(const std::exception& e) {
     std::cerr << e.what() << '\n';
   }
