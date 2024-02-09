@@ -42,6 +42,9 @@ RAM::RAM(const std::vector<std::string>& instructions, const std::vector<std::st
  * @brief Run the RAM.
  */
 void RAM::run(void) {
+  // for (auto it = labels_.begin(); it != labels_.end(); it++) {
+  //   std::cout << it->first << " " << it->second << std::endl;
+  // }
   alcu_->run(data_memory_);
 }
 
@@ -68,6 +71,7 @@ void RAM::write(const std::string& file_name) {
  * @brief Destroy the RAM::RAM object
  */
 RAM::~RAM(void) {
+  delete data_memory_;
   delete alcu_;
   delete input_unit_;
   delete output_unit_;
@@ -86,14 +90,22 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
     }
     int counter = 0, operand;
     AddressingMode addressing_mode;
-    std::string instruction;
-    std::stringstream ss(line); 
+    std::string instruction, label;
+    std::stringstream ss(line);
     while (ss >> word) {
-      if (counter == 0) {
+      // If the word ends with a colon, it is a label.
+      if (word.substr(word.size() - 1) == ":") {
+        label = word.substr(0, word.size() - 1);
+        // The next word is the instruction.
+        ss >> instruction;
+        std::transform(instruction.begin(), instruction.end(), instruction.begin(), ::toupper);
+        ss >> word;
+        ++counter;
+      } else if (counter == 0) {
         std::transform(word.begin(), word.end(), word.begin(), ::toupper);
         instruction = word;
         ++counter;
-      } else {
+      } else if (counter == 1) {
         if (word.length() == 1) {
           addressing_mode = CONSTANT;
           operand = std::stoi(word);
@@ -136,12 +148,10 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
     } else {
       throw std::runtime_error("Invalid instruction.");
     }
-    // TODO: Implement labels distinction.
-    // if (line.find(':') != std::string::npos) {
-    //   std::string label = line.substr(0, line.find(':'));
-    //   // labels[label] = new Instruction(i);
-    //   line = line.substr(line.find(':') + 1);
-    // }
+    if (!label.empty()) {
+      labels_[label] = program_memory_.back();
+      label.clear();
+    }
   }
 }
 
