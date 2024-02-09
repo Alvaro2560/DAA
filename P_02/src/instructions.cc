@@ -33,7 +33,7 @@ LOAD::LOAD(const int& operand) {
  * 
  * @param data_memory 
  */
-int LOAD::execute(int* data_memory, const int& input = 0) {
+int LOAD::execute(int* data_memory) {
   data_memory[0] = data_memory[operand_];
   return 0;
 }
@@ -52,7 +52,7 @@ STORE::STORE(const int& operand) {
  * 
  * @param data_memory 
  */
-int STORE::execute(int* data_memory, const int& input = 0) {
+int STORE::execute(int* data_memory) {
   data_memory[operand_] = data_memory[0];
   return 0;
 }
@@ -73,7 +73,7 @@ ADD::ADD(const AddressingMode& addressing_mode, const int& operand) {
  * 
  * @param data_memory 
  */
-int ADD::execute(int* data_memory, const int& input = 0) {
+int ADD::execute(int* data_memory) {
   switch (addressing_mode_) {
     case CONSTANT:
       data_memory[0] += operand_;
@@ -107,7 +107,7 @@ SUB::SUB(const AddressingMode& addressing_mode, const int& operand) {
  * 
  * @param data_memory 
  */
-int SUB::execute(int* data_memory, const int& input = 0) {
+int SUB::execute(int* data_memory) {
   switch (addressing_mode_) {
     case CONSTANT:
       data_memory[0] -= operand_;
@@ -141,7 +141,7 @@ MUL::MUL(const AddressingMode& addressing_mode, const int& operand) {
  * 
  * @param data_memory 
  */
-int MUL::execute(int* data_memory, const int& input = 0) {
+int MUL::execute(int* data_memory) {
   switch (addressing_mode_) {
     case CONSTANT:
       data_memory[0] *= operand_;
@@ -175,7 +175,7 @@ DIV::DIV(const AddressingMode& addressing_mode, const int& operand) {
  * 
  * @param data_memory 
  */
-int DIV::execute(int* data_memory, const int& input = 0) {
+int DIV::execute(int* data_memory) {
   switch (addressing_mode_) {
     case CONSTANT:
       data_memory[0] /= operand_;
@@ -211,7 +211,7 @@ READ::READ(const AddressingMode& addressing_mode, const int& operand, InputUnit*
  * @param data_memory 
  * @param input 
  */
-int READ::execute(int* data_memory, const int& input = 0) {
+int READ::execute(int* data_memory) {
   switch (addressing_mode_) {
     case DIRECT:
       data_memory[operand_] = input_unit_->process();
@@ -243,7 +243,7 @@ WRITE::WRITE(const AddressingMode& addressing_mode, const int& operand, OutputUn
  * 
  * @param data_memory 
  */
-int WRITE::execute(int* data_memory, const int& input = 0) {
+int WRITE::execute(int* data_memory) {
   switch (addressing_mode_) {
     case DIRECT:
       output_unit_->process(data_memory[operand_]);
@@ -258,43 +258,80 @@ int WRITE::execute(int* data_memory, const int& input = 0) {
   return 0;
 }
 
-// TODO: Implement jump instructions.
-
-// JUMP::JUMP(const std::string& label) {
-//   label_ = label;
-// }
-
-// int JUMP::execute(int* data_memory) {
-//   return operand_;
-// }
-
-// JZERO::JZERO(const std::string& label) {
-//   label_ = label;
-// }
-
-// int JZERO::execute(int* data_memory) {
-//   if (data_memory[0] == 0) {
-//     return label_;
-//   }
-//   return 1;
-// }
-
-// JGTZ::JGTZ(const int& operand) {
-//   operand_ = operand;
-// }
-
-// int JGTZ::execute(int* data_memory) {
-//   if (data_memory[0] > 0) {
-//     return operand_;
-//   }
-//   return 1;
-// }
+/**
+ * @brief Construct a new JUMP::JUMP object
+ * 
+ * @param label 
+ * @param program_counter 
+ * @param labels 
+ */
+JUMP::JUMP(Instruction** program_counter, const std::string& label,
+           std::unordered_map<std::string, Instruction*>& labels) 
+           : program_counter_(program_counter), label_(label), labels_(labels) { }
 
 /**
  * @brief Execute the instruction.
  * 
  * @param data_memory 
  */
-int HALT::execute(int* data_memory, const int& input = 0) {
+int JUMP::execute(int* data_memory) {
+  program_counter_ = &labels_[label_];
+  return 0;
+}
+
+/**
+ * @brief Construct a new JZERO::JZERO object
+ * 
+ * @param label 
+ * @param program_counter 
+ * @param labels 
+ */
+JZERO::JZERO(Instruction** program_counter, const std::string& label, 
+             std::unordered_map<std::string, Instruction*>& labels) 
+             : JUMP(program_counter, label, labels) { }
+
+/**
+ * @brief Execute the instruction.
+ * 
+ * @param data_memory 
+ * @return int 
+ */
+int JZERO::execute(int* data_memory) {
+  if (data_memory[0] == 0) {
+    program_counter_ = &labels_[label_];
+  }
+  return 0;
+}
+
+/**
+ * @brief Construct a new JGTZ::JGTZ object
+ * 
+ * @param label 
+ * @param program_counter 
+ * @param labels 
+ */
+JGTZ::JGTZ(Instruction** program_counter, const std::string& label, 
+           std::unordered_map<std::string, Instruction*>& labels) 
+           : JUMP(program_counter, label, labels) { }
+
+/**
+ * @brief Execute the instruction.
+ * 
+ * @param data_memory 
+ * @return int 
+ */
+int JGTZ::execute(int* data_memory) {
+  if (data_memory[0] > 0) {
+    program_counter_ = &labels_[label_];
+  }
+  return 0;
+}
+
+/**
+ * @brief Execute the instruction.
+ * 
+ * @param data_memory 
+ */
+int HALT::execute(int* data_memory) {
   return -1;
 }

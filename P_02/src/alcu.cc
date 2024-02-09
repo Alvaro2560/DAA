@@ -25,9 +25,7 @@
  * 
  * @param program_memory
  */
-ALCU::ALCU(std::vector<Instruction*>& program_memory) {
-  program_counter_ = &program_memory[0];
-}
+ALCU::ALCU(Instruction** program_counter) : program_counter_(program_counter) { }
 
 /**
  * @brief Run the ALCU.

@@ -27,7 +27,7 @@ class OutputUnit;
  */
 class ALCU {
   public:
-    ALCU(std::vector<Instruction*>& program_memory);
+    ALCU(Instruction** program_counter);
     void run(int* data_memory);
     ~ALCU(void) = default;
   private:

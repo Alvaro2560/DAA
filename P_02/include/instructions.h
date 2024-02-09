@@ -18,6 +18,7 @@
 
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 enum AddressingMode {
   CONSTANT,
@@ -31,7 +32,7 @@ enum AddressingMode {
 class Instruction {
   public:
     Instruction(void) = default;
-    virtual int execute(int* data_memory, const int& input = 0) = 0;
+    virtual int execute(int* data_memory = 0) = 0;
     virtual ~Instruction(void) = default;
   protected:
     AddressingMode addressing_mode_;
@@ -44,7 +45,7 @@ class Instruction {
 class LOAD : public Instruction {
   public:
     LOAD(const int& operand);
-    int execute(int* data_memory, const int& input) override;
+    int execute(int* data_memory) override;
     ~LOAD(void) = default;
 };
 
@@ -54,7 +55,7 @@ class LOAD : public Instruction {
 class STORE : public Instruction {
   public:
     STORE(const int& operand);
-    int execute(int* data_memory, const int& input) override;
+    int execute(int* data_memory) override;
     ~STORE(void) = default;
 };
 
@@ -64,7 +65,7 @@ class STORE : public Instruction {
 class ADD : public Instruction {
   public:
     ADD(const AddressingMode& addressing_mode, const int& operand);
-    int execute(int* data_memory, const int& input) override;
+    int execute(int* data_memory) override;
     ~ADD(void) = default;
 };
 
@@ -74,7 +75,7 @@ class ADD : public Instruction {
 class SUB : public Instruction {
   public:
     SUB(const AddressingMode& addressing_mode, const int& operand);
-    int execute(int* data_memory, const int& input) override;
+    int execute(int* data_memory) override;
     ~SUB(void) = default;
 };
 
@@ -84,7 +85,7 @@ class SUB : public Instruction {
 class MUL : public Instruction {
   public:
     MUL(const AddressingMode& addressing_mode, const int& operand);
-    int execute(int* data_memory, const int& input) override;
+    int execute(int* data_memory) override;
     ~MUL(void) = default;
 };
 
@@ -94,7 +95,7 @@ class MUL : public Instruction {
 class DIV : public Instruction {
   public:
     DIV(const AddressingMode& addressing_mode, const int& operand);
-    int execute(int* data_memory, const int& input) override;
+    int execute(int* data_memory) override;
     ~DIV(void) = default;
 };
 
@@ -106,7 +107,7 @@ class InputUnit;
 class READ : public Instruction {
   public:
     READ(const AddressingMode& addressing_mode, const int& operand, InputUnit* input_unit);
-    int execute(int* data_memory, const int& input) override;
+    int execute(int* data_memory) override;
     ~READ(void) = default;
   private:
     InputUnit* input_unit_;
@@ -120,43 +121,45 @@ class OutputUnit;
 class WRITE : public Instruction {
   public:
     WRITE(const AddressingMode& addressing_mode, const int& operand, OutputUnit* output_unit);
-    int execute(int* data_memory, const int& input) override;
+    int execute(int* data_memory) override;
     ~WRITE(void) = default;
   private:
     OutputUnit* output_unit_;
 };
 
-// TODO: Implement jump instructions.
+/**
+ * @brief Class that represents the JUMP instruction.
+ */
+class JUMP : public Instruction {
+  public:
+    JUMP(Instruction** program_counter, const std::string& label,
+         std::unordered_map<std::string, Instruction*>& labels);
+    int execute(int* data_memory) override;
+  protected:
+    Instruction** program_counter_;
+    std::string label_;
+    std::unordered_map<std::string, Instruction*> labels_;
+};
 
-// /**
-//  * @brief Class that represents the JUMP instruction.
-//  */
-// class JUMP : public Instruction {
-//   public:
-//     JUMP(void) = default;
-//     JUMP(const std::string& label);
-//     int execute(int* data_memory);
-//   protected:
-//     std::string label_;
-// };
+/**
+ * @brief Class that represents the JZERO instruction.
+ */
+class JZERO : public JUMP {
+  public:
+    JZERO(Instruction** program_counter, const std::string& label, 
+          std::unordered_map<std::string, Instruction*>& labels);
+    int execute(int* data_memory) override;
+};
 
-// /**
-//  * @brief Class that represents the JGTZ instruction.
-//  */
-// class JZERO : public Instruction, public JUMP {
-//   public:
-//     JZERO(const std::string& label);
-//     int execute(int* data_memory);
-// };
-
-// /**
-//  * @brief Class that represents the JGTZ instruction.
-//  */
-// class JGTZ : public Instruction, public JUMP {
-//   public:
-//     JGTZ(const std::string& label);
-//     int execute(int* data_memory);
-// };
+/**
+ * @brief Class that represents the JGTZ instruction.
+ */
+class JGTZ : public JUMP {
+  public:
+    JGTZ(Instruction** program_counter, const std::string& label, 
+         std::unordered_map<std::string, Instruction*>& labels);
+    int execute(int* data_memory) override;
+};
 
 /**
  * @brief Class that represents the HALT instruction.
@@ -164,6 +167,6 @@ class WRITE : public Instruction {
 class HALT : public Instruction {
   public:
     HALT(void) = default;
-    int execute(int* data_memory, const int& input) override;
+    int execute(int* data_memory) override;
     ~HALT(void) = default;
 };

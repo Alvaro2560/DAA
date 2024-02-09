@@ -44,4 +44,5 @@ class RAM {
     ALCU* alcu_;
     InputUnit* input_unit_;
     OutputUnit* output_unit_;
+    Instruction** program_counter_;
 };

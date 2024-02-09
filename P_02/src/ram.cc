@@ -35,7 +35,8 @@ RAM::RAM(const std::vector<std::string>& instructions, const std::vector<std::st
     data_memory_[i] = 0;
   }
   FormatInstructions(instructions);
-  alcu_ = new ALCU(program_memory_);
+  program_counter_ = &program_memory_[0];
+  alcu_ = new ALCU(program_counter_);
 }
 
 /**
@@ -100,13 +101,18 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
       } else if (counter == 0) {
         std::transform(word.begin(), word.end(), word.begin(), ::toupper);
         instruction = word;
+        if (instruction[0] == 'J') {
+          ss >> word;
+          label = word;
+          ++counter;
+        }
         ++counter;
       } else if (counter == 1) {
         if (word.length() == 1) {
-          addressing_mode = CONSTANT;
+          addressing_mode = DIRECT;
           operand = std::stoi(word);
         } else if (word[0] == '=') {
-          addressing_mode = DIRECT;
+          addressing_mode = CONSTANT;
           operand = std::stoi(word.substr(1));
         } else if (word[0] == '*') {
           addressing_mode = INDIRECT;
@@ -114,6 +120,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         } else {
           throw std::runtime_error("Invalid operand syntax.");
         }
+        std::cout << addressing_mode << std::endl;
       }
     }
     if (instruction == "LOAD") {
@@ -132,13 +139,12 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
       program_memory_.emplace_back(new READ(addressing_mode, operand, input_unit_));
     } else if (instruction == "WRITE") {
       program_memory_.emplace_back(new WRITE(addressing_mode, operand, output_unit_));
-    // TODO: Implement jump instructions.
-    // } else if (instruction == "JUMP") {
-    //   program_memory_.emplace_back(new JUMP(i));
-    // } else if (instruction == "JZERO") {
-    //   program_memory_.emplace_back(new JZERO(i));
-    // } else if (instruction == "JGTZ") {
-    //   program_memory_.emplace_back(new JGTZ(i));
+    } else if (instruction == "JUMP") {
+      program_memory_.emplace_back(new JUMP(program_counter_, label, labels_));
+    } else if (instruction == "JZERO") {
+      program_memory_.emplace_back(new JZERO(program_counter_, label, labels_));
+    } else if (instruction == "JGTZ") {
+      program_memory_.emplace_back(new JGTZ(program_counter_, label, labels_));
     } else if (instruction == "HALT") {
       program_memory_.emplace_back(new HALT());
     } else {
