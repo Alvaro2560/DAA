@@ -1,7 +1,7 @@
 # Programa con una instrucción ilegal (WRITE 0)
 # Debe producir un error en la ejecución
 
-	label:	LOAD =3
+	label: LOAD =3
 	STORE 1
 	ADD =2
 	STORE 2

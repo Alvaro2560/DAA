@@ -42,9 +42,6 @@ RAM::RAM(const std::vector<std::string>& instructions, const std::vector<std::st
  * @brief Run the RAM.
  */
 void RAM::run(void) {
-  // for (auto it = labels_.begin(); it != labels_.end(); it++) {
-  //   std::cout << it->first << " " << it->second << std::endl;
-  // }
   alcu_->run(data_memory_);
 }
 
@@ -99,7 +96,6 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         // The next word is the instruction.
         ss >> instruction;
         std::transform(instruction.begin(), instruction.end(), instruction.begin(), ::toupper);
-        ss >> word;
         ++counter;
       } else if (counter == 0) {
         std::transform(word.begin(), word.end(), word.begin(), ::toupper);
@@ -149,7 +145,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
       throw std::runtime_error("Invalid instruction.");
     }
     if (!label.empty()) {
-      labels_[label] = program_memory_.back();
+      labels_[label] = program_memory_[program_memory_.size() - 1];
       label.clear();
     }
   }
