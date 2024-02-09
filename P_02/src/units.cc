@@ -2,11 +2,11 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Programación de Aplicaciones Interactivas 2023-2024
+ * Diseño y Análisis de Algoritmos 2023-2024
  * 
- * @file tape.cc
+ * @file units.cc
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
- * @brief Implementation of the classes InputUnit and OutputUnit.
+ * @brief Definitions of the InputUnit and OutputUnit classes.
  * @version 0.1
  * @since Feb 01 2024
  * 
@@ -22,7 +22,7 @@
 /**
  * @brief Construct a new InputUnit::InputUnit object
  * 
- * @param tape 
+ * @param tape The tape that the input unit will process.
  */
 InputUnit::InputUnit(const std::vector<int>& tape) {
   tape_ = new int[tape.size()];
@@ -35,7 +35,7 @@ InputUnit::InputUnit(const std::vector<int>& tape) {
 /**
  * @brief Process the input unit.
  * 
- * @return int 
+ * @return int The value of the tape at the current position.
  */
 int InputUnit::process(void) {
   return *head_++;
@@ -62,7 +62,7 @@ OutputUnit::OutputUnit(void) {
 /**
  * @brief Process the output unit.
  * 
- * @return int 
+ * @param data Data to be processed.
  */
 void OutputUnit::process(const int& data) {
   *head_ = data;
@@ -73,7 +73,7 @@ void OutputUnit::process(const int& data) {
 /**
  * @brief Get the tape.
  * 
- * @return int* 
+ * @return int* The tape.
  */
 int* OutputUnit::getTape(void) {
   return tape_;
@@ -82,7 +82,7 @@ int* OutputUnit::getTape(void) {
 /**
  * @brief Get the size of the tape.
  * 
- * @return size_t 
+ * @return size_t The size of the tape.
  */
 size_t OutputUnit::getSize(void) {
   return size_;

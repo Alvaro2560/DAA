@@ -2,7 +2,7 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Programación de Aplicaciones Interactivas 2023-2024
+ * Diseño y Análisis de Algoritmos 2023-2024
  * 
  * @file ram.h
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)

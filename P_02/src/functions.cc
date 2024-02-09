@@ -2,11 +2,11 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Programación de Aplicaciones Interactivas 2023-2024
+ * Diseño y Análisis de Algoritmos 2023-2024
  * 
  * @file functions.cc
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
- * @brief Implementation of the functions used in the program.
+ * @brief Definition of the functions used in the program.
  * @version 0.1
  * @since Jan 31 2024
  * 

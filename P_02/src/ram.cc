@@ -2,11 +2,11 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Programación de Aplicaciones Interactivas 2023-2024
+ * Diseño y Análisis de Algoritmos 2023-2024
  * 
  * @file ram.h
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
- * @brief Implementation of the class RAM.
+ * @brief Definition of the RAM class.
  * @version 0.1
  * @since Jan 31 2024
  * 
@@ -25,7 +25,8 @@
 /**
  * @brief Construct a new RAM::RAM object
  * 
- * @param input_tape 
+ * @param instructions Instructions of the program as a vector of strings.
+ * @param input_tape Input data as a vector of strings.
  */
 RAM::RAM(const std::vector<std::string>& instructions, const std::vector<std::string>& input_tape) {
   input_unit_ = new InputUnit(FormatTape(input_tape));
@@ -101,6 +102,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
       } else if (counter == 0) {
         std::transform(word.begin(), word.end(), word.begin(), ::toupper);
         instruction = word;
+        // If the instruction is a jump, the next word is the label.
         if (instruction[0] == 'J') {
           ss >> word;
           label = word;
@@ -108,6 +110,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         }
         ++counter;
       } else if (counter == 1) {
+        // Check what type of addressing mode the operand has.
         if (word.length() == 1) {
           addressing_mode = DIRECT;
           operand = std::stoi(word);
@@ -120,7 +123,6 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         } else {
           throw std::runtime_error("Invalid operand syntax.");
         }
-        std::cout << addressing_mode << std::endl;
       }
     }
     if (instruction == "LOAD") {
@@ -148,6 +150,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
     } else if (instruction == "HALT") {
       program_memory_.emplace_back(new HALT());
     } else {
+      // TODO: Print the line of the error.
       throw std::runtime_error("Invalid instruction.");
     }
     if (!label.empty()) {
@@ -158,7 +161,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
 }
 
 /**
- * @brief Formats the tape and stores it in a vector of integers.
+ * @brief Formats the input tape and stores it in a vector of integers.
  * 
  * @param file_name Name of the file to read.
  */

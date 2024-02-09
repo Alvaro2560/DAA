@@ -2,11 +2,11 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Programación de Aplicaciones Interactivas 2023-2024
+ * Diseño y Análisis de Algoritmos 2023-2024
  * 
  * @file instruction.h
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
- * @brief Declaration of the class Instruction.
+ * @brief Declaration of the class Instruction and its subclasses.
  * @version 0.1
  * @since Jan 31 2024
  * 
@@ -135,6 +135,7 @@ class JUMP : public Instruction {
     JUMP(Instruction** program_counter, const std::string& label,
          std::unordered_map<std::string, Instruction*>& labels);
     int execute(int* data_memory) override;
+    // TODO: Add destructor.
   protected:
     Instruction** program_counter_;
     std::string label_;

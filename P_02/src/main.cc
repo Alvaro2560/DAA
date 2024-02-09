@@ -2,7 +2,7 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Programación de Aplicaciones Interactivas 2023-2024
+ * Diseño y Análisis de Algoritmos 2023-2024
  * 
  * @file main.cc
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
@@ -19,6 +19,13 @@
 
 #include <iostream>
 
+/**
+ * @brief Main function of the program.
+ * 
+ * @param argc Number of arguments.
+ * @param argv Arguments.
+ * @return int 0 if the program ends correctly, 1 otherwise.
+ */
 int main(int argc, char** argv) {
   try {
     if (argc != 4) {
