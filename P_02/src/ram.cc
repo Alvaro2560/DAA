@@ -15,12 +15,13 @@
  */
 
 #include "../include/ram.h"
-#include "../include/alcu.h"
 #include "../include/units.h"
 #include "../include/instructions.h"
 
 #include <sstream>
 #include <bits/stdc++.h>
+
+const size_t HALT_FLAG = -1;
 
 /**
  * @brief Construct a new RAM::RAM object
@@ -36,15 +37,26 @@ RAM::RAM(const std::vector<std::string>& instructions, const std::vector<std::st
     data_memory_[i] = 0;
   }
   FormatInstructions(instructions);
-  program_counter_ = &program_memory_[0];
-  alcu_ = new ALCU(program_counter_);
+  program_counter_ = 0;
 }
 
 /**
  * @brief Run the RAM.
  */
 void RAM::run(void) {
-  alcu_->run(data_memory_);
+  size_t next_instruction;
+  while (program_counter_ != HALT_FLAG) {
+    next_instruction = program_memory_[program_counter_]->execute(data_memory_);
+    std::cout << program_memory_[program_counter_]->getInstruction() << std::endl;
+    if (next_instruction == HALT_FLAG) {
+      program_counter_ = HALT_FLAG;
+    } else if (next_instruction == 1) {
+      program_counter_++;
+    } else {
+      program_counter_ = next_instruction;
+    }
+    // output_unit_->print();
+  }
 }
 
 /**
@@ -69,12 +81,11 @@ void RAM::write(const std::string& file_name) {
 /**
  * @brief Destroy the RAM::RAM object
  */
-RAM::~RAM(void) {
-  delete data_memory_;
-  delete alcu_;
-  delete input_unit_;
-  delete output_unit_;
-}
+// RAM::~RAM(void) {
+//   delete data_memory_;
+//   delete input_unit_;
+//   delete output_unit_;
+// }
 
 /**
  * @brief Formats the instructions and stores them in a vector of strings.
@@ -89,7 +100,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
     }
     int counter = 0, operand;
     AddressingMode addressing_mode;
-    std::string instruction, label;
+    std::string instruction, label, jump_label;
     std::stringstream ss(line);
     while (ss >> word) {
       // If the word ends with a colon, it is a label.
@@ -105,7 +116,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         // If the instruction is a jump, the next word is the label.
         if (instruction[0] == 'J') {
           ss >> word;
-          label = word;
+          jump_label = word;
           ++counter;
         }
         ++counter;
@@ -142,11 +153,11 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
     } else if (instruction == "WRITE") {
       program_memory_.emplace_back(new WRITE(addressing_mode, operand, output_unit_));
     } else if (instruction == "JUMP") {
-      program_memory_.emplace_back(new JUMP(program_counter_, label, labels_));
+      program_memory_.emplace_back(new JUMP(jump_label, &labels_, program_memory_));
     } else if (instruction == "JZERO") {
-      program_memory_.emplace_back(new JZERO(program_counter_, label, labels_));
+      program_memory_.emplace_back(new JZERO(jump_label, &labels_, program_memory_));
     } else if (instruction == "JGTZ") {
-      program_memory_.emplace_back(new JGTZ(program_counter_, label, labels_));
+      program_memory_.emplace_back(new JGTZ(jump_label, &labels_, program_memory_));
     } else if (instruction == "HALT") {
       program_memory_.emplace_back(new HALT());
     } else {
@@ -154,7 +165,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
       throw std::runtime_error("Invalid instruction.");
     }
     if (!label.empty()) {
-      labels_[label] = program_memory_[program_memory_.size() - 1];
+      labels_[label] = program_memory_.size() - 1;
       label.clear();
     }
   }

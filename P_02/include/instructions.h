@@ -32,8 +32,9 @@ enum AddressingMode {
 class Instruction {
   public:
     Instruction(void) = default;
-    virtual int execute(int* data_memory = 0) = 0;
-    virtual ~Instruction(void) = default;
+    virtual size_t execute(int* data_memory = 0) = 0;
+    virtual std::string getInstruction(void) = 0;
+    // virtual ~Instruction(void) = default;
   protected:
     AddressingMode addressing_mode_;
     int operand_;
@@ -45,8 +46,9 @@ class Instruction {
 class LOAD : public Instruction {
   public:
     LOAD(const int& operand);
-    int execute(int* data_memory) override;
-    ~LOAD(void) = default;
+    size_t execute(int* data_memory) override;
+    std::string getInstruction(void) override { return "LOAD"; };
+    // ~LOAD(void) = default;
 };
 
 /**
@@ -55,8 +57,9 @@ class LOAD : public Instruction {
 class STORE : public Instruction {
   public:
     STORE(const int& operand);
-    int execute(int* data_memory) override;
-    ~STORE(void) = default;
+    size_t execute(int* data_memory) override;
+    std::string getInstruction(void) override { return "STORE"; };
+    // ~STORE(void) = default;
 };
 
 /**
@@ -65,8 +68,9 @@ class STORE : public Instruction {
 class ADD : public Instruction {
   public:
     ADD(const AddressingMode& addressing_mode, const int& operand);
-    int execute(int* data_memory) override;
-    ~ADD(void) = default;
+    size_t execute(int* data_memory) override;
+    std::string getInstruction(void) override { return "ADD"; };
+    // ~ADD(void) = default;
 };
 
 /**
@@ -75,8 +79,9 @@ class ADD : public Instruction {
 class SUB : public Instruction {
   public:
     SUB(const AddressingMode& addressing_mode, const int& operand);
-    int execute(int* data_memory) override;
-    ~SUB(void) = default;
+    size_t execute(int* data_memory) override;
+    std::string getInstruction(void) override { return "SUB"; };
+    // ~SUB(void) = default;
 };
 
 /**
@@ -85,8 +90,9 @@ class SUB : public Instruction {
 class MUL : public Instruction {
   public:
     MUL(const AddressingMode& addressing_mode, const int& operand);
-    int execute(int* data_memory) override;
-    ~MUL(void) = default;
+    size_t execute(int* data_memory) override;
+    std::string getInstruction(void) override { return "MUL"; };
+    // ~MUL(void) = default;
 };
 
 /**
@@ -95,8 +101,9 @@ class MUL : public Instruction {
 class DIV : public Instruction {
   public:
     DIV(const AddressingMode& addressing_mode, const int& operand);
-    int execute(int* data_memory) override;
-    ~DIV(void) = default;
+    size_t execute(int* data_memory) override;
+    std::string getInstruction(void) override { return "DIV"; };
+    // ~DIV(void) = default;
 };
 
 class InputUnit;
@@ -107,8 +114,9 @@ class InputUnit;
 class READ : public Instruction {
   public:
     READ(const AddressingMode& addressing_mode, const int& operand, InputUnit* input_unit);
-    int execute(int* data_memory) override;
-    ~READ(void) = default;
+    size_t execute(int* data_memory) override;
+    std::string getInstruction(void) override { return "READ"; };
+    // ~READ(void) = default;
   private:
     InputUnit* input_unit_;
 };
@@ -121,8 +129,9 @@ class OutputUnit;
 class WRITE : public Instruction {
   public:
     WRITE(const AddressingMode& addressing_mode, const int& operand, OutputUnit* output_unit);
-    int execute(int* data_memory) override;
-    ~WRITE(void) = default;
+    size_t execute(int* data_memory) override;
+    std::string getInstruction(void) override { return "WRITE"; };
+    // ~WRITE(void) = default;
   private:
     OutputUnit* output_unit_;
 };
@@ -132,14 +141,15 @@ class WRITE : public Instruction {
  */
 class JUMP : public Instruction {
   public:
-    JUMP(Instruction** program_counter, const std::string& label,
-         std::unordered_map<std::string, Instruction*>& labels);
-    int execute(int* data_memory) override;
-    // TODO: Add destructor.
+    JUMP(const std::string& label, std::unordered_map<std::string, size_t>* labels, 
+         const std::vector<Instruction*>& program_memory);
+    size_t execute(int* data_memory) override;
+    std::string getInstruction(void) override { return "JUMP"; };
+    // ~JUMP(void);
   protected:
-    Instruction** program_counter_;
     std::string label_;
-    std::unordered_map<std::string, Instruction*> labels_;
+    std::unordered_map<std::string, size_t>* labels_;
+    std::vector<Instruction*> program_memory_;
 };
 
 /**
@@ -147,9 +157,11 @@ class JUMP : public Instruction {
  */
 class JZERO : public JUMP {
   public:
-    JZERO(Instruction** program_counter, const std::string& label, 
-          std::unordered_map<std::string, Instruction*>& labels);
-    int execute(int* data_memory) override;
+    JZERO(const std::string& label, std::unordered_map<std::string, size_t>* labels, 
+          const std::vector<Instruction*>& program_memory);
+    size_t execute(int* data_memory) override;
+    std::string getInstruction(void) override { return "JZERO"; };
+    // ~JZERO(void);
 };
 
 /**
@@ -157,9 +169,11 @@ class JZERO : public JUMP {
  */
 class JGTZ : public JUMP {
   public:
-    JGTZ(Instruction** program_counter, const std::string& label, 
-         std::unordered_map<std::string, Instruction*>& labels);
-    int execute(int* data_memory) override;
+    JGTZ(const std::string& label, std::unordered_map<std::string, size_t>* labels, 
+         const std::vector<Instruction*>& program_memory);
+    size_t execute(int* data_memory) override;
+    std::string getInstruction(void) override { return "JGTZ"; };
+    // ~JGTZ(void);
 };
 
 /**
@@ -168,6 +182,7 @@ class JGTZ : public JUMP {
 class HALT : public Instruction {
   public:
     HALT(void) = default;
-    int execute(int* data_memory) override;
-    ~HALT(void) = default;
+    size_t execute(int* data_memory) override;
+    std::string getInstruction(void) override { return "HALT"; };
+    // ~HALT(void) = default;
 };

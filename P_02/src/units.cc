@@ -45,9 +45,9 @@ int InputUnit::process(void) {
  * @brief Destroy the InputUnit::InputUnit object
  * 
  */
-InputUnit::~InputUnit(void) {
-  delete[] tape_;
-}
+// InputUnit::~InputUnit(void) {
+//   delete[] tape_;
+// }
 
 /**
  * @brief Construct a new OutputUnit::OutputUnit object
@@ -89,9 +89,19 @@ size_t OutputUnit::getSize(void) {
 }
 
 /**
+ * @brief Print the tape.
+ * 
+ */
+void OutputUnit::print(void) {
+  for (size_t i = 0; i < size_; i++) {
+    std::cout << tape_[i] << std::endl;
+  }
+}
+
+/**
  * @brief Destroy the OutputUnit::OutputUnit object
  * 
  */
-OutputUnit::~OutputUnit(void) {
-  delete[] tape_;
-}
+// OutputUnit::~OutputUnit(void) {
+//   delete[] tape_;
+// }
