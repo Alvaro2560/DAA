@@ -7,7 +7,7 @@
  * @file ram.h
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
  * @brief Declaration of the class RAM.
- * @version 0.1
+ * @version 1.0
  * @since Jan 31 2024
  * 
  * @copyright Copyright (c) 2024
@@ -29,9 +29,10 @@ class Instruction;
  */
 class RAM {
   public:
-    RAM(const std::vector<std::string>& instructions, const std::vector<std::string>& input_tape);
+    RAM(const std::vector<std::string>& instructions, 
+        const std::vector<std::string>& input_tape, 
+        OutputUnit* output_unit);
     void run(void);
-    void write(const std::string& file_name);
     ~RAM(void);
   private:
     void FormatInstructions(const std::vector<std::string>& instructions);

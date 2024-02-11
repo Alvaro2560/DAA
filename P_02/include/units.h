@@ -7,7 +7,7 @@
  * @file units.h
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
  * @brief Declaration of the classes InputUnit and OutputUnit.
- * @version 0.1
+ * @version 1.0
  * @since Feb 01 2024
  * 
  * @copyright Copyright (c) 2024
@@ -37,13 +37,13 @@ class InputUnit {
  */
 class OutputUnit {
   public:
-    OutputUnit(void);
+    OutputUnit(const std::string& file_name);
     void process(const int& data);
-    int* getTape(void);
     size_t getSize(void);
-    void print(void);
+    void write(void);
     ~OutputUnit(void);
   private:
     int* tape_;
     size_t size_;
+    std::string file_name_;
 };

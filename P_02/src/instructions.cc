@@ -7,7 +7,7 @@
  * @file instructions.cc
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
  * @brief Definitions of instruction classes.
- * @version 0.1
+ * @version 1.0
  * @since Jan 31 2024
  * 
  * @copyright Copyright (c) 2024
@@ -22,9 +22,11 @@
 /**
  * @brief Construct a new LOAD::LOAD object
  * 
+ * @param addressing_mode The addressing mode of the instruction.
  * @param operand The operand of the instruction.
  */
-LOAD::LOAD(const int& operand) {
+LOAD::LOAD(const AddressingMode& addresing_mode, const int& operand) {
+  addressing_mode_ = addresing_mode;
   operand_ = operand;
 }
 
@@ -32,19 +34,31 @@ LOAD::LOAD(const int& operand) {
  * @brief Execute the instruction.
  * 
  * @param data_memory The data memory.
- * @return Instruction**
+ * @return size_t
  */
 size_t LOAD::execute(int* data_memory) {
-  data_memory[0] = data_memory[operand_];
+  switch (addressing_mode_) {
+    case CONSTANT:
+      data_memory[0] = operand_;
+      break;
+    case DIRECT:
+      data_memory[0] = data_memory[operand_];
+      break;
+    case INDIRECT:
+      data_memory[0] = data_memory[data_memory[operand_]];
+      break;
+  }
   return 1;
 }
 
 /**
  * @brief Construct a new STORE::STORE object
  * 
+ * @param addresing_mode The addressing mode of the instruction.
  * @param operand The operand of the instruction. 
  */
-STORE::STORE(const int& operand) {
+STORE::STORE(const AddressingMode& addresing_mode, const int& operand) {
+  addressing_mode_ = addresing_mode;
   operand_ = operand;
 }
 
@@ -52,10 +66,17 @@ STORE::STORE(const int& operand) {
  * @brief Execute the instruction.
  * 
  * @param data_memory The data memory.
- * @return Instruction**
+ * @return size_t
  */
 size_t STORE::execute(int* data_memory) {
-  data_memory[operand_] = data_memory[0];
+  switch (addressing_mode_) {
+    case DIRECT:
+      data_memory[operand_] = data_memory[0];
+      break;
+    case INDIRECT:
+      data_memory[data_memory[operand_]] = data_memory[0];
+      break;
+  }
   return 1;
 }
 
@@ -74,7 +95,7 @@ ADD::ADD(const AddressingMode& addressing_mode, const int& operand) {
  * @brief Execute the instruction.
  * 
  * @param data_memory The data memory.
- * @return Instruction**
+ * @return size_t
  */
 size_t ADD::execute(int* data_memory) {
   switch (addressing_mode_) {
@@ -86,9 +107,6 @@ size_t ADD::execute(int* data_memory) {
       break;
     case INDIRECT:
       data_memory[0] += data_memory[data_memory[operand_]];
-      break;
-    default:
-      throw std::invalid_argument("Invalid addressing mode");
       break;
   }
   return 1;
@@ -109,7 +127,7 @@ SUB::SUB(const AddressingMode& addressing_mode, const int& operand) {
  * @brief Execute the instruction.
  * 
  * @param data_memory The data memory.
- * @return Instruction**
+ * @return size_t
  */
 size_t SUB::execute(int* data_memory) {
   switch (addressing_mode_) {
@@ -121,9 +139,6 @@ size_t SUB::execute(int* data_memory) {
       break;
     case INDIRECT:
       data_memory[0] -= data_memory[data_memory[operand_]];
-      break;
-    default:
-      throw std::invalid_argument("Invalid addressing mode");
       break;
   }
   return 1;
@@ -144,7 +159,7 @@ MUL::MUL(const AddressingMode& addressing_mode, const int& operand) {
  * @brief Execute the instruction.
  * 
  * @param data_memory The data memory.
- * @return Instruction**
+ * @return size_t
  */
 size_t MUL::execute(int* data_memory) {
   switch (addressing_mode_) {
@@ -156,9 +171,6 @@ size_t MUL::execute(int* data_memory) {
       break;
     case INDIRECT:
       data_memory[0] *= data_memory[data_memory[operand_]];
-      break;
-    default:
-      throw std::invalid_argument("Invalid addressing mode");
       break;
   }
   return 1;
@@ -179,7 +191,7 @@ DIV::DIV(const AddressingMode& addressing_mode, const int& operand) {
  * @brief Execute the instruction.
  * 
  * @param data_memory The data memory.
- * @return Instruction**
+ * @return size_t
  */
 size_t DIV::execute(int* data_memory) {
   switch (addressing_mode_) {
@@ -191,9 +203,6 @@ size_t DIV::execute(int* data_memory) {
       break;
     case INDIRECT:
       data_memory[0] /= data_memory[data_memory[operand_]];
-      break;
-    default:
-      throw std::invalid_argument("Invalid addressing mode");
       break;
   }
   return 1;
@@ -216,7 +225,7 @@ READ::READ(const AddressingMode& addressing_mode, const int& operand, InputUnit*
  * @brief Execute the instruction.
  * 
  * @param data_memory The data memory.
- * @return Instruction**
+ * @return size_t
  */
 size_t READ::execute(int* data_memory) {
   switch (addressing_mode_) {
@@ -225,9 +234,6 @@ size_t READ::execute(int* data_memory) {
       break;
     case INDIRECT:
       data_memory[data_memory[operand_]] = input_unit_->process();
-      break;
-    default:
-      throw std::invalid_argument("Invalid addressing mode.");
       break;
   }
   return 1;
@@ -250,18 +256,18 @@ WRITE::WRITE(const AddressingMode& addressing_mode, const int& operand, OutputUn
  * @brief Execute the instruction.
  * 
  * @param data_memory The data memory.
- * @return Instruction**
+ * @return size_t
  */
 size_t WRITE::execute(int* data_memory) {
   switch (addressing_mode_) {
+    case CONSTANT:
+      output_unit_->process(operand_);
+      break;
     case DIRECT:
       output_unit_->process(data_memory[operand_]);
       break;
     case INDIRECT:
       output_unit_->process(data_memory[data_memory[operand_]]);
-      break;
-    default:
-      throw std::invalid_argument("Invalid addressing mode.");
       break;
   }
   return 1;
@@ -270,9 +276,9 @@ size_t WRITE::execute(int* data_memory) {
 /**
  * @brief Construct a new JUMP::JUMP object
  * 
- * @param program_counter The program counter.
  * @param label The target label to jump.
  * @param labels The labels of the program.
+ * @param program_memory The program memory.
  */
 JUMP::JUMP(const std::string& label,
            std::unordered_map<std::string, size_t>* labels, 
@@ -283,7 +289,7 @@ JUMP::JUMP(const std::string& label,
  * @brief Execute the instruction.
  * 
  * @param data_memory The data memory.
- * @return Instruction**
+ * @return size_t
  */
 size_t JUMP::execute(int* data_memory) {
   return (*labels_)[label_];
@@ -301,9 +307,9 @@ JUMP::~JUMP(void) {
 /**
  * @brief Construct a new JZERO::JZERO object
  * 
- * @param program_counter The program counter.
  * @param label The target label to jump.
  * @param labels The labels of the program.
+ * @param program_memory The program memory.
  */
 JZERO::JZERO(const std::string& label, 
              std::unordered_map<std::string, size_t>* labels, 
@@ -314,7 +320,7 @@ JZERO::JZERO(const std::string& label,
  * @brief Execute the instruction.
  * 
  * @param data_memory The data memory.
- * @return Instruction** 
+ * @return size_t
  */
 size_t JZERO::execute(int* data_memory) {
   if (data_memory[0] == 0) {
@@ -336,9 +342,9 @@ JZERO::~JZERO(void) {
 /**
  * @brief Construct a new JGTZ::JGTZ object
  *  
- * @param program_counter
- * @param label 
- * @param labels 
+ * @param label The target label to jump.
+ * @param labels The labels of the program.
+ * @param program_memory The program memory.
  */
 JGTZ::JGTZ(const std::string& label, 
            std::unordered_map<std::string, size_t>* labels, 
@@ -349,7 +355,7 @@ JGTZ::JGTZ(const std::string& label,
  * @brief Execute the instruction.
  * 
  * @param data_memory The data memory.
- * @return Instruction** 
+ * @return size_t
  */
 size_t JGTZ::execute(int* data_memory) {
   if (data_memory[0] > 0) {
@@ -372,7 +378,7 @@ JGTZ::~JGTZ(void) {
  * @brief Execute the instruction.
  * 
  * @param data_memory The data memory.
- * @return Instruction** 
+ * @return size_t
  */
 size_t HALT::execute(int* data_memory) {
   return -1;

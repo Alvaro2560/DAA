@@ -7,7 +7,7 @@
  * @file ram.h
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
  * @brief Definition of the RAM class.
- * @version 0.1
+ * @version 1.0
  * @since Jan 31 2024
  * 
  * @copyright Copyright (c) 2024
@@ -28,10 +28,13 @@ const size_t HALT_FLAG = -1;
  * 
  * @param instructions Instructions of the program as a vector of strings.
  * @param input_tape Input data as a vector of strings.
+ * @param output_tape Output data as a pointer to an OutputUnit object.
  */
-RAM::RAM(const std::vector<std::string>& instructions, const std::vector<std::string>& input_tape) {
+RAM::RAM(const std::vector<std::string>& instructions, 
+         const std::vector<std::string>& input_tape, 
+         OutputUnit* output_tape) {
   input_unit_ = new InputUnit(FormatTape(input_tape));
-  output_unit_ = new OutputUnit();
+  output_unit_ = output_tape;
   data_memory_ = new int[16];
   for (size_t i = 0; i < 16; i++) {
     data_memory_[i] = 0;
@@ -45,9 +48,8 @@ RAM::RAM(const std::vector<std::string>& instructions, const std::vector<std::st
  */
 void RAM::run(void) {
   size_t next_instruction;
-  while (program_counter_ != HALT_FLAG) {
+  while (program_counter_ != HALT_FLAG && program_counter_ < program_memory_.size()) {
     next_instruction = program_memory_[program_counter_]->execute(data_memory_);
-    // std::cout << program_memory_[program_counter_]->getInstruction() << std::endl;
     if (next_instruction == HALT_FLAG) {
       program_counter_ = HALT_FLAG;
     } else if (next_instruction == 1) {
@@ -55,27 +57,7 @@ void RAM::run(void) {
     } else {
       program_counter_ = next_instruction;
     }
-    // output_unit_->print();
   }
-}
-
-/**
- * @brief Write the output tape to a file.
- * 
- * @param file_name Name of the file to write.
- */
-void RAM::write(const std::string& file_name) {
-  std::ofstream file(file_name);
-  int* output_tape = output_unit_->getTape();
-  size_t size = output_unit_->getSize();
-  if (file.is_open()) {
-    for (size_t i = 0; i < size - 1; i++) {
-      file << output_tape[i] << std::endl;
-    }
-  } else {
-    throw std::runtime_error("Unable to open file.");
-  }
-  file.close();
 }
 
 /**
@@ -139,9 +121,8 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         }
       }
     }
-    // TODO: LOAD instruction operand syntax error.
     if (instruction == "LOAD") {
-      program_memory_.emplace_back(new LOAD(operand));
+      program_memory_.emplace_back(new LOAD(addressing_mode, operand));
     } else if (instruction == "STORE") {
       if (addressing_mode == CONSTANT) {
         std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
@@ -152,7 +133,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         error += "\nInvalid operand for STORE instruction.";
         throw std::runtime_error(error);
       }
-      program_memory_.emplace_back(new STORE(operand));
+      program_memory_.emplace_back(new STORE(addressing_mode, operand));
     } else if (instruction == "ADD") {
       program_memory_.emplace_back(new ADD(addressing_mode, operand));
     } else if (instruction == "SUB") {
@@ -162,7 +143,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
     } else if (instruction == "DIV") {
       program_memory_.emplace_back(new DIV(addressing_mode, operand));
     } else if (instruction == "READ") {
-      if (addressing_mode == CONSTANT && operand == 0) {
+      if ((addressing_mode == DIRECT && operand == 0) || addressing_mode == CONSTANT) {
         std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
         error += instruction + " " + word + "\n";
         for (size_t i = 0; i < (instruction + word).size() + 1; i++) {
@@ -173,7 +154,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
       }
       program_memory_.emplace_back(new READ(addressing_mode, operand, input_unit_));
     } else if (instruction == "WRITE") {
-      if (addressing_mode == CONSTANT && operand == 0) {
+      if (addressing_mode == DIRECT && operand == 0) {
         std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
         error += instruction + " " + word + "\n";
         for (size_t i = 0; i < (instruction + word).size() + 1; i++) {

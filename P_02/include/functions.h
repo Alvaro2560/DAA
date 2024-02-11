@@ -7,7 +7,7 @@
  * @file functions.h
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
  * @brief Declaration of the functions used in the program.
- * @version 0.1
+ * @version 1.0
  * @since Jan 31 2024
  * 
  * @copyright Copyright (c) 2024

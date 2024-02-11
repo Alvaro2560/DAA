@@ -7,7 +7,7 @@
  * @file main.cc
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
  * @brief Main function of the program.
- * @version 0.1
+ * @version 1.0
  * @since Jan 31 2024
  * 
  * @copyright Copyright (c) 2024
@@ -16,6 +16,7 @@
 
 #include "../include/functions.h"
 #include "../include/ram.h"
+#include "../include/units.h"
 
 #include <iostream>
 
@@ -27,6 +28,7 @@
  * @return int 0 if the program ends correctly, 1 otherwise.
  */
 int main(int argc, char** argv) {
+  OutputUnit* output_unit = new OutputUnit(argv[3]);
   try {
     if (argc != 4) {
       PrintHelp();
@@ -34,11 +36,13 @@ int main(int argc, char** argv) {
     }
     std::vector<std::string> instructions = ReadFile(argv[1]),
                              input_tape = ReadFile(argv[2]);
-    RAM ram(instructions, input_tape);
+    RAM ram(instructions, input_tape, output_unit);
     ram.run();
-    ram.write(argv[3]);
+    output_unit->write();
     return 0;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     std::cerr << e.what() << '\n';
+    output_unit->write();
+    return 1;
   }
 }

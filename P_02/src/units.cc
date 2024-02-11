@@ -7,7 +7,7 @@
  * @file units.cc
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
  * @brief Definitions of the InputUnit and OutputUnit classes.
- * @version 0.1
+ * @version 1.0
  * @since Feb 01 2024
  * 
  * @copyright Copyright (c) 2024
@@ -18,7 +18,7 @@
 
 #include <vector>
 #include <iostream>
-#include <limits>
+#include <fstream>
 
 /**
  * @brief Construct a new InputUnit::InputUnit object
@@ -54,9 +54,10 @@ InputUnit::~InputUnit(void) {
  * @brief Construct a new OutputUnit::OutputUnit object
  * 
  */
-OutputUnit::OutputUnit(void) {
+OutputUnit::OutputUnit(const std::string& file_name) {
   tape_ = new int[1];
   size_ = 1;
+  file_name_ = file_name;
 }
 
 /**
@@ -80,15 +81,6 @@ void OutputUnit::process(const int& data) {
 }
 
 /**
- * @brief Get the tape.
- * 
- * @return int* The tape.
- */
-int* OutputUnit::getTape(void) {
-  return tape_;
-}
-
-/**
  * @brief Get the size of the tape.
  * 
  * @return size_t The size of the tape.
@@ -98,13 +90,19 @@ size_t OutputUnit::getSize(void) {
 }
 
 /**
- * @brief Print the tape.
+ * @brief Write the tape to a file.
  * 
  */
-void OutputUnit::print(void) {
-  for (size_t i = 0; i < size_; i++) {
-    std::cout << tape_[i] << std::endl;
+void OutputUnit::write(void) {
+  std::ofstream file(file_name_);
+  if (file.is_open()) {
+    for (size_t i = 0; i < size_ - 1; i++) {
+      file << tape_[i] << std::endl;
+    }
+  } else {
+    throw std::runtime_error("Unable to open output file.");
   }
+  file.close();
 }
 
 /**

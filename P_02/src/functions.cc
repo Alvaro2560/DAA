@@ -7,7 +7,7 @@
  * @file functions.cc
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
  * @brief Definition of the functions used in the program.
- * @version 0.1
+ * @version 1.0
  * @since Jan 31 2024
  * 
  * @see https://www.geeksforgeeks.org/conversion-whole-string-uppercase-lowercase-using-stl-c/
