@@ -18,6 +18,7 @@
 
 #include <vector>
 #include <iostream>
+#include <limits>
 
 /**
  * @brief Construct a new InputUnit::InputUnit object
@@ -45,9 +46,9 @@ int InputUnit::process(void) {
  * @brief Destroy the InputUnit::InputUnit object
  * 
  */
-// InputUnit::~InputUnit(void) {
-//   delete[] tape_;
-// }
+InputUnit::~InputUnit(void) {
+  delete[] tape_;
+}
 
 /**
  * @brief Construct a new OutputUnit::OutputUnit object
@@ -55,7 +56,6 @@ int InputUnit::process(void) {
  */
 OutputUnit::OutputUnit(void) {
   tape_ = new int[1];
-  head_ = &tape_[0];
   size_ = 1;
 }
 
@@ -65,9 +65,17 @@ OutputUnit::OutputUnit(void) {
  * @param data Data to be processed.
  */
 void OutputUnit::process(const int& data) {
-  *head_ = data;
-  head_++;
   size_++;
+  int* new_tape = new int[size_];
+  for (size_t i = 0; i < size_ - 1; i++) {
+    new_tape[i] = tape_[i];
+  }
+  tape_ = new int[size_];
+  for (size_t i = 0; i < size_; i++) {
+    tape_[i] = new_tape[i];
+  }
+  delete[] new_tape;
+  tape_[size_ - 1] = data;
 }
 
 /**
@@ -102,6 +110,6 @@ void OutputUnit::print(void) {
  * @brief Destroy the OutputUnit::OutputUnit object
  * 
  */
-// OutputUnit::~OutputUnit(void) {
-//   delete[] tape_;
-// }
+OutputUnit::~OutputUnit(void) {
+  delete[] tape_;
+}

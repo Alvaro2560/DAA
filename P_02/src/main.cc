@@ -37,6 +37,7 @@ int main(int argc, char** argv) {
     RAM ram(instructions, input_tape);
     ram.run();
     ram.write(argv[3]);
+    return 0;
   } catch(const std::exception& e) {
     std::cerr << e.what() << '\n';
   }

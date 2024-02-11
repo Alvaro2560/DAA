@@ -26,7 +26,7 @@ class InputUnit {
   public:
     InputUnit(const std::vector<int>& tape);
     int process(void);
-    // ~InputUnit(void);
+    ~InputUnit(void);
   private:
     int* tape_;
     int* head_;
@@ -42,9 +42,8 @@ class OutputUnit {
     int* getTape(void);
     size_t getSize(void);
     void print(void);
-    // ~OutputUnit(void);
+    ~OutputUnit(void);
   private:
     int* tape_;
-    int* head_;
     size_t size_;
 };

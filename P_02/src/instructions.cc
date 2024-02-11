@@ -293,9 +293,12 @@ size_t JUMP::execute(int* data_memory) {
  * @brief Destroy the JUMP::JUMP object
  * 
  */
-// JUMP::~JUMP(void) { 
-//   delete labels_;
-// }
+JUMP::~JUMP(void) { 
+  std::cout << "JUMP destructor" << std::endl;
+  labels_ = nullptr;
+  delete labels_;
+  std::cout << "JUMP destroyed" << std::endl;
+}
 
 /**
  * @brief Construct a new JZERO::JZERO object
@@ -327,9 +330,12 @@ size_t JZERO::execute(int* data_memory) {
  * @brief Destroy the JZERO::JZERO object
  * 
  */
-// JZERO::~JZERO(void) { 
-//   delete labels_;
-// }
+JZERO::~JZERO(void) { 
+  std::cout << "JZERO destructor" << std::endl;
+  labels_ = nullptr;
+  delete labels_;
+  std::cout << "JZERO destroyed" << std::endl;
+}
 
 /**
  * @brief Construct a new JGTZ::JGTZ object
@@ -361,9 +367,11 @@ size_t JGTZ::execute(int* data_memory) {
  * @brief Destroy the JGTZ::JGTZ object
  * 
  */
-// JGTZ::~JGTZ(void) { 
-//   delete labels_;
-// }
+JGTZ::~JGTZ(void) { 
+  std::cout << "JGTZ destructor" << std::endl;
+  delete labels_;
+  std::cout << "JGTZ destroyed" << std::endl;
+}
 
 /**
  * @brief Execute the instruction.

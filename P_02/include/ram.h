@@ -32,7 +32,7 @@ class RAM {
     RAM(const std::vector<std::string>& instructions, const std::vector<std::string>& input_tape);
     void run(void);
     void write(const std::string& file_name);
-    // ~RAM(void);
+    ~RAM(void);
   private:
     void FormatInstructions(const std::vector<std::string>& instructions);
     std::vector<int> FormatTape(const std::vector<std::string>& file_name);

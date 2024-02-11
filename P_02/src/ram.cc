@@ -81,11 +81,16 @@ void RAM::write(const std::string& file_name) {
 /**
  * @brief Destroy the RAM::RAM object
  */
-// RAM::~RAM(void) {
-//   delete data_memory_;
-//   delete input_unit_;
-//   delete output_unit_;
-// }
+RAM::~RAM(void) {
+  for (size_t i = 0; i < program_memory_.size(); i++) {
+    std::cout << "Deleting instruction " << program_memory_[i]->getInstruction() << std::endl;
+    delete program_memory_[i];
+    std::cout << "Instruction deleted" << std::endl;
+  }
+  delete[] data_memory_;
+  delete input_unit_;
+  delete output_unit_;
+}
 
 /**
  * @brief Formats the instructions and stores them in a vector of strings.
