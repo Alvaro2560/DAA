@@ -65,17 +65,18 @@ OutputUnit::OutputUnit(void) {
  * @param data Data to be processed.
  */
 void OutputUnit::process(const int& data) {
-  size_++;
-  int* new_tape = new int[size_];
-  for (size_t i = 0; i < size_ - 1; i++) {
-    new_tape[i] = tape_[i];
+  if (size_ == 1) {
+    tape_[0] = data;
+  } else {
+    int* new_tape = new int[size_];
+    for (size_t i = 0; i < size_ - 1; i++) {
+      new_tape[i] = tape_[i];
+    }
+    new_tape[size_ - 1] = data;
+    delete[] tape_;
+    tape_ = new_tape;
   }
-  tape_ = new int[size_];
-  for (size_t i = 0; i < size_; i++) {
-    tape_[i] = new_tape[i];
-  }
-  delete[] new_tape;
-  tape_[size_ - 1] = data;
+  ++size_;
 }
 
 /**

@@ -47,7 +47,7 @@ void RAM::run(void) {
   size_t next_instruction;
   while (program_counter_ != HALT_FLAG) {
     next_instruction = program_memory_[program_counter_]->execute(data_memory_);
-    std::cout << program_memory_[program_counter_]->getInstruction() << std::endl;
+    // std::cout << program_memory_[program_counter_]->getInstruction() << std::endl;
     if (next_instruction == HALT_FLAG) {
       program_counter_ = HALT_FLAG;
     } else if (next_instruction == 1) {
@@ -69,7 +69,7 @@ void RAM::write(const std::string& file_name) {
   int* output_tape = output_unit_->getTape();
   size_t size = output_unit_->getSize();
   if (file.is_open()) {
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < size - 1; i++) {
       file << output_tape[i] << std::endl;
     }
   } else {
@@ -83,9 +83,7 @@ void RAM::write(const std::string& file_name) {
  */
 RAM::~RAM(void) {
   for (size_t i = 0; i < program_memory_.size(); i++) {
-    std::cout << "Deleting instruction " << program_memory_[i]->getInstruction() << std::endl;
     delete program_memory_[i];
-    std::cout << "Instruction deleted" << std::endl;
   }
   delete[] data_memory_;
   delete input_unit_;
@@ -130,7 +128,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         if (word.length() == 1) {
           addressing_mode = DIRECT;
           operand = std::stoi(word);
-        } else if (word[0] == '=') {
+        } else if (word[0] == '=' && instruction == "LOAD" && instruction == "STORE") {
           addressing_mode = CONSTANT;
           operand = std::stoi(word.substr(1));
         } else if (word[0] == '*') {
@@ -154,8 +152,14 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
     } else if (instruction == "DIV") {
       program_memory_.emplace_back(new DIV(addressing_mode, operand));
     } else if (instruction == "READ") {
+      if (addressing_mode == DIRECT && operand == 0) {
+        throw std::runtime_error("Invalid operand for READ instruction.");
+      }
       program_memory_.emplace_back(new READ(addressing_mode, operand, input_unit_));
     } else if (instruction == "WRITE") {
+      if (addressing_mode == DIRECT && operand == 0) {
+        throw std::runtime_error("Invalid operand for WRITE instruction.");
+      }
       program_memory_.emplace_back(new WRITE(addressing_mode, operand, output_unit_));
     } else if (instruction == "JUMP") {
       program_memory_.emplace_back(new JUMP(jump_label, &labels_, program_memory_));

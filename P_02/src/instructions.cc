@@ -294,10 +294,8 @@ size_t JUMP::execute(int* data_memory) {
  * 
  */
 JUMP::~JUMP(void) { 
-  std::cout << "JUMP destructor" << std::endl;
   labels_ = nullptr;
   delete labels_;
-  std::cout << "JUMP destroyed" << std::endl;
 }
 
 /**
@@ -331,10 +329,8 @@ size_t JZERO::execute(int* data_memory) {
  * 
  */
 JZERO::~JZERO(void) { 
-  std::cout << "JZERO destructor" << std::endl;
   labels_ = nullptr;
   delete labels_;
-  std::cout << "JZERO destroyed" << std::endl;
 }
 
 /**
@@ -368,9 +364,8 @@ size_t JGTZ::execute(int* data_memory) {
  * 
  */
 JGTZ::~JGTZ(void) { 
-  std::cout << "JGTZ destructor" << std::endl;
+  labels_ = nullptr;
   delete labels_;
-  std::cout << "JGTZ destroyed" << std::endl;
 }
 
 /**
