@@ -35,6 +35,7 @@ RAM::RAM(const std::vector<std::string>& instructions,
          OutputUnit* output_tape) {
   input_unit_ = new InputUnit(FormatTape(input_tape));
   output_unit_ = output_tape;
+  // TODO: Ask the number of registers.
   data_memory_ = new int[16];
   for (size_t i = 0; i < 16; i++) {
     data_memory_[i] = 0;
@@ -55,6 +56,7 @@ void RAM::run(void) {
     } else if (next_instruction == 1) {
       program_counter_++;
     } else {
+      // If the instruction is a jump, the next instruction is the one returned by the execute method.
       program_counter_ = next_instruction;
     }
   }
@@ -80,6 +82,7 @@ RAM::~RAM(void) {
 void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
   for (size_t i = 0; i < instructions.size(); i++) {
     std::string line = instructions[i], word;
+    // If the line is a comment or it is empty, skip it.
     if (line[0] == '#' || line.size() < 4) {
       continue;
     }
@@ -87,6 +90,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
     AddressingMode addressing_mode;
     std::string instruction, label, jump_label;
     std::stringstream ss(line);
+    // Separate the line into words.
     while (ss >> word) {
       // If the word ends with a colon, it is a label.
       if (word.substr(word.size() - 1) == ":") {
@@ -101,7 +105,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         // If the instruction is a jump, the next word is the label.
         if (instruction[0] == 'J') {
           ss >> word;
-          jump_label = word;
+          jump_label = word; // TODO: Check if the label exists.
           ++counter;
         }
         ++counter;
@@ -117,7 +121,13 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
           addressing_mode = INDIRECT;
           operand = std::stoi(word.substr(1));
         } else {
-          throw std::runtime_error("Invalid operand syntax.");
+          std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
+          error += instruction + " " + word + "\n";
+          for (size_t i = 0; i < (instruction + word).size() + 1; i++) {
+            error += "^";
+          }
+          error += "\nInvalid addressing mode.";
+          throw std::runtime_error(error);
         }
       }
     }
