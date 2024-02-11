@@ -98,7 +98,7 @@ RAM::~RAM(void) {
 void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
   for (size_t i = 0; i < instructions.size(); i++) {
     std::string line = instructions[i], word;
-    if (line[0] == '#' || line.empty()) {
+    if (line[0] == '#' || line.size() < 4) {
       continue;
     }
     int counter = 0, operand;
@@ -128,7 +128,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         if (word.length() == 1) {
           addressing_mode = DIRECT;
           operand = std::stoi(word);
-        } else if (word[0] == '=' && instruction == "LOAD" && instruction == "STORE") {
+        } else if (word[0] == '=') {
           addressing_mode = CONSTANT;
           operand = std::stoi(word.substr(1));
         } else if (word[0] == '*') {
@@ -139,9 +139,19 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         }
       }
     }
+    // TODO: LOAD instruction operand syntax error.
     if (instruction == "LOAD") {
       program_memory_.emplace_back(new LOAD(operand));
     } else if (instruction == "STORE") {
+      if (addressing_mode == CONSTANT) {
+        std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
+        error += instruction + " " + word + "\n";
+        for (size_t i = 0; i < (instruction + word).size() + 1; i++) {
+          error += "^";
+        }
+        error += "\nInvalid operand for STORE instruction.";
+        throw std::runtime_error(error);
+      }
       program_memory_.emplace_back(new STORE(operand));
     } else if (instruction == "ADD") {
       program_memory_.emplace_back(new ADD(addressing_mode, operand));
@@ -152,13 +162,25 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
     } else if (instruction == "DIV") {
       program_memory_.emplace_back(new DIV(addressing_mode, operand));
     } else if (instruction == "READ") {
-      if (addressing_mode == DIRECT && operand == 0) {
-        throw std::runtime_error("Invalid operand for READ instruction.");
+      if (addressing_mode == CONSTANT && operand == 0) {
+        std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
+        error += instruction + " " + word + "\n";
+        for (size_t i = 0; i < (instruction + word).size() + 1; i++) {
+          error += "^";
+        }
+        error += "\nInvalid operand for READ instruction.";
+        throw std::runtime_error(error);
       }
       program_memory_.emplace_back(new READ(addressing_mode, operand, input_unit_));
     } else if (instruction == "WRITE") {
-      if (addressing_mode == DIRECT && operand == 0) {
-        throw std::runtime_error("Invalid operand for WRITE instruction.");
+      if (addressing_mode == CONSTANT && operand == 0) {
+        std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
+        error += instruction + " " + word + "\n";
+        for (size_t i = 0; i < (instruction + word).size() + 1; i++) {
+          error += "^";
+        }
+        error += "\nInvalid operand for WRITE instruction.";
+        throw std::runtime_error(error);
       }
       program_memory_.emplace_back(new WRITE(addressing_mode, operand, output_unit_));
     } else if (instruction == "JUMP") {
@@ -170,8 +192,13 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
     } else if (instruction == "HALT") {
       program_memory_.emplace_back(new HALT());
     } else {
-      // TODO: Print the line of the error.
-      throw std::runtime_error("Invalid instruction.");
+        std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
+        error += instruction + " " + word + "\n";
+        for (size_t i = 0; i < (instruction + word).size() + 1; i++) {
+          error += "^";
+        }
+        error += "\nInvalid instruction.";
+        throw std::runtime_error(error);
     }
     if (!label.empty()) {
       labels_[label] = program_memory_.size() - 1;
