@@ -25,8 +25,8 @@
  * @param addressing_mode The addressing mode of the instruction.
  * @param operand The operand of the instruction.
  */
-LOAD::LOAD(const AddressingMode& addresing_mode, const int& operand) {
-  addressing_mode_ = addresing_mode;
+LOAD::LOAD(const AddressingMode& addressing_mode, const int& operand) {
+  addressing_mode_ = addressing_mode;
   operand_ = operand;
 }
 
@@ -54,11 +54,11 @@ size_t LOAD::execute(int* data_memory) {
 /**
  * @brief Construct a new STORE::STORE object
  * 
- * @param addresing_mode The addressing mode of the instruction.
+ * @param addressing_mode The addressing mode of the instruction.
  * @param operand The operand of the instruction. 
  */
-STORE::STORE(const AddressingMode& addresing_mode, const int& operand) {
-  addressing_mode_ = addresing_mode;
+STORE::STORE(const AddressingMode& addressing_mode, const int& operand) {
+  addressing_mode_ = addressing_mode;
   operand_ = operand;
 }
 

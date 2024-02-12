@@ -44,7 +44,7 @@ class Instruction {
  */
 class LOAD : public Instruction {
   public:
-    LOAD(const AddressingMode& addresing_mode, const int& operand);
+    LOAD(const AddressingMode& addressing_mode, const int& operand);
     size_t execute(int* data_memory) override;
     ~LOAD(void) = default;
 };
@@ -54,7 +54,7 @@ class LOAD : public Instruction {
  */
 class STORE : public Instruction {
   public:
-    STORE(const AddressingMode& addresing_mode, const int& operand);
+    STORE(const AddressingMode& addressing_mode, const int& operand);
     size_t execute(int* data_memory) override;
     ~STORE(void) = default;
 };
