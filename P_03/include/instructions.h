@@ -32,11 +32,12 @@ enum AddressingMode {
 class Instruction {
   public:
     Instruction(void) = default;
-    virtual size_t execute(int* data_memory = 0) = 0;
+    virtual size_t execute(std::vector<std::vector<int>>& data_memory) = 0;
     virtual ~Instruction(void) = default;
   protected:
     AddressingMode addressing_mode_;
-    int operand_;
+    int register_;
+    int direction_;
 };
 
 /**
@@ -44,8 +45,8 @@ class Instruction {
  */
 class LOAD : public Instruction {
   public:
-    LOAD(const AddressingMode& addresing_mode, const int& operand);
-    size_t execute(int* data_memory) override;
+    LOAD(const AddressingMode& addresing_mode, const int& register_operand, const int& direction_operand = 0);
+    size_t execute(std::vector<std::vector<int>>& data_memory) override;
     ~LOAD(void) = default;
 };
 
@@ -54,8 +55,8 @@ class LOAD : public Instruction {
  */
 class STORE : public Instruction {
   public:
-    STORE(const AddressingMode& addresing_mode, const int& operand);
-    size_t execute(int* data_memory) override;
+    STORE(const AddressingMode& addresing_mode, const int& register_operand, const int& direction_operand = 0);
+    size_t execute(std::vector<std::vector<int>>& data_memory) override;
     ~STORE(void) = default;
 };
 
@@ -64,8 +65,8 @@ class STORE : public Instruction {
  */
 class ADD : public Instruction {
   public:
-    ADD(const AddressingMode& addressing_mode, const int& operand);
-    size_t execute(int* data_memory) override;
+    ADD(const AddressingMode& addresing_mode, const int& register_operand, const int& direction_operand = 0);
+    size_t execute(std::vector<std::vector<int>>& data_memory) override;
     ~ADD(void) = default;
 };
 
@@ -74,8 +75,8 @@ class ADD : public Instruction {
  */
 class SUB : public Instruction {
   public:
-    SUB(const AddressingMode& addressing_mode, const int& operand);
-    size_t execute(int* data_memory) override;
+    SUB(const AddressingMode& addresing_mode, const int& register_operand, const int& direction_operand = 0);
+    size_t execute(std::vector<std::vector<int>>& data_memory) override;
     ~SUB(void) = default;
 };
 
@@ -84,8 +85,8 @@ class SUB : public Instruction {
  */
 class MUL : public Instruction {
   public:
-    MUL(const AddressingMode& addressing_mode, const int& operand);
-    size_t execute(int* data_memory) override;
+    MUL(const AddressingMode& addresing_mode, const int& register_operand, const int& direction_operand = 0);
+    size_t execute(std::vector<std::vector<int>>& data_memory) override;
     ~MUL(void) = default;
 };
 
@@ -94,8 +95,8 @@ class MUL : public Instruction {
  */
 class DIV : public Instruction {
   public:
-    DIV(const AddressingMode& addressing_mode, const int& operand);
-    size_t execute(int* data_memory) override;
+    DIV(const AddressingMode& addresing_mode, const int& register_operand, const int& direction_operand = 0);
+    size_t execute(std::vector<std::vector<int>>& data_memory) override;
     ~DIV(void) = default;
 };
 
@@ -106,8 +107,9 @@ class InputUnit;
  */
 class READ : public Instruction {
   public:
-    READ(const AddressingMode& addressing_mode, const int& operand, InputUnit* input_unit);
-    size_t execute(int* data_memory) override;
+    READ(const AddressingMode& addresing_mode, const int& register_operand, 
+         const int& direction_operand = 0, InputUnit* input_unit);
+    size_t execute(std::vector<std::vector<int>>& data_memory) override;
     ~READ(void) = default;
   private:
     InputUnit* input_unit_;
@@ -120,8 +122,9 @@ class OutputUnit;
  */
 class WRITE : public Instruction {
   public:
-    WRITE(const AddressingMode& addressing_mode, const int& operand, OutputUnit* output_unit);
-    size_t execute(int* data_memory) override;
+    WRITE(const AddressingMode& addresing_mode, const int& register_operand, 
+          const int& direction_operand = 0, OutputUnit* output_unit);
+    size_t execute(std::vector<std::vector<int>>& data_memory) override;
     ~WRITE(void) = default;
   private:
     OutputUnit* output_unit_;
@@ -134,7 +137,7 @@ class JUMP : public Instruction {
   public:
     JUMP(const std::string& label, std::unordered_map<std::string, size_t>* labels, 
          const std::vector<Instruction*>& program_memory);
-    size_t execute(int* data_memory) override;
+    size_t execute(std::vector<std::vector<int>>& data_memory) override;
     ~JUMP(void);
   protected:
     std::string label_;
@@ -149,7 +152,7 @@ class JZERO : public JUMP {
   public:
     JZERO(const std::string& label, std::unordered_map<std::string, size_t>* labels, 
           const std::vector<Instruction*>& program_memory);
-    size_t execute(int* data_memory) override;
+    size_t execute(std::vector<std::vector<int>>& data_memory) override;
     ~JZERO(void);
 };
 
@@ -160,7 +163,7 @@ class JGTZ : public JUMP {
   public:
     JGTZ(const std::string& label, std::unordered_map<std::string, size_t>* labels, 
          const std::vector<Instruction*>& program_memory);
-    size_t execute(int* data_memory) override;
+    size_t execute(std::vector<std::vector<int>>& data_memory) override;
     ~JGTZ(void);
 };
 
@@ -170,6 +173,6 @@ class JGTZ : public JUMP {
 class HALT : public Instruction {
   public:
     HALT(void) = default;
-    size_t execute(int* data_memory) override;
+    size_t execute(std::vector<std::vector<int>>& data_memory) override;
     ~HALT(void) = default;
 };
