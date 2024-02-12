@@ -23,7 +23,13 @@
  * @brief Prints the help menu.
  */
 void PrintHelp(void) {
-  std::cout << "Usage: ./P_02 <file_name.ram> <input_tape> <output_tape>" << std::endl;
+  std::cout << "Usage: ./P_02 <file_name.ram> <input_tape> <output_tape> <debug_mode>" << std::endl;
+  std::cout << "  file_name.ram: File with the instructions of the RAM." << std::endl;
+  std::cout << "  input_tape: File with the input tape." << std::endl;
+  std::cout << "  output_tape: File where the output tape will be written." << std::endl;
+  std::cout << "  debug_mode: 0 if the program should run in normal mode, 1 if it should print" 
+               " the number of instructions executed, 2 if it should print the instruction executed," 
+               " data memory, input tape, output tape and number of instructions executed, step by step." << std::endl;
 }
 
 /**

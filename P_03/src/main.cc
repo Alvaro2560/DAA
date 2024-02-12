@@ -30,7 +30,7 @@
 int main(int argc, char** argv) {
   OutputUnit* output_unit = new OutputUnit(argv[3]);
   try {
-    if (argc != 4) {
+    if (argc != 5) {
       PrintHelp();
       return 1;
     }
