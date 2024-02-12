@@ -35,9 +35,8 @@ RAM::RAM(const std::vector<std::string>& instructions,
          OutputUnit* output_tape) {
   input_unit_ = new InputUnit(FormatTape(input_tape));
   output_unit_ = output_tape;
-  // TODO: Ask the number of registers.
-  data_memory_ = new int[16];
-  for (size_t i = 0; i < 16; i++) {
+  data_memory_ = new int[32];
+  for (size_t i = 0; i < 32; i++) {
     data_memory_[i] = 0;
   }
   FormatInstructions(instructions);
@@ -80,6 +79,7 @@ RAM::~RAM(void) {
  * @param instructions Content of the file as a vector of strings.
  */
 void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
+  std::unordered_map<std::string, std::pair<size_t, std::string>> labels_cache;
   for (size_t i = 0; i < instructions.size(); i++) {
     std::string line = instructions[i], word;
     // If the line is a comment or it is empty, skip it.
@@ -105,7 +105,9 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         // If the instruction is a jump, the next word is the label.
         if (instruction[0] == 'J') {
           ss >> word;
-          jump_label = word; // TODO: Check if the label exists.
+          jump_label = word;
+          // If the label is not in the cache, add it.
+          labels_cache[jump_label] = std::make_pair(i + 1, instruction + " " + word);
           ++counter;
         }
         ++counter;
@@ -194,6 +196,19 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
     if (!label.empty()) {
       labels_[label] = program_memory_.size() - 1;
       label.clear();
+    }
+  }
+  // Check if there are any undefined labels.
+  for (auto it = labels_cache.begin(); it != labels_cache.end(); it++) {
+    // If the label is not in the labels map, it is undefined.
+    if (labels_.find(it->first) == labels_.end()) {
+      std::string error = "Error at line " + std::to_string(it->second.first) + ":\n\n";
+      error += it->second.second + "\n";
+      for (size_t i = 0; i < it->second.second.size(); i++) {
+        error += "^";
+      }
+      error += "\nUndefined label.";
+      throw std::runtime_error(error);
     }
   }
 }

@@ -1,5 +1,5 @@
 CC=g++
-CXXFLAGS=-g -std=c++17 -Wall
+CXXFLAGS=-g -std=c++17
 
 OBJS = ../src/main.o ../src/functions.o ../src/ram.o ../src/units.o ../src/instructions.o
 
