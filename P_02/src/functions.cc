@@ -24,6 +24,9 @@
  */
 void PrintHelp(void) {
   std::cout << "Usage: ./P_02 <file_name.ram> <input_tape> <output_tape>" << std::endl;
+  std::cout << "  file_name.ram: File with the instructions of the RAM." << std::endl;
+  std::cout << "  input_tape: File with the input tape." << std::endl;
+  std::cout << "  output_tape: File where the output tape will be written." << std::endl;
 }
 
 /**
