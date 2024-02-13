@@ -17,6 +17,7 @@
 #include "../include/ram.h"
 #include "../include/units.h"
 #include "../include/instructions.h"
+#include "../include/debugger.h"
 
 #include <sstream>
 #include <bits/stdc++.h>
@@ -35,10 +36,12 @@ RAM::RAM(const std::vector<std::string>& instructions,
          OutputUnit* output_tape) {
   input_unit_ = new InputUnit(FormatTape(input_tape));
   output_unit_ = output_tape;
-  data_memory_ = new int[32];
+  data_memory_.resize(32);
   for (size_t i = 0; i < 32; i++) {
-    data_memory_[i] = 0;
+    data_memory_[i] = std::vector<int>();
   }
+  data_memory_[0].resize(1);
+  data_memory_[0][0] = 0;
   FormatInstructions(instructions);
   program_counter_ = 0;
 }
@@ -46,7 +49,7 @@ RAM::RAM(const std::vector<std::string>& instructions,
 /**
  * @brief Run the RAM.
  */
-void RAM::run(void) {
+void RAM::run(const int& debug_flag) {
   size_t next_instruction;
   while (program_counter_ != HALT_FLAG && program_counter_ < program_memory_.size()) {
     next_instruction = program_memory_[program_counter_]->execute(data_memory_);
@@ -58,6 +61,14 @@ void RAM::run(void) {
       // If the instruction is a jump, the next instruction is the one returned by the execute method.
       program_counter_ = next_instruction;
     }
+    if (debug_flag != 0) {
+      if (debug_flag == 2) {
+        Debugger::print_info(*this);
+        std::cout << "Press enter to continue...";
+        std::cin.get();
+      }
+      Debugger::increment();
+    }
   }
 }
 
@@ -68,7 +79,6 @@ RAM::~RAM(void) {
   for (size_t i = 0; i < program_memory_.size(); i++) {
     delete program_memory_[i];
   }
-  delete[] data_memory_;
   delete input_unit_;
   delete output_unit_;
 }

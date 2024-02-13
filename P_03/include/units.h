@@ -26,10 +26,14 @@ class InputUnit {
   public:
     InputUnit(const std::vector<int>& tape);
     int process(void);
+    int* getTape(void);
+    int* getHead(void);
+    size_t getSize(void);
     ~InputUnit(void);
   private:
     int* tape_;
     int* head_;
+    size_t size_;
 };
 
 /**
@@ -39,6 +43,7 @@ class OutputUnit {
   public:
     OutputUnit(const std::string& file_name);
     void process(const int& data);
+    int* getTape(void);
     size_t getSize(void);
     void write(void);
     ~OutputUnit(void);

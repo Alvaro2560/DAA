@@ -34,23 +34,26 @@ void Debugger::increment(void) {
  */
 void Debugger::print_info(const RAM& ram) {
   std::cout << "Program counter: " << ram.program_counter_ << std::endl;
-  std::cout << "Instruction counter: " << instruction_counter_ << std::endl;
   std::cout << "Data memory: " << std::endl;
   for (size_t i = 0; i < ram.data_memory_.size(); i++) {
-    std::cout << i << ": ";
+    std::cout << "R" << i << ": ";
     for (size_t j = 0; j < ram.data_memory_[i].size(); j++) {
       std::cout << ram.data_memory_[i][j] << " ";
     }
     std::cout << std::endl;
   }
   std::cout << "Input unit: " << std::endl;
-  for (size_t i = 0; i < ram.input_unit_->tape_.size(); i++) {
-    std::cout << ram.input_unit_->tape_[i] << " ";
+  int* tape = ram.input_unit_->getTape();
+  size_t size = ram.input_unit_->getSize();
+  for (size_t i = 0; i < size; i++) {
+    std::cout << tape[i] << " ";
   }
   std::cout << std::endl;
   std::cout << "Output unit: " << std::endl;
-  for (size_t i = 0; i < ram.output_unit_->tape_.size(); i++) {
-    std::cout << ram.output_unit_->tape_[i] << " ";
+  tape = ram.output_unit_->getTape();
+  size = ram.output_unit_->getSize();
+  for (size_t i = 0; i < size; i++) {
+    std::cout << tape[i] << " ";
   }
   std::cout << std::endl;
 }

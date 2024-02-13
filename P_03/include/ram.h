@@ -28,11 +28,12 @@ class Instruction;
  * @brief Class that represents the RAM.
  */
 class RAM {
+  friend class Debugger;
   public:
     RAM(const std::vector<std::string>& instructions, 
         const std::vector<std::string>& input_tape, 
         OutputUnit* output_unit);
-    void run(void);
+    void run(const int& debug_flag);
     ~RAM(void);
   private:
     void FormatInstructions(const std::vector<std::string>& instructions);
@@ -41,7 +42,7 @@ class RAM {
     size_t program_counter_;
     std::vector<Instruction*> program_memory_;
     std::unordered_map<std::string, size_t> labels_;
-    int* data_memory_;
+    std::vector<std::vector<int>> data_memory_;
     InputUnit* input_unit_;
     OutputUnit* output_unit_;
 };
