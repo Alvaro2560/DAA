@@ -15,7 +15,8 @@
  */
 
 #include "../include/ram.h"
-#include "../include/units.h"
+#include "../include/input-unit.h"
+#include "../include/output-unit.h"
 #include "../include/instructions.h"
 #include "../include/debugger.h"
 
@@ -32,10 +33,9 @@ const size_t HALT_FLAG = -1;
  * @param output_tape Output data as a pointer to an OutputUnit object.
  */
 RAM::RAM(const std::vector<std::string>& instructions, 
-         const std::vector<std::string>& input_tape, 
-         OutputUnit* output_tape) {
+         const std::vector<std::string>& input_tape) {
   input_unit_ = new InputUnit(FormatTape(input_tape));
-  output_unit_ = output_tape;
+  output_unit_ = new OutputUnit();
   data_memory_.resize(32);
   for (size_t i = 0; i < 32; i++) {
     data_memory_[i] = std::vector<int>();
@@ -52,6 +52,7 @@ RAM::RAM(const std::vector<std::string>& instructions,
 void RAM::run(const int& debug_flag) {
   size_t next_instruction;
   while (program_counter_ != HALT_FLAG && program_counter_ < program_memory_.size()) {
+    std::cout << "soto\n";
     next_instruction = program_memory_[program_counter_]->execute(data_memory_);
     if (next_instruction == HALT_FLAG) {
       program_counter_ = HALT_FLAG;
@@ -70,6 +71,15 @@ void RAM::run(const int& debug_flag) {
       Debugger::increment();
     }
   }
+}
+
+/**
+ * @brief Get the Output Unit.
+ * 
+ * @return OutputUnit* Pointer to the OutputUnit object.
+ */
+OutputUnit* RAM::getOutputUnit(void) const {
+  return output_unit_;
 }
 
 /**
@@ -155,15 +165,15 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         error += "\nInvalid operand for STORE instruction.";
         throw std::runtime_error(error);
       }
-      program_memory_.emplace_back(new STORE(addressing_mode, operand));
+      program_memory_.emplace_back(new STORE(addressing_mode, operand, 0));
     } else if (instruction == "ADD") {
-      program_memory_.emplace_back(new ADD(addressing_mode, operand));
+      program_memory_.emplace_back(new ADD(addressing_mode, operand, 0));
     } else if (instruction == "SUB") {
-      program_memory_.emplace_back(new SUB(addressing_mode, operand));
+      program_memory_.emplace_back(new SUB(addressing_mode, operand, 0));
     } else if (instruction == "MUL") {
-      program_memory_.emplace_back(new MUL(addressing_mode, operand));
+      program_memory_.emplace_back(new MUL(addressing_mode, operand, 0));
     } else if (instruction == "DIV") {
-      program_memory_.emplace_back(new DIV(addressing_mode, operand));
+      program_memory_.emplace_back(new DIV(addressing_mode, operand, 0));
     } else if (instruction == "READ") {
       if ((addressing_mode == DIRECT && operand == 0) || addressing_mode == CONSTANT) {
         std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
@@ -174,7 +184,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         error += "\nInvalid operand for READ instruction.";
         throw std::runtime_error(error);
       }
-      program_memory_.emplace_back(new READ(addressing_mode, operand, input_unit_));
+      program_memory_.emplace_back(new READ(addressing_mode, operand, input_unit_, 0));
     } else if (instruction == "WRITE") {
       if (addressing_mode == DIRECT && operand == 0) {
         std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
@@ -185,7 +195,7 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         error += "\nInvalid operand for WRITE instruction.";
         throw std::runtime_error(error);
       }
-      program_memory_.emplace_back(new WRITE(addressing_mode, operand, output_unit_));
+      program_memory_.emplace_back(new WRITE(addressing_mode, operand, output_unit_, 0));
     } else if (instruction == "JUMP") {
       program_memory_.emplace_back(new JUMP(jump_label, &labels_, program_memory_));
     } else if (instruction == "JZERO") {

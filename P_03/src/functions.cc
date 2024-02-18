@@ -18,12 +18,13 @@
 
 #include "../include/functions.h"
 #include "../include/instructions.h"
+#include "../include/output-unit.h"
 
 /**
  * @brief Prints the help menu.
  */
 void PrintHelp(void) {
-  std::cout << "Usage: ./P_02 <file_name.ram> <input_tape> <output_tape> <debug_mode>" << std::endl;
+  std::cout << "Usage: ./P_03 <file_name.ram> <input_tape> <output_tape> <debug_mode>" << std::endl;
   std::cout << "  file_name.ram: File with the instructions of the RAM." << std::endl;
   std::cout << "  input_tape: File with the input tape." << std::endl;
   std::cout << "  output_tape: File where the output tape will be written." << std::endl;
@@ -51,4 +52,25 @@ std::vector<std::string> ReadFile(const std::string& file_name) {
     throw std::runtime_error("Unable to open file.");
   }
   return file_content;
+}
+
+/**
+ * @brief Writes the content of a vector of integers to a file.
+ * 
+ * @param output_tape Vector of integers to write to the file.
+ * @param size Size of the vector.
+ * @param file_name Name of the file to write.
+ */
+void WriteUnit(const OutputUnit* output_unit, const std::string& file_name) {
+  std::ofstream file(file_name);
+  if (file.is_open()) {
+    int* output_tape = output_unit->getTape();
+    size_t size = output_unit->getSize();
+    for (size_t i = 0; i < size - 1; i++) {
+      file << output_tape[i] << std::endl;
+    }
+    file.close();
+  } else {
+    throw std::runtime_error("Unable to open file.");
+  }
 }

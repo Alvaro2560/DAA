@@ -16,7 +16,8 @@
 
 #include "../include/debugger.h"
 #include "../include/ram.h"
-#include "../include/units.h"
+#include "../include/input-unit.h"
+#include "../include/output-unit.h"
 
 int Debugger::instruction_counter_ = 0;
 

@@ -16,7 +16,6 @@
 
 #include "../include/functions.h"
 #include "../include/ram.h"
-#include "../include/units.h"
 
 #include <iostream>
 
@@ -28,7 +27,6 @@
  * @return int 0 if the program ends correctly, 1 otherwise.
  */
 int main(int argc, char** argv) {
-  OutputUnit* output_unit = new OutputUnit(argv[3]);
   try {
     if (argc != 5) {
       PrintHelp();
@@ -36,13 +34,12 @@ int main(int argc, char** argv) {
     }
     std::vector<std::string> instructions = ReadFile(argv[1]),
                              input_tape = ReadFile(argv[2]);
-    RAM ram(instructions, input_tape, output_unit);
-    ram.run();
-    output_unit->write();
+    RAM ram(instructions, input_tape);
+    ram.run(std::stoi(argv[4]));
+    WriteUnit(ram.getOutputUnit(), argv[3]);
     return 0;
   } catch (const std::exception& e) {
     std::cerr << e.what() << '\n';
-    output_unit->write();
     return 1;
   }
 }

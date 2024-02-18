@@ -2,9 +2,9 @@
 # que encuentre un 0 y copia los valores leídos a la cinta 
 # de salida (el valor 0 no se copia)
 
-lee:	read R1[0]
-			load R1[0]
+lee:	read 1
+			load 1
 			jzero fin
-			write R1[0]
+			write 1
 			jump lee
 fin:	halt

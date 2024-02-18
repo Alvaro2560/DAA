@@ -15,7 +15,8 @@
  */
 
 #include "../include/instructions.h"
-#include "../include/units.h"
+#include "../include/input-unit.h"
+#include "../include/output-unit.h"
 
 #include <iostream>
 
@@ -26,7 +27,7 @@
  * @param register_operand The register accesed on the instruction.
  * @param direction_operand The direction operand of the instruction.
  */
-LOAD::LOAD(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand = 0) {
+LOAD::LOAD(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand) {
   addressing_mode_ = addressing_mode;
   register_ = register_operand;
   direction_ = direction_operand;
@@ -47,7 +48,6 @@ size_t LOAD::execute(std::vector<std::vector<int>>& data_memory) {
       data_memory[0][0] = data_memory[register_][direction_];
       break;
     case INDIRECT:
-      // TODO: Ask if, when indirect addressing, is the first position of the register the direction.
       data_memory[0][0] = data_memory[data_memory[register_][direction_]][0];
       break;
   }
@@ -61,7 +61,7 @@ size_t LOAD::execute(std::vector<std::vector<int>>& data_memory) {
  * @param register_operand The register accesed on the instruction.
  * @param direction_operand The direction operand of the instruction. 
  */
-STORE::STORE(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand = 0) {
+STORE::STORE(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand) {
   addressing_mode_ = addressing_mode;
   register_ = register_operand;
   direction_ = direction_operand;
@@ -92,7 +92,7 @@ size_t STORE::execute(std::vector<std::vector<int>>& data_memory) {
  * @param register_operand The register accesed on the instruction.
  * @param direction_operand The direction operand of the instruction. 
  */
-ADD::ADD(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand = 0) {
+ADD::ADD(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand) {
   addressing_mode_ = addressing_mode;
   register_ = register_operand;
   direction_ = direction_operand;
@@ -126,7 +126,7 @@ size_t ADD::execute(std::vector<std::vector<int>>& data_memory) {
  * @param register_operand The register accesed on the instruction.
  * @param direction_operand The direction operand of the instruction. 
  */
-SUB::SUB(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand = 0) {
+SUB::SUB(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand) {
   addressing_mode_ = addressing_mode;
   register_ = register_operand;
   direction_ = direction_operand;
@@ -160,7 +160,7 @@ size_t SUB::execute(std::vector<std::vector<int>>& data_memory) {
  * @param register_operand The register accesed on the instruction.
  * @param direction_operand The direction operand of the instruction. 
  */
-MUL::MUL(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand = 0) {
+MUL::MUL(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand) {
   addressing_mode_ = addressing_mode;
   register_ = register_operand;
   direction_ = direction_operand;
@@ -194,7 +194,7 @@ size_t MUL::execute(std::vector<std::vector<int>>& data_memory) {
  * @param register_operand The register accesed on the instruction.
  * @param direction_operand The direction operand of the instruction. 
  */
-DIV::DIV(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand = 0) {
+DIV::DIV(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand) {
   addressing_mode_ = addressing_mode;
   register_ = register_operand;
   direction_ = direction_operand;
@@ -229,11 +229,12 @@ size_t DIV::execute(std::vector<std::vector<int>>& data_memory) {
  * @param direction_operand The direction operand of the instruction. 
  * @param input_unit The input unit.
  */
-READ::READ(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand = 0, InputUnit* input_unit) {
+READ::READ(const AddressingMode& addressing_mode, const int& register_operand, 
+           InputUnit* input_unit, const int& direction_operand) {
   addressing_mode_ = addressing_mode;
   register_ = register_operand;
-  direction_ = direction_operand;
   input_unit_ = input_unit;
+  direction_ = direction_operand;
 }
 
 /**
@@ -245,6 +246,7 @@ READ::READ(const AddressingMode& addressing_mode, const int& register_operand, c
 size_t READ::execute(std::vector<std::vector<int>>& data_memory) {
   switch (addressing_mode_) {
     case DIRECT:
+      data_memory.resize(register_ + 1);
       data_memory[register_][direction_] = input_unit_->process();
       break;
     case INDIRECT:
@@ -263,11 +265,11 @@ size_t READ::execute(std::vector<std::vector<int>>& data_memory) {
  * @param output_unit The output unit.
  */
 WRITE::WRITE(const AddressingMode& addressing_mode, const int& register_operand, 
-             const int& direction_operand = 0, OutputUnit* output_unit) {
+             OutputUnit* output_unit, const int& direction_operand) {
   addressing_mode_ = addressing_mode;
   register_ = register_operand;
-  direction_ = direction_operand;
   output_unit_ = output_unit;
+  direction_ = direction_operand;
 }
 
 /**

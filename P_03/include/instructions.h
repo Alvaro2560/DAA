@@ -108,7 +108,7 @@ class InputUnit;
 class READ : public Instruction {
   public:
     READ(const AddressingMode& addresing_mode, const int& register_operand, 
-         const int& direction_operand = 0, InputUnit* input_unit);
+         InputUnit* input_unit, const int& direction_operand = 0);
     size_t execute(std::vector<std::vector<int>>& data_memory) override;
     ~READ(void) = default;
   private:
@@ -123,7 +123,7 @@ class OutputUnit;
 class WRITE : public Instruction {
   public:
     WRITE(const AddressingMode& addresing_mode, const int& register_operand, 
-          const int& direction_operand = 0, OutputUnit* output_unit);
+          OutputUnit* output_unit, const int& direction_operand = 0);
     size_t execute(std::vector<std::vector<int>>& data_memory) override;
     ~WRITE(void) = default;
   private:
