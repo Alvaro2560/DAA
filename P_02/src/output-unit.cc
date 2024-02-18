@@ -6,7 +6,7 @@
  * 
  * @file units.cc
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
- * @brief Definitions of the InputUnit and OutputUnit classes.
+ * @brief Definition of OutputUnit class.
  * @version 1.0
  * @since Feb 01 2024
  * 
@@ -14,41 +14,9 @@
  * 
  */
 
-#include "../include/units.h"
+#include "../include/output-unit.h"
 
-#include <vector>
-#include <iostream>
 #include <fstream>
-
-/**
- * @brief Construct a new InputUnit::InputUnit object
- * 
- * @param tape The tape that the input unit will process.
- */
-InputUnit::InputUnit(const std::vector<int>& tape) {
-  tape_ = new int[tape.size()];
-  for (size_t i = 0; i < tape.size(); i++) {
-    tape_[i] = tape[i];
-  }
-  head_ = &tape_[0];
-}
-
-/**
- * @brief Process the input unit.
- * 
- * @return int The value of the tape at the current position.
- */
-int InputUnit::process(void) {
-  return *head_++;
-}
-
-/**
- * @brief Destroy the InputUnit::InputUnit object
- * 
- */
-InputUnit::~InputUnit(void) {
-  delete[] tape_;
-}
 
 /**
  * @brief Construct a new OutputUnit::OutputUnit object

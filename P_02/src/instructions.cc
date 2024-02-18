@@ -15,7 +15,8 @@
  */
 
 #include "../include/instructions.h"
-#include "../include/units.h"
+#include "../include/input-unit.h"
+#include "../include/output-unit.h"
 
 #include <iostream>
 

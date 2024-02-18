@@ -15,7 +15,8 @@
  */
 
 #include "../include/ram.h"
-#include "../include/units.h"
+#include "../include/input-unit.h"
+#include "../include/output-unit.h"
 #include "../include/instructions.h"
 
 #include <sstream>
