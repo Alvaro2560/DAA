@@ -32,10 +32,9 @@ const size_t HALT_FLAG = -1;
  * @param output_tape Output data as a pointer to an OutputUnit object.
  */
 RAM::RAM(const std::vector<std::string>& instructions, 
-         const std::vector<std::string>& input_tape, 
-         OutputUnit* output_tape) {
+         const std::vector<std::string>& input_tape) {
   input_unit_ = new InputUnit(FormatTape(input_tape));
-  output_unit_ = output_tape;
+  output_unit_ = new OutputUnit();
   data_memory_ = new int[32];
   for (size_t i = 0; i < 32; i++) {
     data_memory_[i] = 0;
@@ -60,6 +59,15 @@ void RAM::run(void) {
       program_counter_ = next_instruction;
     }
   }
+}
+
+/**
+ * @brief Get the Output Unit.
+ * 
+ * @return OutputUnit* Pointer to the OutputUnit object.
+ */
+OutputUnit* RAM::getOutputUnit(void) const {
+  return output_unit_;
 }
 
 /**

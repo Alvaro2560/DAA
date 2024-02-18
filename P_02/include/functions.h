@@ -22,7 +22,10 @@
 #include <unordered_map>
 
 class Instruction;
+class OutputUnit;
 
 void PrintHelp(void);
 
 std::vector<std::string> ReadFile(const std::string& file_name);
+
+void WriteUnit(const OutputUnit* output_unit, const std::string& file_name);

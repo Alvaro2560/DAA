@@ -30,9 +30,9 @@ class Instruction;
 class RAM {
   public:
     RAM(const std::vector<std::string>& instructions, 
-        const std::vector<std::string>& input_tape, 
-        OutputUnit* output_unit);
+        const std::vector<std::string>& input_tape);
     void run(void);
+    OutputUnit* getOutputUnit(void) const;
     ~RAM(void);
   private:
     void FormatInstructions(const std::vector<std::string>& instructions);

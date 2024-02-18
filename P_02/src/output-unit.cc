@@ -16,16 +16,13 @@
 
 #include "../include/output-unit.h"
 
-#include <fstream>
-
 /**
  * @brief Construct a new OutputUnit::OutputUnit object
  * 
  */
-OutputUnit::OutputUnit(const std::string& file_name) {
+OutputUnit::OutputUnit(void) {
   tape_ = new int[1];
   size_ = 1;
-  file_name_ = file_name;
 }
 
 /**
@@ -49,28 +46,21 @@ void OutputUnit::process(const int& data) {
 }
 
 /**
+ * @brief Get the tape.
+ * 
+ * @return int* The tape.
+ */
+int* OutputUnit::getTape(void) const {
+  return tape_;
+}
+
+/**
  * @brief Get the size of the tape.
  * 
  * @return size_t The size of the tape.
  */
-size_t OutputUnit::getSize(void) {
+size_t OutputUnit::getSize(void) const {
   return size_;
-}
-
-/**
- * @brief Write the tape to a file.
- * 
- */
-void OutputUnit::write(void) {
-  std::ofstream file(file_name_);
-  if (file.is_open()) {
-    for (size_t i = 0; i < size_ - 1; i++) {
-      file << tape_[i] << std::endl;
-    }
-  } else {
-    throw std::runtime_error("Unable to open output file.");
-  }
-  file.close();
 }
 
 /**

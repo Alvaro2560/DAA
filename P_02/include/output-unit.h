@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <vector>
 #include <string>
 
 /**
@@ -24,13 +23,12 @@
  */
 class OutputUnit {
   public:
-    OutputUnit(const std::string& file_name);
+    OutputUnit(void);
     void process(const int& data);
-    size_t getSize(void);
-    void write(void);
+    int* getTape(void) const;
+    size_t getSize(void) const;
     ~OutputUnit(void);
   private:
     int* tape_;
     size_t size_;
-    std::string file_name_;
 };
