@@ -401,12 +401,19 @@ std::string DIV::toString(void) const {
  * @param direction_operand The direction operand of the instruction. 
  * @param input_unit The input unit.
  */
-READ::READ(const AddressingMode& addressing_mode, const int& register_operand, 
-           InputUnit* input_unit, const int& direction_operand) {
+READ::READ(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand) {
   addressing_mode_ = addressing_mode;
   register_ = register_operand;
-  input_unit_ = input_unit;
   direction_ = direction_operand;
+}
+
+/**
+ * @brief Set the input unit.
+ * 
+ * @param input_unit The input unit.
+ */
+void READ::setUnit(InputUnit* input_unit) {
+  input_unit_ = input_unit;
 }
 
 /**
@@ -462,12 +469,19 @@ std::string READ::toString(void) const {
  * @param direction_operand The direction operand of the instruction. 
  * @param output_unit The output unit.
  */
-WRITE::WRITE(const AddressingMode& addressing_mode, const int& register_operand, 
-             OutputUnit* output_unit, const int& direction_operand) {
+WRITE::WRITE(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand) {
   addressing_mode_ = addressing_mode;
   register_ = register_operand;
-  output_unit_ = output_unit;
   direction_ = direction_operand;
+}
+
+/**
+ * @brief Set the output unit.
+ * 
+ * @param output_unit The output unit.
+ */
+void WRITE::setUnit(OutputUnit* output_unit) {
+  output_unit_ = output_unit;
 }
 
 /**

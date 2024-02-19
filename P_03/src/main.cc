@@ -35,7 +35,8 @@ int main(int argc, char** argv) {
     }
     std::vector<std::string> instructions = ReadFile(argv[1]),
                              input_tape = ReadFile(argv[2]);
-    RAM ram(instructions, input_tape);
+    std::unordered_map<std::string, size_t> labels;
+    RAM ram(FormatInstructions(instructions, labels), FormatTape(input_tape), labels);
     ram.run(std::stoi(argv[4]));
     WriteUnit(ram.getOutputUnit(), argv[3]);
     Debugger::printInstructions();
