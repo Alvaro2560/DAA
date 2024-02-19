@@ -47,6 +47,9 @@ void Debugger::printInfo(const RAM& ram) {
   std::cout << "Program counter: " << ram.program_memory_[ram.program_counter_]->toString() << std::endl;
   std::cout << "\nData memory: " << std::endl;
   for (size_t i = 0; i < ram.data_memory_.size(); i++) {
+    if (ram.data_memory_[i].size() == 0) {
+      continue;
+    }
     std::cout << "R" << i << ": ";
     for (size_t j = 0; j < ram.data_memory_[i].size(); j++) {
       std::cout << ram.data_memory_[i][j] << " ";

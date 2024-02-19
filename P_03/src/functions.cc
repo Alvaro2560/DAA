@@ -94,7 +94,7 @@ std::vector<Instruction*> FormatInstructions(const std::vector<std::string>& ins
     if (line[0] == '#' || line.size() < 4) {
       continue;
     }
-    int counter = 0, operand;
+    int counter = 0, operand, position;
     AddressingMode addressing_mode;
     std::string instruction, label, jump_label;
     std::stringstream ss(line);
@@ -120,10 +120,10 @@ std::vector<Instruction*> FormatInstructions(const std::vector<std::string>& ins
         }
         ++counter;
       } else if (counter == 1) {
-        CheckAddressingMode(word, addressing_mode, operand, i, instruction);
+        CheckAddressingMode(word, addressing_mode, operand, position, i, instruction);
       }
     }
-    CreateInstruction(program_memory, instruction, addressing_mode, operand, label, i, word, jump_label, labels);
+    CreateInstruction(program_memory, instruction, addressing_mode, operand, position, label, i, word, jump_label, labels);
     if (!label.empty()) {
       labels[label] = program_memory.size() - 1;
       label.clear();
@@ -147,13 +147,14 @@ std::vector<Instruction*> FormatInstructions(const std::vector<std::string>& ins
 void CreateInstruction(std::vector<Instruction*>& program_memory,
                        const std::string& instruction, 
                        const AddressingMode& addressing_mode, 
-                       const int& operand, 
+                       const int& operand,
+                       const int& position,
                        const std::string& label, const int& line,
                        const std::string& line_operand,
                        const std::string& jump_label,
                        std::unordered_map<std::string, size_t>& labels) {
   if (instruction == "LOAD") {
-      program_memory.emplace_back(new LOAD(addressing_mode, operand));
+      program_memory.emplace_back(new LOAD(addressing_mode, operand, position));
   } else if (instruction == "STORE") {
     if (addressing_mode == CONSTANT) {
       std::string error = "Error at line " + std::to_string(line + 1) + ":\n\n";
@@ -164,15 +165,15 @@ void CreateInstruction(std::vector<Instruction*>& program_memory,
       error += "\nInvalid operand for STORE instruction.";
       throw std::runtime_error(error);
     }
-    program_memory.emplace_back(new STORE(addressing_mode, operand, 0));
+    program_memory.emplace_back(new STORE(addressing_mode, operand, position));
   } else if (instruction == "ADD") {
-    program_memory.emplace_back(new ADD(addressing_mode, operand, 0));
+    program_memory.emplace_back(new ADD(addressing_mode, operand, position));
   } else if (instruction == "SUB") {
-    program_memory.emplace_back(new SUB(addressing_mode, operand, 0));
+    program_memory.emplace_back(new SUB(addressing_mode, operand, position));
   } else if (instruction == "MUL") {
-    program_memory.emplace_back(new MUL(addressing_mode, operand, 0));
+    program_memory.emplace_back(new MUL(addressing_mode, operand, position));
   } else if (instruction == "DIV") {
-    program_memory.emplace_back(new DIV(addressing_mode, operand, 0));
+    program_memory.emplace_back(new DIV(addressing_mode, operand, position));
   } else if (instruction == "READ") {
     if ((addressing_mode == DIRECT && operand == 0) || addressing_mode == CONSTANT) {
       std::string error = "Error at line " + std::to_string(line + 1) + ":\n\n";
@@ -183,7 +184,7 @@ void CreateInstruction(std::vector<Instruction*>& program_memory,
       error += "\nInvalid operand for READ instruction.";
       throw std::runtime_error(error);
     }
-    program_memory.emplace_back(new READ(addressing_mode, operand, 0));
+    program_memory.emplace_back(new READ(addressing_mode, operand, position));
   } else if (instruction == "WRITE") {
     if (addressing_mode == DIRECT && operand == 0) {
       std::string error = "Error at line " + std::to_string(line + 1) + ":\n\n";
@@ -194,7 +195,7 @@ void CreateInstruction(std::vector<Instruction*>& program_memory,
       error += "\nInvalid operand for WRITE instruction.";
       throw std::runtime_error(error);
     }
-    program_memory.emplace_back(new WRITE(addressing_mode, operand, 0));
+    program_memory.emplace_back(new WRITE(addressing_mode, operand, position));
   } else if (instruction == "JUMP") {
     program_memory.emplace_back(new JUMP(jump_label, &labels, program_memory));
   } else if (instruction == "JZERO") {
@@ -216,19 +217,30 @@ void CreateInstruction(std::vector<Instruction*>& program_memory,
 
 void CheckAddressingMode(const std::string& word, 
                          AddressingMode& addressing_mode, 
-                         int& operand, 
+                         int& operand,
+                         int& position,
                          const int& i, 
                          const std::string& instruction) {
   // Check what type of addressing mode the operand has.
-  if (word.length() == 1) {
+  if (word[0] != '=' && word[0] != '*') {
     addressing_mode = DIRECT;
-    operand = std::stoi(word);
+    if (word[1] == '[') {
+      operand = std::stoi(word.substr(0, 1));
+      position = std::stoi(word.substr(2, word.length() - 3));
+    } else {
+      operand = std::stoi(word);
+    }
   } else if (word[0] == '=') {
     addressing_mode = CONSTANT;
     operand = std::stoi(word.substr(1));
   } else if (word[0] == '*') {
     addressing_mode = INDIRECT;
-    operand = std::stoi(word.substr(1));
+    if (word[1] == '[') {
+      operand = std::stoi(word.substr(0, 1));
+      position = std::stoi(word.substr(2, word.length() - 3));
+    } else {
+      operand = std::stoi(word);
+    }
   } else {
     std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
     error += instruction + " " + word + "\n";

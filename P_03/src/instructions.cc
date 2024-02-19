@@ -103,6 +103,9 @@ STORE::STORE(const AddressingMode& addressing_mode, const int& register_operand,
  * @return size_t
  */
 size_t STORE::execute(std::vector<std::vector<int>>& data_memory) {
+  if (data_memory[register_].size() <= direction_) {
+    data_memory[register_].resize(direction_ + 1);
+  }
   switch (addressing_mode_) {
     case DIRECT:
       data_memory[register_][direction_] = data_memory[0][0];
@@ -399,7 +402,6 @@ std::string DIV::toString(void) const {
  * @param addressing_mode The addressing mode of the instruction.
  * @param register_operand The register accesed on the instruction.
  * @param direction_operand The direction operand of the instruction. 
- * @param input_unit The input unit.
  */
 READ::READ(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand) {
   addressing_mode_ = addressing_mode;
@@ -423,9 +425,11 @@ void READ::setUnit(InputUnit* input_unit) {
  * @return size_t
  */
 size_t READ::execute(std::vector<std::vector<int>>& data_memory) {
+  if (data_memory[register_].size() <= direction_) {
+    data_memory[register_].resize(direction_ + 1);
+  }
   switch (addressing_mode_) {
     case DIRECT:
-      data_memory.resize(register_ + 1);
       data_memory[register_][direction_] = input_unit_->process();
       break;
     case INDIRECT:
@@ -467,7 +471,6 @@ std::string READ::toString(void) const {
  * @param addressing_mode THe addressing mode of the instruction.
  * @param register_operand The register accesed on the instruction.
  * @param direction_operand The direction operand of the instruction. 
- * @param output_unit The output unit.
  */
 WRITE::WRITE(const AddressingMode& addressing_mode, const int& register_operand, const int& direction_operand) {
   addressing_mode_ = addressing_mode;

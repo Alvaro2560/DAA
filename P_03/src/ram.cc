@@ -27,9 +27,9 @@ const size_t HALT_FLAG = -1;
 /**
  * @brief Construct a new RAM::RAM object
  * 
- * @param instructions Instructions of the program as a vector of strings.
- * @param input_tape Input data as a vector of strings.
- * @param output_tape Output data as a pointer to an OutputUnit object.
+ * @param instructions Instructions of the program as a vector of instructions.
+ * @param input_tape Input data as a vector of ints.
+ * @param labels Labels of the program as an unordered map.
  */
 RAM::RAM(const std::vector<Instruction*>& instructions, 
          const std::vector<int>& input_tape,
@@ -39,8 +39,9 @@ RAM::RAM(const std::vector<Instruction*>& instructions,
   output_unit_ = new OutputUnit();
   data_memory_.resize(32);
   for (size_t i = 0; i < 32; i++) {
-    data_memory_[i] = std::vector<int>(1);
+    data_memory_[i] = std::vector<int>();
   }
+  data_memory_[0].resize(1);
   data_memory_[0][0] = 0;
   program_counter_ = 0;
   labels_ = labels;
@@ -55,6 +56,8 @@ RAM::RAM(const std::vector<Instruction*>& instructions,
 
 /**
  * @brief Run the RAM.
+ * 
+ * @param debug_flag Flag to indicate if the program should be run in debug mode.
  */
 void RAM::run(const int& debug_flag) {
   size_t next_instruction;
