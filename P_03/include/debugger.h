@@ -25,7 +25,8 @@ class Debugger {
   public:
     Debugger(void) = default;
     static void increment(void);
-    static void print_info(const RAM& ram);
+    static void printInstructions(void);
+    static void printInfo(const RAM& ram);
     ~Debugger() = default;
   private:
     static int instruction_counter_;

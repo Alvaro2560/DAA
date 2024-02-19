@@ -55,6 +55,35 @@ size_t LOAD::execute(std::vector<std::vector<int>>& data_memory) {
 }
 
 /**
+ * @brief Convert the instruction to a string.
+ * 
+ * @return std::string
+ */
+std::string LOAD::toString(void) const {
+  std::string instruction = "LOAD ";
+  switch (addressing_mode_) {
+    case CONSTANT:
+      instruction += "=" + std::to_string(register_);
+      break;
+    case DIRECT:
+      if (direction_ == 0) {
+        instruction += std::to_string(register_);
+      } else {
+        instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+    case INDIRECT:
+      if (direction_ == 0) {
+        instruction += "*" + std::to_string(register_);
+      } else {
+        instruction += "*" + std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+  }
+  return instruction;
+}
+
+/**
  * @brief Construct a new STORE::STORE object
  * 
  * @param addressing_mode The addressing mode of the instruction.
@@ -83,6 +112,32 @@ size_t STORE::execute(std::vector<std::vector<int>>& data_memory) {
       break;
   }
   return 1;
+}
+
+/**
+ * @brief Convert the instruction to a string.
+ * 
+ * @return std::string
+ */
+std::string STORE::toString(void) const {
+  std::string instruction = "STORE ";
+  switch (addressing_mode_) {
+    case DIRECT:
+      if (direction_ == 0) {
+        instruction += std::to_string(register_);
+      } else {
+        instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+    case INDIRECT:
+      if (direction_ == 0) {
+        instruction += "*" + std::to_string(register_);
+      } else {
+        instruction += "*" + std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+  }
+  return instruction;
 }
 
 /**
@@ -120,6 +175,35 @@ size_t ADD::execute(std::vector<std::vector<int>>& data_memory) {
 }
 
 /**
+ * @brief Convert the instruction to a string.
+ * 
+ * @return std::string
+ */
+std::string ADD::toString(void) const {
+  std::string instruction = "ADD ";
+  switch (addressing_mode_) {
+    case CONSTANT:
+      instruction += "=" + std::to_string(register_);
+      break;
+    case DIRECT:
+      if (direction_ == 0) {
+        instruction += std::to_string(register_);
+      } else {
+        instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+    case INDIRECT:
+      if (direction_ == 0) {
+        instruction += "*" + std::to_string(register_);
+      } else {
+        instruction += "*" + std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+  }
+  return instruction;
+}
+
+/**
  * @brief Construct a new SUB::SUB object
  * 
  * @param addressing_mode The addressing mode of the instruction.
@@ -151,6 +235,35 @@ size_t SUB::execute(std::vector<std::vector<int>>& data_memory) {
       break;
   }
   return 1;
+}
+
+/**
+ * @brief Convert the instruction to a string.
+ * 
+ * @return std::string
+ */
+std::string SUB::toString(void) const {
+  std::string instruction = "SUB ";
+  switch (addressing_mode_) {
+    case CONSTANT:
+      instruction += "=" + std::to_string(register_);
+      break;
+    case DIRECT:
+      if (direction_ == 0) {
+        instruction += std::to_string(register_);
+      } else {
+        instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+    case INDIRECT:
+      if (direction_ == 0) {
+        instruction += "*" + std::to_string(register_);
+      } else {
+        instruction += "*" + std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+  }
+  return instruction;
 }
 
 /**
@@ -188,6 +301,35 @@ size_t MUL::execute(std::vector<std::vector<int>>& data_memory) {
 }
 
 /**
+ * @brief Convert the instruction to a string.
+ * 
+ * @return std::string
+ */
+std::string MUL::toString(void) const {
+  std::string instruction = "MUL ";
+  switch (addressing_mode_) {
+    case CONSTANT:
+      instruction += "=" + std::to_string(register_);
+      break;
+    case DIRECT:
+      if (direction_ == 0) {
+        instruction += std::to_string(register_);
+      } else {
+        instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+    case INDIRECT:
+      if (direction_ == 0) {
+        instruction += "*" + std::to_string(register_);
+      } else {
+        instruction += "*" + std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+  }
+  return instruction;
+}
+
+/**
  * @brief Construct a new DIV::DIV object
  * 
  * @param addressing_mode The addressing mode of the instruction.
@@ -199,6 +341,7 @@ DIV::DIV(const AddressingMode& addressing_mode, const int& register_operand, con
   register_ = register_operand;
   direction_ = direction_operand;
 }
+
 
 /**
  * @brief Execute the instruction.
@@ -219,6 +362,35 @@ size_t DIV::execute(std::vector<std::vector<int>>& data_memory) {
       break;
   }
   return 1;
+}
+
+/**
+ * @brief Convert the instruction to a string.
+ * 
+ * @return std::string
+ */
+std::string DIV::toString(void) const {
+  std::string instruction = "DIV ";
+  switch (addressing_mode_) {
+    case CONSTANT:
+      instruction += "=" + std::to_string(register_);
+      break;
+    case DIRECT:
+      if (direction_ == 0) {
+        instruction += std::to_string(register_);
+      } else {
+        instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+    case INDIRECT:
+      if (direction_ == 0) {
+        instruction += "*" + std::to_string(register_);
+      } else {
+        instruction += "*" + std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+  }
+  return instruction;
 }
 
 /**
@@ -254,6 +426,32 @@ size_t READ::execute(std::vector<std::vector<int>>& data_memory) {
       break;
   }
   return 1;
+}
+
+/**
+ * @brief Convert the instruction to a string.
+ * 
+ * @return std::string
+ */
+std::string READ::toString(void) const {
+  std::string instruction = "READ ";
+  switch (addressing_mode_) {
+    case DIRECT:
+      if (direction_ == 0) {
+        instruction += std::to_string(register_);
+      } else {
+        instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+    case INDIRECT:
+      if (direction_ == 0) {
+        instruction += "*" + std::to_string(register_);
+      } else {
+        instruction += "*" + std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+  }
+  return instruction;
 }
 
 /**
@@ -294,6 +492,35 @@ size_t WRITE::execute(std::vector<std::vector<int>>& data_memory) {
 }
 
 /**
+ * @brief Convert the instruction to a string.
+ * 
+ * @return std::string
+ */
+std::string WRITE::toString(void) const {
+  std::string instruction = "WRITE ";
+  switch (addressing_mode_) {
+    case CONSTANT:
+      instruction += "=" + std::to_string(register_);
+      break;
+    case DIRECT:
+      if (direction_ == 0) {
+        instruction += std::to_string(register_);
+      } else {
+        instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+    case INDIRECT:
+      if (direction_ == 0) {
+        instruction += "*" + std::to_string(register_);
+      } else {
+        instruction += "*" + std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      }
+      break;
+  }
+  return instruction;
+}
+
+/**
  * @brief Construct a new JUMP::JUMP object
  * 
  * @param label The target label to jump.
@@ -313,6 +540,15 @@ JUMP::JUMP(const std::string& label,
  */
 size_t JUMP::execute(std::vector<std::vector<int>>& data_memory) {
   return (*labels_)[label_];
+}
+
+/**
+ * @brief Convert the instruction to a string.
+ * 
+ * @return std::string
+ */
+std::string JUMP::toString(void) const {
+  return "JUMP " + label_;
 }
 
 /**
@@ -351,6 +587,15 @@ size_t JZERO::execute(std::vector<std::vector<int>>& data_memory) {
 }
 
 /**
+ * @brief Convert the instruction to a string.
+ * 
+ * @return std::string
+ */
+std::string JZERO::toString(void) const {
+  return "JZERO " + label_;
+}
+
+/**
  * @brief Destroy the JZERO::JZERO object
  * 
  */
@@ -386,6 +631,15 @@ size_t JGTZ::execute(std::vector<std::vector<int>>& data_memory) {
 }
 
 /**
+ * @brief Convert the instruction to a string.
+ * 
+ * @return std::string
+ */
+std::string JGTZ::toString(void) const {
+  return "JGTZ " + label_;
+}
+
+/**
  * @brief Destroy the JGTZ::JGTZ object
  * 
  */
@@ -402,4 +656,13 @@ JGTZ::~JGTZ(void) {
  */
 size_t HALT::execute(std::vector<std::vector<int>>& data_memory) {
   return -1;
+}
+
+/**
+ * @brief Convert the instruction to a string.
+ * 
+ * @return std::string
+ */
+std::string HALT::toString(void) const {
+  return "HALT";
 }

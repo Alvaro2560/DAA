@@ -26,11 +26,11 @@ class InputUnit {
     InputUnit(const std::vector<int>& tape);
     int process(void);
     int* getTape(void);
-    int* getHead(void);
+    size_t getHead(void);
     size_t getSize(void);
     ~InputUnit(void);
   private:
     int* tape_;
-    int* head_;
+    size_t head_;
     size_t size_;
 };

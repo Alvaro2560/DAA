@@ -26,7 +26,7 @@ InputUnit::InputUnit(const std::vector<int>& tape) {
   for (size_t i = 0; i < tape.size(); i++) {
     tape_[i] = tape[i];
   }
-  head_ = &tape_[0];
+  head_ = 0;
   size_ = tape.size();
 }
 
@@ -36,7 +36,7 @@ InputUnit::InputUnit(const std::vector<int>& tape) {
  * @return int The value of the tape at the current position.
  */
 int InputUnit::process(void) {
-  return *head_++;
+  return tape_[head_++];
 }
 
 /**
@@ -51,9 +51,9 @@ int* InputUnit::getTape(void) {
 /**
  * @brief Get the head of the input unit.
  * 
- * @return int* The head of the input unit.
+ * @return size_t The head of the input unit.
  */
-int* InputUnit::getHead(void) {
+size_t InputUnit::getHead(void) {
   return head_;
 }
 

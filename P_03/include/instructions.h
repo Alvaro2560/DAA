@@ -33,6 +33,7 @@ class Instruction {
   public:
     Instruction(void) = default;
     virtual size_t execute(std::vector<std::vector<int>>& data_memory) = 0;
+    virtual std::string toString(void) const = 0;
     virtual ~Instruction(void) = default;
   protected:
     AddressingMode addressing_mode_;
@@ -47,6 +48,7 @@ class LOAD : public Instruction {
   public:
     LOAD(const AddressingMode& addresing_mode, const int& register_operand, const int& direction_operand = 0);
     size_t execute(std::vector<std::vector<int>>& data_memory) override;
+    std::string toString(void) const override;
     ~LOAD(void) = default;
 };
 
@@ -57,6 +59,7 @@ class STORE : public Instruction {
   public:
     STORE(const AddressingMode& addresing_mode, const int& register_operand, const int& direction_operand = 0);
     size_t execute(std::vector<std::vector<int>>& data_memory) override;
+    std::string toString(void) const override;
     ~STORE(void) = default;
 };
 
@@ -67,6 +70,7 @@ class ADD : public Instruction {
   public:
     ADD(const AddressingMode& addresing_mode, const int& register_operand, const int& direction_operand = 0);
     size_t execute(std::vector<std::vector<int>>& data_memory) override;
+    std::string toString(void) const override;
     ~ADD(void) = default;
 };
 
@@ -77,6 +81,7 @@ class SUB : public Instruction {
   public:
     SUB(const AddressingMode& addresing_mode, const int& register_operand, const int& direction_operand = 0);
     size_t execute(std::vector<std::vector<int>>& data_memory) override;
+    std::string toString(void) const override;
     ~SUB(void) = default;
 };
 
@@ -87,6 +92,7 @@ class MUL : public Instruction {
   public:
     MUL(const AddressingMode& addresing_mode, const int& register_operand, const int& direction_operand = 0);
     size_t execute(std::vector<std::vector<int>>& data_memory) override;
+    std::string toString(void) const override;
     ~MUL(void) = default;
 };
 
@@ -97,6 +103,7 @@ class DIV : public Instruction {
   public:
     DIV(const AddressingMode& addresing_mode, const int& register_operand, const int& direction_operand = 0);
     size_t execute(std::vector<std::vector<int>>& data_memory) override;
+    std::string toString(void) const override;
     ~DIV(void) = default;
 };
 
@@ -110,6 +117,7 @@ class READ : public Instruction {
     READ(const AddressingMode& addresing_mode, const int& register_operand, 
          InputUnit* input_unit, const int& direction_operand = 0);
     size_t execute(std::vector<std::vector<int>>& data_memory) override;
+    std::string toString(void) const override;
     ~READ(void) = default;
   private:
     InputUnit* input_unit_;
@@ -125,6 +133,7 @@ class WRITE : public Instruction {
     WRITE(const AddressingMode& addresing_mode, const int& register_operand, 
           OutputUnit* output_unit, const int& direction_operand = 0);
     size_t execute(std::vector<std::vector<int>>& data_memory) override;
+    std::string toString(void) const override;
     ~WRITE(void) = default;
   private:
     OutputUnit* output_unit_;
@@ -138,6 +147,7 @@ class JUMP : public Instruction {
     JUMP(const std::string& label, std::unordered_map<std::string, size_t>* labels, 
          const std::vector<Instruction*>& program_memory);
     size_t execute(std::vector<std::vector<int>>& data_memory) override;
+    std::string toString(void) const override;
     ~JUMP(void);
   protected:
     std::string label_;
@@ -153,6 +163,7 @@ class JZERO : public JUMP {
     JZERO(const std::string& label, std::unordered_map<std::string, size_t>* labels, 
           const std::vector<Instruction*>& program_memory);
     size_t execute(std::vector<std::vector<int>>& data_memory) override;
+    std::string toString(void) const override;
     ~JZERO(void);
 };
 
@@ -164,6 +175,7 @@ class JGTZ : public JUMP {
     JGTZ(const std::string& label, std::unordered_map<std::string, size_t>* labels, 
          const std::vector<Instruction*>& program_memory);
     size_t execute(std::vector<std::vector<int>>& data_memory) override;
+    std::string toString(void) const override;
     ~JGTZ(void);
 };
 
@@ -174,5 +186,6 @@ class HALT : public Instruction {
   public:
     HALT(void) = default;
     size_t execute(std::vector<std::vector<int>>& data_memory) override;
+    std::string toString(void) const override;
     ~HALT(void) = default;
 };

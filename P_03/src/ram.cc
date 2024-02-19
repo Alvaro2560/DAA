@@ -38,9 +38,8 @@ RAM::RAM(const std::vector<std::string>& instructions,
   output_unit_ = new OutputUnit();
   data_memory_.resize(32);
   for (size_t i = 0; i < 32; i++) {
-    data_memory_[i] = std::vector<int>();
+    data_memory_[i] = std::vector<int>(1);
   }
-  data_memory_[0].resize(1);
   data_memory_[0][0] = 0;
   FormatInstructions(instructions);
   program_counter_ = 0;
@@ -52,8 +51,16 @@ RAM::RAM(const std::vector<std::string>& instructions,
 void RAM::run(const int& debug_flag) {
   size_t next_instruction;
   while (program_counter_ != HALT_FLAG && program_counter_ < program_memory_.size()) {
-    std::cout << "soto\n";
     next_instruction = program_memory_[program_counter_]->execute(data_memory_);
+    if (debug_flag != 0) {
+      if (debug_flag == 2) {
+        Debugger::printInfo(*this);
+        std::cout << "\nPress enter to continue...";
+        std::cin.get();
+        std::cout << "--------------------------------------------\n";
+      }
+      Debugger::increment();
+    }
     if (next_instruction == HALT_FLAG) {
       program_counter_ = HALT_FLAG;
     } else if (next_instruction == 1) {
@@ -61,14 +68,6 @@ void RAM::run(const int& debug_flag) {
     } else {
       // If the instruction is a jump, the next instruction is the one returned by the execute method.
       program_counter_ = next_instruction;
-    }
-    if (debug_flag != 0) {
-      if (debug_flag == 2) {
-        Debugger::print_info(*this);
-        std::cout << "Press enter to continue...";
-        std::cin.get();
-      }
-      Debugger::increment();
     }
   }
 }

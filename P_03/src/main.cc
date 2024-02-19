@@ -16,6 +16,7 @@
 
 #include "../include/functions.h"
 #include "../include/ram.h"
+#include "../include/debugger.h"
 
 #include <iostream>
 
@@ -37,6 +38,7 @@ int main(int argc, char** argv) {
     RAM ram(instructions, input_tape);
     ram.run(std::stoi(argv[4]));
     WriteUnit(ram.getOutputUnit(), argv[3]);
+    Debugger::printInstructions();
     return 0;
   } catch (const std::exception& e) {
     std::cerr << e.what() << '\n';
