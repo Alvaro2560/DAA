@@ -20,6 +20,9 @@
 #include "../include/instructions.h"
 #include "../include/output-unit.h"
 
+#include <sstream>
+#include <bits/stdc++.h>
+
 /**
  * @brief Prints the help menu.
  */
@@ -70,4 +73,213 @@ void WriteUnit(const OutputUnit* output_unit, const std::string& file_name) {
   } else {
     throw std::runtime_error("Unable to open file.");
   }
+}
+
+/**
+ * @brief Formats the instructions and stores them in a vector of strings.
+ * 
+ * @param instructions Content of the file as a vector of strings.
+ * @return std::vector<Instruction*> Vector of instructions.
+ */
+std::vector<Instruction*> FormatInstructions(const std::vector<std::string>& instructions,
+                                             std::unordered_map<std::string, size_t>& labels) {
+  std::unordered_map<std::string, std::pair<size_t, std::string>> labels_cache;
+  std::vector<Instruction*> program_memory;
+  for (size_t i = 0; i < instructions.size(); i++) {
+    std::string line = instructions[i], word;
+    // If the line is a comment or it is empty, skip it.
+    if (line[0] == '#' || line.size() < 4) {
+      continue;
+    }
+    int counter = 0, operand;
+    AddressingMode addressing_mode;
+    std::string instruction, label, jump_label;
+    std::stringstream ss(line);
+    // Separate the line into words.
+    while (ss >> word) {
+      // If the word ends with a colon, it is a label.
+      if (word.substr(word.size() - 1) == ":") {
+        label = word.substr(0, word.size() - 1);
+        // The next word is the instruction.
+        ss >> instruction;
+        std::transform(instruction.begin(), instruction.end(), instruction.begin(), ::toupper);
+        ++counter;
+      } else if (counter == 0) {
+        std::transform(word.begin(), word.end(), word.begin(), ::toupper);
+        instruction = word;
+        // If the instruction is a jump, the next word is the label.
+        if (instruction[0] == 'J') {
+          ss >> word;
+          jump_label = word;
+          // If the label is not in the cache, add it.
+          labels_cache[jump_label] = std::make_pair(i + 1, instruction + " " + word);
+          ++counter;
+        }
+        ++counter;
+      } else if (counter == 1) {
+        CheckAddressingMode(word, addressing_mode, operand, i, instruction);
+      }
+    }
+    CreateInstruction(program_memory, instruction, addressing_mode, operand, label, i, word, jump_label, labels);
+    if (!label.empty()) {
+      labels[label] = program_memory.size() - 1;
+      label.clear();
+    }
+  }
+  CheckLabels(labels, labels_cache);
+  return program_memory;
+}
+
+/**
+ * @brief Creates an instruction and stores it in the program memory.
+ * 
+ * @param program_memory Program memory.
+ * @param instruction Instruction to create.
+ * @param addressing_mode Addressing mode of the instruction.
+ * @param operand Operand of the instruction.
+ * @param label Label of the instruction.
+ * @param line Line of the instruction.
+ * @param line_operand Operand of the instruction as a string.
+ * @param jump_label Label of the instruction to jump to.
+ * @param labels Labels of the program.
+ */
+void CreateInstruction(std::vector<Instruction*>& program_memory,
+                       const std::string& instruction, 
+                       const AddressingMode& addressing_mode, 
+                       const int& operand, 
+                       const std::string& label, const int& line,
+                       const std::string& line_operand,
+                       const std::string& jump_label,
+                       std::unordered_map<std::string, size_t>& labels) {
+  if (instruction == "LOAD") {
+      program_memory.emplace_back(new LOAD(addressing_mode, operand));
+  } else if (instruction == "STORE") {
+    if (addressing_mode == CONSTANT) {
+      std::string error = "Error at line " + std::to_string(line + 1) + ":\n\n";
+      error += instruction + " " + line_operand + "\n";
+      for (size_t i = 0; i < (instruction + line_operand).size() + 1; i++) {
+        error += "^";
+      }
+      error += "\nInvalid operand for STORE instruction.";
+      throw std::runtime_error(error);
+    }
+    program_memory.emplace_back(new STORE(addressing_mode, operand));
+  } else if (instruction == "ADD") {
+    program_memory.emplace_back(new ADD(addressing_mode, operand));
+  } else if (instruction == "SUB") {
+    program_memory.emplace_back(new SUB(addressing_mode, operand));
+  } else if (instruction == "MUL") {
+    program_memory.emplace_back(new MUL(addressing_mode, operand));
+  } else if (instruction == "DIV") {
+    program_memory.emplace_back(new DIV(addressing_mode, operand));
+  } else if (instruction == "READ") {
+    if ((addressing_mode == DIRECT && operand == 0) || addressing_mode == CONSTANT) {
+      std::string error = "Error at line " + std::to_string(line + 1) + ":\n\n";
+      error += instruction + " " + line_operand + "\n";
+      for (size_t i = 0; i < (instruction + line_operand).size() + 1; i++) {
+        error += "^";
+      }
+      error += "\nInvalid operand for READ instruction.";
+      throw std::runtime_error(error);
+    }
+    program_memory.emplace_back(new READ(addressing_mode, operand));
+  } else if (instruction == "WRITE") {
+    if (addressing_mode == DIRECT && operand == 0) {
+      std::string error = "Error at line " + std::to_string(line + 1) + ":\n\n";
+      error += instruction + " " + line_operand + "\n";
+      for (size_t i = 0; i < (instruction + line_operand).size() + 1; i++) {
+        error += "^";
+      }
+      error += "\nInvalid operand for WRITE instruction.";
+      throw std::runtime_error(error);
+    }
+    program_memory.emplace_back(new WRITE(addressing_mode, operand));
+  } else if (instruction == "JUMP") {
+    program_memory.emplace_back(new JUMP(jump_label, &labels, program_memory));
+  } else if (instruction == "JZERO") {
+    program_memory.emplace_back(new JZERO(jump_label, &labels, program_memory));
+  } else if (instruction == "JGTZ") {
+    program_memory.emplace_back(new JGTZ(jump_label, &labels, program_memory));
+  } else if (instruction == "HALT") {
+    program_memory.emplace_back(new HALT());
+  } else {
+      std::string error = "Error at line " + std::to_string(line + 1) + ":\n\n";
+      error += instruction + " " + line_operand + "\n";
+      for (size_t i = 0; i < (instruction + line_operand).size() + 1; i++) {
+        error += "^";
+      }
+      error += "\nInvalid instruction.";
+      throw std::runtime_error(error);
+  }
+}
+
+/**
+ * @brief Checks the addressing mode of an operand.
+ * 
+ * @param word Operand to check.
+ * @param addressing_mode Addressing mode of the operand.
+ * @param operand Operand as an integer.
+ * @param i Line of the instruction.
+ * @param instruction Instruction to check.
+ */
+void CheckAddressingMode(const std::string& word, 
+                         AddressingMode& addressing_mode, 
+                         int& operand, 
+                         const int& i, 
+                         const std::string& instruction) {
+  // Check what type of addressing mode the operand has.
+  if (word.length() == 1) {
+    addressing_mode = DIRECT;
+    operand = std::stoi(word);
+  } else if (word[0] == '=') {
+    addressing_mode = CONSTANT;
+    operand = std::stoi(word.substr(1));
+  } else if (word[0] == '*') {
+    addressing_mode = INDIRECT;
+    operand = std::stoi(word.substr(1));
+  } else {
+    std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
+    error += instruction + " " + word + "\n";
+    for (size_t i = 0; i < (instruction + word).size() + 1; i++) {
+      error += "^";
+    }
+    error += "\nInvalid addressing mode.";
+    throw std::runtime_error(error);
+  }
+}
+
+/**
+ * @brief Checks if there are any undefined labels.
+ * 
+ * @param labels Labels of the program.
+ * @param labels_cache Cache of the labels.
+ */
+void CheckLabels(const std::unordered_map<std::string, size_t>& labels, 
+                 const std::unordered_map<std::string, std::pair<size_t, std::string>>& labels_cache) {
+  // Check if there are any undefined labels.
+  for (auto it = labels_cache.begin(); it != labels_cache.end(); it++) {
+    // If the label is not in the labels map, it is undefined.
+    if (labels.find(it->first) == labels.end()) {
+      std::string error = "Error at line " + std::to_string(it->second.first) + ":\n\n";
+      error += it->second.second + "\n";
+      for (size_t i = 0; i < it->second.second.size(); i++) {
+        error += "^";
+      }
+      error += "\nUndefined label.";
+      throw std::runtime_error(error);
+    }
+  }
+}
+
+/**
+ * @brief Formats the input tape and stores it in a vector of integers.
+ * 
+ * @param file_name Name of the file to read.
+ */
+std::vector<int> FormatTape(const std::vector<std::string>& file_name) {
+  std::vector<int> tape;
+  for (size_t i = 0; i < file_name.size(); i++) {
+    tape.emplace_back(std::stoi(file_name[i]));
+  }
+  return tape;
 }

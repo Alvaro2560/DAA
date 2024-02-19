@@ -106,8 +106,9 @@ class InputUnit;
  */
 class READ : public Instruction {
   public:
-    READ(const AddressingMode& addressing_mode, const int& operand, InputUnit* input_unit);
+    READ(const AddressingMode& addressing_mode, const int& operand);
     size_t execute(int* data_memory) override;
+    void setUnit(InputUnit* input_unit);
     ~READ(void) = default;
   private:
     InputUnit* input_unit_;
@@ -120,8 +121,9 @@ class OutputUnit;
  */
 class WRITE : public Instruction {
   public:
-    WRITE(const AddressingMode& addressing_mode, const int& operand, OutputUnit* output_unit);
+    WRITE(const AddressingMode& addressing_mode, const int& operand);
     size_t execute(int* data_memory) override;
+    void setUnit(OutputUnit* output_unit);
     ~WRITE(void) = default;
   private:
     OutputUnit* output_unit_;

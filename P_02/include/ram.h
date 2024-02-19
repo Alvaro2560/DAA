@@ -29,14 +29,12 @@ class Instruction;
  */
 class RAM {
   public:
-    RAM(const std::vector<std::string>& instructions, 
-        const std::vector<std::string>& input_tape);
+    RAM(const std::vector<Instruction*>& instructions, 
+        const std::vector<int>& input_tape,
+        const std::unordered_map<std::string, size_t>& labels);
     void run(void);
     OutputUnit* getOutputUnit(void) const;
     ~RAM(void);
-  private:
-    void FormatInstructions(const std::vector<std::string>& instructions);
-    std::vector<int> FormatTape(const std::vector<std::string>& file_name);
   private:
     size_t program_counter_;
     std::vector<Instruction*> program_memory_;

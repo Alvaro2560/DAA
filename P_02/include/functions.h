@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include "instructions.h"
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -29,3 +31,24 @@ void PrintHelp(void);
 std::vector<std::string> ReadFile(const std::string& file_name);
 
 void WriteUnit(const OutputUnit* output_unit, const std::string& file_name);
+
+std::vector<Instruction*> FormatInstructions(const std::vector<std::string>& instructions, 
+                                             std::unordered_map<std::string, size_t>& labels);
+
+void CreateInstruction(std::vector<Instruction*>& program_memory,
+                       const std::string& instruction, 
+                       const AddressingMode& addressing_mode, 
+                       const int& operand, 
+                       const std::string& label, const int& line,
+                       const std::string& line_operand,
+                       const std::string& jump_label,
+                       std::unordered_map<std::string, size_t>& labels);
+void CheckAddressingMode(const std::string& word, 
+                          AddressingMode& addressing_mode, 
+                          int& operand, 
+                          const int& i, 
+                          const std::string& instruction);
+void CheckLabels(const std::unordered_map<std::string, size_t>& labels, 
+                 const std::unordered_map<std::string, std::pair<size_t, std::string>>& labels_cache);
+
+std::vector<int> FormatTape(const std::vector<std::string>& file_name);

@@ -214,12 +214,10 @@ size_t DIV::execute(int* data_memory) {
  * 
  * @param addressing_mode The addressing mode of the instruction.
  * @param operand The operand of the instruction. 
- * @param input_unit The input unit.
  */
-READ::READ(const AddressingMode& addressing_mode, const int& operand, InputUnit* input_unit) {
+READ::READ(const AddressingMode& addressing_mode, const int& operand) {
   addressing_mode_ = addressing_mode;
   operand_ = operand;
-  input_unit_ = input_unit;
 }
 
 /**
@@ -241,16 +239,23 @@ size_t READ::execute(int* data_memory) {
 }
 
 /**
+ * @brief Set the input unit.
+ * 
+ * @param input_unit The input unit.
+ */
+void READ::setUnit(InputUnit* input_unit) {
+  input_unit_ = input_unit;
+}
+
+/**
  * @brief Construct a new WRITE::WRITE object
  * 
  * @param addressing_mode THe addressing mode of the instruction.
  * @param operand The operand of the instruction. 
- * @param output_unit The output unit.
  */
-WRITE::WRITE(const AddressingMode& addressing_mode, const int& operand, OutputUnit* output_unit) {
+WRITE::WRITE(const AddressingMode& addressing_mode, const int& operand) {
   addressing_mode_ = addressing_mode;
   operand_ = operand;
-  output_unit_ = output_unit;
 }
 
 /**
@@ -272,6 +277,15 @@ size_t WRITE::execute(int* data_memory) {
       break;
   }
   return 1;
+}
+
+/**
+ * @brief Set the output unit.
+ * 
+ * @param output_unit The output unit.
+ */
+void WRITE::setUnit(OutputUnit* output_unit) {
+  output_unit_ = output_unit;
 }
 
 /**
