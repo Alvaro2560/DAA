@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include "../include/instructions.h"
+
 #include <iostream>
 #include <vector>
 #include <unordered_map>
@@ -38,6 +40,18 @@ class RAM {
   private:
     void FormatInstructions(const std::vector<std::string>& instructions);
     std::vector<int> FormatTape(const std::vector<std::string>& file_name);
+    void CreateInstruction(const std::string& instruction, 
+                           const AddressingMode& addressing_mode, 
+                           const int& operand, 
+                           const std::string& label, const int& line,
+                           const std::string& line_operand,
+                           const std::string& jump_label);
+    void CheckAddressingMode(const std::string& word, 
+                             AddressingMode& addressing_mode, 
+                             int& operand, 
+                             const int& i, 
+                             const std::string& instruction);
+    void CheckLabels(const std::unordered_map<std::string, std::pair<size_t, std::string>>& labels_cache);
   private:
     size_t program_counter_;
     std::vector<Instruction*> program_memory_;

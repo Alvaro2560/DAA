@@ -131,92 +131,129 @@ void RAM::FormatInstructions(const std::vector<std::string>& instructions) {
         }
         ++counter;
       } else if (counter == 1) {
-        // Check what type of addressing mode the operand has.
-        if (word.length() == 1) {
-          addressing_mode = DIRECT;
-          operand = std::stoi(word);
-        } else if (word[0] == '=') {
-          addressing_mode = CONSTANT;
-          operand = std::stoi(word.substr(1));
-        } else if (word[0] == '*') {
-          addressing_mode = INDIRECT;
-          operand = std::stoi(word.substr(1));
-        } else {
-          std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
-          error += instruction + " " + word + "\n";
-          for (size_t i = 0; i < (instruction + word).size() + 1; i++) {
-            error += "^";
-          }
-          error += "\nInvalid addressing mode.";
-          throw std::runtime_error(error);
-        }
+        CheckAddressingMode(word, addressing_mode, operand, i, instruction);
       }
     }
-    if (instruction == "LOAD") {
-      program_memory_.emplace_back(new LOAD(addressing_mode, operand));
-    } else if (instruction == "STORE") {
-      if (addressing_mode == CONSTANT) {
-        std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
-        error += instruction + " " + word + "\n";
-        for (size_t i = 0; i < (instruction + word).size() + 1; i++) {
-          error += "^";
-        }
-        error += "\nInvalid operand for STORE instruction.";
-        throw std::runtime_error(error);
-      }
-      program_memory_.emplace_back(new STORE(addressing_mode, operand, 0));
-    } else if (instruction == "ADD") {
-      program_memory_.emplace_back(new ADD(addressing_mode, operand, 0));
-    } else if (instruction == "SUB") {
-      program_memory_.emplace_back(new SUB(addressing_mode, operand, 0));
-    } else if (instruction == "MUL") {
-      program_memory_.emplace_back(new MUL(addressing_mode, operand, 0));
-    } else if (instruction == "DIV") {
-      program_memory_.emplace_back(new DIV(addressing_mode, operand, 0));
-    } else if (instruction == "READ") {
-      if ((addressing_mode == DIRECT && operand == 0) || addressing_mode == CONSTANT) {
-        std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
-        error += instruction + " " + word + "\n";
-        for (size_t i = 0; i < (instruction + word).size() + 1; i++) {
-          error += "^";
-        }
-        error += "\nInvalid operand for READ instruction.";
-        throw std::runtime_error(error);
-      }
-      program_memory_.emplace_back(new READ(addressing_mode, operand, input_unit_, 0));
-    } else if (instruction == "WRITE") {
-      if (addressing_mode == DIRECT && operand == 0) {
-        std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
-        error += instruction + " " + word + "\n";
-        for (size_t i = 0; i < (instruction + word).size() + 1; i++) {
-          error += "^";
-        }
-        error += "\nInvalid operand for WRITE instruction.";
-        throw std::runtime_error(error);
-      }
-      program_memory_.emplace_back(new WRITE(addressing_mode, operand, output_unit_, 0));
-    } else if (instruction == "JUMP") {
-      program_memory_.emplace_back(new JUMP(jump_label, &labels_, program_memory_));
-    } else if (instruction == "JZERO") {
-      program_memory_.emplace_back(new JZERO(jump_label, &labels_, program_memory_));
-    } else if (instruction == "JGTZ") {
-      program_memory_.emplace_back(new JGTZ(jump_label, &labels_, program_memory_));
-    } else if (instruction == "HALT") {
-      program_memory_.emplace_back(new HALT());
-    } else {
-        std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
-        error += instruction + " " + word + "\n";
-        for (size_t i = 0; i < (instruction + word).size() + 1; i++) {
-          error += "^";
-        }
-        error += "\nInvalid instruction.";
-        throw std::runtime_error(error);
-    }
+    CreateInstruction(instruction, addressing_mode, operand, label, i, word, jump_label);
     if (!label.empty()) {
       labels_[label] = program_memory_.size() - 1;
       label.clear();
     }
   }
+  CheckLabels(labels_cache);
+}
+
+/**
+ * @brief Creates an instruction and stores it in the program memory.
+ * 
+ * @param instruction Instruction to create.
+ * @param addressing_mode Addressing mode of the instruction.
+ * @param operand Operand of the instruction.
+ * @param label Label of the instruction.
+ * @param line Line of the instruction.
+ * @param line_operand Operand of the instruction as a string.
+ * @param jump_label Label of the instruction to jump to.
+ */
+void RAM::CreateInstruction(const std::string& instruction, 
+                            const AddressingMode& addressing_mode, 
+                            const int& operand, 
+                            const std::string& label, const int& line,
+                            const std::string& line_operand,
+                            const std::string& jump_label) {
+  if (instruction == "LOAD") {
+      program_memory_.emplace_back(new LOAD(addressing_mode, operand));
+  } else if (instruction == "STORE") {
+    if (addressing_mode == CONSTANT) {
+      std::string error = "Error at line " + std::to_string(line + 1) + ":\n\n";
+      error += instruction + " " + line_operand + "\n";
+      for (size_t i = 0; i < (instruction + line_operand).size() + 1; i++) {
+        error += "^";
+      }
+      error += "\nInvalid operand for STORE instruction.";
+      throw std::runtime_error(error);
+    }
+    program_memory_.emplace_back(new STORE(addressing_mode, operand, 0));
+  } else if (instruction == "ADD") {
+    program_memory_.emplace_back(new ADD(addressing_mode, operand, 0));
+  } else if (instruction == "SUB") {
+    program_memory_.emplace_back(new SUB(addressing_mode, operand, 0));
+  } else if (instruction == "MUL") {
+    program_memory_.emplace_back(new MUL(addressing_mode, operand, 0));
+  } else if (instruction == "DIV") {
+    program_memory_.emplace_back(new DIV(addressing_mode, operand, 0));
+  } else if (instruction == "READ") {
+    if ((addressing_mode == DIRECT && operand == 0) || addressing_mode == CONSTANT) {
+      std::string error = "Error at line " + std::to_string(line + 1) + ":\n\n";
+      error += instruction + " " + line_operand + "\n";
+      for (size_t i = 0; i < (instruction + line_operand).size() + 1; i++) {
+        error += "^";
+      }
+      error += "\nInvalid operand for READ instruction.";
+      throw std::runtime_error(error);
+    }
+    program_memory_.emplace_back(new READ(addressing_mode, operand, input_unit_, 0));
+  } else if (instruction == "WRITE") {
+    if (addressing_mode == DIRECT && operand == 0) {
+      std::string error = "Error at line " + std::to_string(line + 1) + ":\n\n";
+      error += instruction + " " + line_operand + "\n";
+      for (size_t i = 0; i < (instruction + line_operand).size() + 1; i++) {
+        error += "^";
+      }
+      error += "\nInvalid operand for WRITE instruction.";
+      throw std::runtime_error(error);
+    }
+    program_memory_.emplace_back(new WRITE(addressing_mode, operand, output_unit_, 0));
+  } else if (instruction == "JUMP") {
+    program_memory_.emplace_back(new JUMP(jump_label, &labels_, program_memory_));
+  } else if (instruction == "JZERO") {
+    program_memory_.emplace_back(new JZERO(jump_label, &labels_, program_memory_));
+  } else if (instruction == "JGTZ") {
+    program_memory_.emplace_back(new JGTZ(jump_label, &labels_, program_memory_));
+  } else if (instruction == "HALT") {
+    program_memory_.emplace_back(new HALT());
+  } else {
+      std::string error = "Error at line " + std::to_string(line + 1) + ":\n\n";
+      error += instruction + " " + line_operand + "\n";
+      for (size_t i = 0; i < (instruction + line_operand).size() + 1; i++) {
+        error += "^";
+      }
+      error += "\nInvalid instruction.";
+      throw std::runtime_error(error);
+  }
+}
+
+void RAM::CheckAddressingMode(const std::string& word, 
+                         AddressingMode& addressing_mode, 
+                         int& operand, 
+                         const int& i, 
+                         const std::string& instruction) {
+  // Check what type of addressing mode the operand has.
+  if (word.length() == 1) {
+    addressing_mode = DIRECT;
+    operand = std::stoi(word);
+  } else if (word[0] == '=') {
+    addressing_mode = CONSTANT;
+    operand = std::stoi(word.substr(1));
+  } else if (word[0] == '*') {
+    addressing_mode = INDIRECT;
+    operand = std::stoi(word.substr(1));
+  } else {
+    std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";
+    error += instruction + " " + word + "\n";
+    for (size_t i = 0; i < (instruction + word).size() + 1; i++) {
+      error += "^";
+    }
+    error += "\nInvalid addressing mode.";
+    throw std::runtime_error(error);
+  }
+}
+
+/**
+ * @brief Formats the input tape and stores it in a vector of integers.
+ * 
+ * @param file_name Name of the file to read.
+ */
+void RAM::CheckLabels(const std::unordered_map<std::string, std::pair<size_t, std::string>>& labels_cache) {
   // Check if there are any undefined labels.
   for (auto it = labels_cache.begin(); it != labels_cache.end(); it++) {
     // If the label is not in the labels map, it is undefined.
