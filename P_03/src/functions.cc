@@ -106,6 +106,13 @@ std::vector<Instruction*> FormatInstructions(const std::vector<std::string>& ins
         // The next word is the instruction.
         ss >> instruction;
         std::transform(instruction.begin(), instruction.end(), instruction.begin(), ::toupper);
+        if (instruction[0] == 'J') {
+          ss >> word;
+          jump_label = word;
+          // If the label is not in the cache, add it.
+          labels_cache[jump_label] = std::make_pair(i + 1, instruction + " " + word);
+          ++counter;
+        }
         ++counter;
       } else if (counter == 0) {
         std::transform(word.begin(), word.end(), word.begin(), ::toupper);
@@ -225,10 +232,22 @@ void CheckAddressingMode(const std::string& word,
   if (word[0] != '=' && word[0] != '*') {
     addressing_mode = DIRECT;
     if (word[1] == '[') {
+      if (word[2] == '*') {
+        position = -std::stoi(word.substr(3, word.length() - 4));
+      } else {
+        position = std::stoi(word.substr(2, word.length() - 3));
+      }
       operand = std::stoi(word.substr(0, 1));
-      position = std::stoi(word.substr(2, word.length() - 3));
+    } else if (word[2] == '[') {
+      if (word[3] == '*') {
+        position = -std::stoi(word.substr(4, word.length() - 5));
+      } else {
+        position = std::stoi(word.substr(3, word.length() - 4));
+      }
+      operand = std::stoi(word.substr(0, 2));
     } else {
       operand = std::stoi(word);
+      position = IND;
     }
   } else if (word[0] == '=') {
     addressing_mode = CONSTANT;
@@ -236,10 +255,15 @@ void CheckAddressingMode(const std::string& word,
   } else if (word[0] == '*') {
     addressing_mode = INDIRECT;
     if (word[1] == '[') {
+      if (word[2] == '*') {
+        position = -std::stoi(word.substr(3, word.length() - 4));
+      } else {
+        position = std::stoi(word.substr(2, word.length() - 3));
+      }
       operand = std::stoi(word.substr(0, 1));
-      position = std::stoi(word.substr(2, word.length() - 3));
     } else {
       operand = std::stoi(word);
+      position = IND;
     }
   } else {
     std::string error = "Error at line " + std::to_string(i + 1) + ":\n\n";

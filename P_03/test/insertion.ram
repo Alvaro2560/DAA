@@ -1,0 +1,84 @@
+# Método de ordenación por Inserción
+
+load =0
+store 3[0]
+
+input_loop: read 2[0]
+            load 2[0]
+            jzero sort
+            store 1
+            load 3[0]
+            add =1
+            store 3[0]
+            sub =1
+            store 8[0]
+            jump input_loop
+
+sort:       load =1
+            store 2[0]
+            store 4[0]
+            jump main_loop
+
+main_loop:  load 1[*4]
+            store 5[0]
+            load 4[0]
+            sub =1
+            store 6[0]
+
+            jump check
+
+            while_loop: load 6[0]
+                        add =1
+                        store 7[0]
+                        load 1[*6]
+                        store 1[*7]
+                        load 6[0]
+                        sub =1
+                        store 6[0]
+
+                        jump check
+
+            end_while: load 6[0]
+                       add =1
+                       store 7[0]
+                       load 5[0]
+                       store 1[*7]
+
+                       load 3[0]
+                       sub =1
+                       store 3[0]
+                       sub 2[0]
+
+                       jzero write_array
+
+                       load 4[0]
+                       add =1
+                       store 4[0]
+
+                       jump main_loop
+
+check:      load 6[0]
+            jzero third_check
+            jump second_check
+
+second_check: jgtz third_check
+
+third_check: load 1[*6]
+             sub 5[0]
+             jzero end_while
+             jgtz while_loop
+             jump end_while
+
+write_array: load =0
+             store 2[0]
+
+             print_loop: write 1[*2]
+                         load 8[0]
+                         sub 2[0]
+                         jzero end
+                         load 2[0]
+                         add =1
+                         store 2[0]
+                         jump print_loop
+
+end:        halt

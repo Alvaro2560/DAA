@@ -19,12 +19,15 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <climits>
 
 enum AddressingMode {
   CONSTANT,
   DIRECT,
   INDIRECT
 };
+
+const int IND = INT_MAX;
 
 /**
  * @brief Class that represents an instruction.

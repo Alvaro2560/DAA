@@ -45,7 +45,11 @@ size_t LOAD::execute(std::vector<std::vector<int>>& data_memory) {
       data_memory[0][0] = register_;
       break;
     case DIRECT:
-      data_memory[0][0] = data_memory[register_][direction_];
+      if (direction_ < 0) {
+        data_memory[0][0] = data_memory[register_][data_memory[-direction_][0]];
+      } else {
+        data_memory[0][0] = data_memory[register_][direction_];
+      }
       break;
     case INDIRECT:
       data_memory[0][0] = data_memory[data_memory[register_][direction_]][0];
@@ -66,10 +70,12 @@ std::string LOAD::toString(void) const {
       instruction += "=" + std::to_string(register_);
       break;
     case DIRECT:
-      if (direction_ == 0) {
+      if (direction_ == IND) {
         instruction += std::to_string(register_);
-      } else {
+      } else if (direction_ >= 0) {
         instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      } else {
+        instruction += std::to_string(register_) + "[*" + std::to_string(-direction_) + "]";
       }
       break;
     case INDIRECT:
@@ -103,12 +109,24 @@ STORE::STORE(const AddressingMode& addressing_mode, const int& register_operand,
  * @return size_t
  */
 size_t STORE::execute(std::vector<std::vector<int>>& data_memory) {
-  if (data_memory[register_].size() <= direction_) {
-    data_memory[register_].resize(direction_ + 1);
+  if (direction_ == IND) {
+    if (data_memory[register_].size() == 0) {
+      data_memory[register_].resize(1);
+    } else {
+      data_memory[register_].resize(data_memory[register_].size() + 1);
+    }
+  } else if (data_memory[register_].size() <= direction_ && direction_ >= 0) {
+    data_memory[register_].resize(-direction_ + 1);
   }
   switch (addressing_mode_) {
     case DIRECT:
-      data_memory[register_][direction_] = data_memory[0][0];
+      if (direction_ < 0) {
+        data_memory[register_][data_memory[-direction_][0]] = data_memory[0][0];
+      } else if (direction_ == IND) {
+        data_memory[register_][data_memory[register_].size() - 1] = data_memory[0][0];
+      } else {
+        data_memory[register_][direction_] = data_memory[0][0];
+      }
       break;
     case INDIRECT:
       data_memory[data_memory[register_][direction_]][0] = data_memory[0][0];
@@ -126,10 +144,12 @@ std::string STORE::toString(void) const {
   std::string instruction = "STORE ";
   switch (addressing_mode_) {
     case DIRECT:
-      if (direction_ == 0) {
+      if (direction_ == IND) {
         instruction += std::to_string(register_);
-      } else {
+      } else if (direction_ >= 0) {
         instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      } else {
+        instruction += std::to_string(register_) + "[*" + std::to_string(-direction_) + "]";
       }
       break;
     case INDIRECT:
@@ -168,7 +188,11 @@ size_t ADD::execute(std::vector<std::vector<int>>& data_memory) {
       data_memory[0][0] += register_;
       break;
     case DIRECT:
-      data_memory[0][0] += data_memory[register_][direction_];
+      if (direction_ < 0) {
+        data_memory[0][0] += data_memory[register_][data_memory[-direction_][0]];
+      } else {
+        data_memory[0][0] += data_memory[register_][direction_];
+      }
       break;
     case INDIRECT:
       data_memory[0][0] += data_memory[data_memory[register_][direction_]][0];
@@ -189,10 +213,12 @@ std::string ADD::toString(void) const {
       instruction += "=" + std::to_string(register_);
       break;
     case DIRECT:
-      if (direction_ == 0) {
+      if (direction_ == IND) {
         instruction += std::to_string(register_);
-      } else {
+      } else if (direction_ >= 0) {
         instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      } else {
+        instruction += std::to_string(register_) + "[*" + std::to_string(-direction_) + "]";
       }
       break;
     case INDIRECT:
@@ -231,7 +257,11 @@ size_t SUB::execute(std::vector<std::vector<int>>& data_memory) {
       data_memory[0][0] -= register_;
       break;
     case DIRECT:
-      data_memory[0][0] -= data_memory[register_][direction_];
+      if (direction_ < 0) {
+        data_memory[0][0] -= data_memory[register_][data_memory[-direction_][0]];
+      } else {
+        data_memory[0][0] -= data_memory[register_][direction_];
+      }
       break;
     case INDIRECT:
       data_memory[0][0] -= data_memory[data_memory[register_][direction_]][0];
@@ -252,10 +282,12 @@ std::string SUB::toString(void) const {
       instruction += "=" + std::to_string(register_);
       break;
     case DIRECT:
-      if (direction_ == 0) {
+      if (direction_ == IND) {
         instruction += std::to_string(register_);
-      } else {
+      } else if (direction_ >= 0) {
         instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      } else {
+        instruction += std::to_string(register_) + "[*" + std::to_string(-direction_) + "]";
       }
       break;
     case INDIRECT:
@@ -294,7 +326,11 @@ size_t MUL::execute(std::vector<std::vector<int>>& data_memory) {
       data_memory[0][0] *= register_;
       break;
     case DIRECT:
-      data_memory[0][0] *= data_memory[register_][direction_];
+      if (direction_ < 0) {
+        data_memory[0][0] *= data_memory[register_][data_memory[-direction_][0]];
+      } else {
+        data_memory[0][0] *= data_memory[register_][direction_];
+      }
       break;
     case INDIRECT:
       data_memory[0][0] *= data_memory[data_memory[register_][direction_]][0];
@@ -315,10 +351,12 @@ std::string MUL::toString(void) const {
       instruction += "=" + std::to_string(register_);
       break;
     case DIRECT:
-      if (direction_ == 0) {
+      if (direction_ == IND) {
         instruction += std::to_string(register_);
-      } else {
+      } else if (direction_ >= 0) {
         instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      } else {
+        instruction += std::to_string(register_) + "[*" + std::to_string(-direction_) + "]";
       }
       break;
     case INDIRECT:
@@ -358,7 +396,11 @@ size_t DIV::execute(std::vector<std::vector<int>>& data_memory) {
       data_memory[0][0] /= register_;
       break;
     case DIRECT:
-      data_memory[0][0] /= data_memory[register_][direction_];
+      if (direction_ < 0) {
+        data_memory[0][0] /= data_memory[register_][data_memory[-direction_][0]];
+      } else {
+        data_memory[0][0] /= data_memory[register_][direction_];
+      }
       break;
     case INDIRECT:
       data_memory[0][0] /= data_memory[data_memory[register_][direction_]][0];
@@ -379,10 +421,12 @@ std::string DIV::toString(void) const {
       instruction += "=" + std::to_string(register_);
       break;
     case DIRECT:
-      if (direction_ == 0) {
+      if (direction_ == IND) {
         instruction += std::to_string(register_);
-      } else {
+      } else if (direction_ >= 0) {
         instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      } else {
+        instruction += std::to_string(register_) + "[*" + std::to_string(-direction_) + "]";
       }
       break;
     case INDIRECT:
@@ -425,12 +469,24 @@ void READ::setUnit(InputUnit* input_unit) {
  * @return size_t
  */
 size_t READ::execute(std::vector<std::vector<int>>& data_memory) {
-  if (data_memory[register_].size() <= direction_) {
-    data_memory[register_].resize(direction_ + 1);
+  if (direction_ == IND) {
+    if (data_memory[register_].size() == 0) {
+      data_memory[register_].resize(1);
+    } else {
+      data_memory[register_].resize(data_memory[register_].size() + 1);
+    }
+  } else if (data_memory[register_].size() <= direction_ && direction_ >= 0) {
+    data_memory[register_].resize(-direction_ + 1);
   }
   switch (addressing_mode_) {
     case DIRECT:
-      data_memory[register_][direction_] = input_unit_->process();
+      if (direction_ < 0) {
+        data_memory[register_][data_memory[-direction_][0]] = input_unit_->process();
+      } else if (direction_ == IND) {
+        data_memory[register_][data_memory[register_].size() - 1] = input_unit_->process();
+      } else {
+        data_memory[register_][direction_] = input_unit_->process();
+      }
       break;
     case INDIRECT:
       data_memory[data_memory[register_][direction_]][0] = input_unit_->process();
@@ -448,10 +504,12 @@ std::string READ::toString(void) const {
   std::string instruction = "READ ";
   switch (addressing_mode_) {
     case DIRECT:
-      if (direction_ == 0) {
+      if (direction_ == IND) {
         instruction += std::to_string(register_);
-      } else {
+      } else if (direction_ >= 0) {
         instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      } else {
+        instruction += std::to_string(register_) + "[*" + std::to_string(-direction_) + "]";
       }
       break;
     case INDIRECT:
@@ -499,7 +557,11 @@ size_t WRITE::execute(std::vector<std::vector<int>>& data_memory) {
       output_unit_->process(register_);
       break;
     case DIRECT:
-      output_unit_->process(data_memory[register_][direction_]);
+      if (direction_ < 0) {
+        output_unit_->process(data_memory[register_][data_memory[-direction_][0]]);
+      } else {
+        output_unit_->process(data_memory[register_][direction_]);
+      }
       break;
     case INDIRECT:
       output_unit_->process(data_memory[data_memory[register_][direction_]][0]);
@@ -520,10 +582,12 @@ std::string WRITE::toString(void) const {
       instruction += "=" + std::to_string(register_);
       break;
     case DIRECT:
-      if (direction_ == 0) {
+      if (direction_ == IND) {
         instruction += std::to_string(register_);
-      } else {
+      } else if (direction_ >= 0) {
         instruction += std::to_string(register_) + "[" + std::to_string(direction_) + "]";
+      } else {
+        instruction += std::to_string(register_) + "[*" + std::to_string(-direction_) + "]";
       }
       break;
     case INDIRECT:
