@@ -103,6 +103,13 @@ std::vector<Instruction*> FormatInstructions(const std::vector<std::string>& ins
         // The next word is the instruction.
         ss >> instruction;
         std::transform(instruction.begin(), instruction.end(), instruction.begin(), ::toupper);
+        if (instruction[0] == 'J') {
+          ss >> word;
+          jump_label = word;
+          // If the label is not in the cache, add it.
+          labels_cache[jump_label] = std::make_pair(i + 1, instruction + " " + word);
+          ++counter;
+        }
         ++counter;
       } else if (counter == 0) {
         std::transform(word.begin(), word.end(), word.begin(), ::toupper);
