@@ -19,6 +19,7 @@
 class Algorithm {
   public:
     int* Solve(int* array, int size);
+  protected:
     virtual bool Small(int* array) = 0;
     virtual int* SolveSmall(int* array) = 0;
     virtual int** Divide(int* array, int size) = 0;
