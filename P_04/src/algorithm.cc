@@ -16,6 +16,8 @@
 
 #include "../include/algorithm.h"
 
+#include <iostream>
+
 /**
  * @brief Solves the problem.
  * 
@@ -24,13 +26,22 @@
  * @return int* The solution to the problem.
  */
 int* Algorithm::Solve(int* array, int size) {
-  if (Small(array)) {
-    return SolveSmall(array);
+  if (Small(array, size)) {
+    return SolveSmall(array, size);
   } else {
     int** divided_array = Divide(array, size);
     int* solution1 = Solve(divided_array[0], size / 2);
-    int* solution2 = Solve(divided_array[1] + size / 2, size / 2);
-    int* solution = Combine(solution1, solution2);
+    int* solution2 = Solve(divided_array[1], size / 2);
+    int* solution = Combine(solution1, solution2, size / 2);
     return solution;
   }
+}
+
+/**
+ * @brief Returns the recurrence of the algorithm.
+ * 
+ * @return std::string The recurrence of the algorithm.
+ */
+std::string Algorithm::Recurrence(void) {
+  return getRecurrence();
 }
