@@ -14,10 +14,18 @@
  * 
  */
 
+#include "../include/dyv.h"
+#include "../include/functions.h"
+
 #include <iostream>
 
 int main(int argc, char** argv) {
   try {
+    DyV::QuickSort quicksort;
+    int* array = GenerateRandom(10);
+    PrintArray(array, 10);
+    int* solution = quicksort.Solve(array, 10);
+    PrintArray(solution, 10);
     return 0;
   } catch(const std::exception& e) {
     std::cerr << e.what() << '\n';
