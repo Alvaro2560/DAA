@@ -17,12 +17,15 @@
 #pragma once
 
 #include "algorithm.h"
+#include "dyv.h"
 
-// TODO: Implement the MergeSort class
-class MergeSort : public Algorithm {
-  private:
-    bool Small(int* array) override;
-    int* SolveSmall(int* array) override;
-    int** Divide(int* array, int size) override;
-    int* Combine(int* solution1, int* solution2) override;
-};
+namespace DyV {
+  class MergeSort : public Algorithm {
+    private:
+      bool Small(int* array, int size) override;
+      int* SolveSmall(int* array, int size) override;
+      int** Divide(int* array, int size) override;
+      int* Combine(int* solution1, int* solution2, int size) override;
+      std::string getRecurrence(void) override;
+  };
+}
