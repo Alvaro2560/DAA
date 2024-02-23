@@ -16,4 +16,8 @@
 
 #pragma once
 
+#include <string>
+
 int* GenerateRandom(int size);
+
+void WriteArray(int* array, const int& size, const std::string& file_name);

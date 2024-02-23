@@ -18,9 +18,17 @@
 
 #include <stdlib.h>
 #include <time.h>
+#include <fstream>
+#include <iostream>
 
 // TODO: Create a namespace
 
+/**
+ * @brief Generates a random array of integers.
+ * 
+ * @param size The size of the array.
+ * @return int* The generated array.
+ */
 int* GenerateRandom(int size) {
   srand(time(NULL));
   int* array = new int[size];
@@ -28,4 +36,19 @@ int* GenerateRandom(int size) {
     array[i] = rand() % 100;
   }
   return array;
+}
+
+/**
+ * @brief Writes an array to a file.
+ * 
+ * @param array The array to write.
+ * @param size The size of the array.
+ * @param file_name The name of the file.
+ */
+void WriteArray(int* array, const int& size, const std::string& file_name) {
+  std::ofstream file(file_name);
+  for (int i = 0; i < size; i++) {
+    file << array[i] << std::endl;
+  }
+  file.close();
 }
