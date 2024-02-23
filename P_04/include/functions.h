@@ -18,6 +18,7 @@
 
 #include <string>
 
+void Help(void);
 int* GenerateRandom(int size);
-
+void PrintArray(int* array, const int& size);
 void WriteArray(int* array, const int& size, const std::string& file_name);

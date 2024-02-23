@@ -21,21 +21,6 @@
 #include <fstream>
 #include <iostream>
 
-// TODO: Create a namespace
-
-bool checkParameters(int argc, char** argv) {
-  if (argc < 3) {
-    return false;
-  }
-  if (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help") {
-    return false;
-  }
-  if (std::string(argv[2]) == "-h" || std::string(argv[2]) == "--help") {
-    return false;
-  }
-  return true;
-}
-
 /**
  * @brief Prints the help message.
  * 
@@ -58,6 +43,19 @@ int* GenerateRandom(int size) {
     array[i] = rand() % 100;
   }
   return array;
+}
+
+/**
+ * @brief Prints an array to the console.
+ * 
+ * @param array The array to print.
+ * @param size The size of the array.
+ */
+void PrintArray(int* array, const int& size) {
+  for (int i = 0; i < size; i++) {
+    std::cout << array[i] << " ";
+  }
+  std::cout << std::endl;
 }
 
 /**
