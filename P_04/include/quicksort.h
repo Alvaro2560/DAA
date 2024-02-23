@@ -16,6 +16,13 @@
 
 #pragma once
 
+#include "algorithm.h"
+
 // TODO: Implement the QuickSort class
-class QuickSort {
+class QuickSort : public Algorithm {
+  private:
+    bool Small(int* array) override;
+    int* SolveSmall(int* array) override;
+    int** Divide(int* array, int size) override;
+    int* Combine(int* solution1, int* solution2) override;
 };
