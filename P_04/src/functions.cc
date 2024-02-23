@@ -23,6 +23,28 @@
 
 // TODO: Create a namespace
 
+bool checkParameters(int argc, char** argv) {
+  if (argc < 3) {
+    return false;
+  }
+  if (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help") {
+    return false;
+  }
+  if (std::string(argv[2]) == "-h" || std::string(argv[2]) == "--help") {
+    return false;
+  }
+  return true;
+}
+
+/**
+ * @brief Prints the help message.
+ * 
+ */
+void Help(void) {
+  std::cout << "Usage: ./dyv <size> <[-m | --merge-sort] | [-q | --quick-sort]> [-f | --file] [filename]" << std::endl;
+  std::cout << "Generates a random array of integers of the given size and sort it using the idicated algorithm." << std::endl;
+}
+
 /**
  * @brief Generates a random array of integers.
  * 
