@@ -36,10 +36,10 @@ void Help(void) {
  * @param size The size of the array.
  * @return int* The generated array.
  */
-int* GenerateRandom(int size) {
+std::vector<int> GenerateRandom(const size_t& size) {
   srand(time(NULL));
-  int* array = new int[size];
-  for (int i = 0; i < size; i++) {
+  std::vector<int> array(size);
+  for (size_t i = 0; i < size; i++) {
     array[i] = rand() % 100;
   }
   return array;
@@ -51,8 +51,8 @@ int* GenerateRandom(int size) {
  * @param array The array to print.
  * @param size The size of the array.
  */
-void PrintArray(int* array, const int& size) {
-  for (int i = 0; i < size; i++) {
+void PrintArray(const std::vector<int>& array) {
+  for (size_t i = 0; i < array.size(); i++) {
     std::cout << array[i] << " ";
   }
   std::cout << std::endl;
@@ -65,9 +65,9 @@ void PrintArray(int* array, const int& size) {
  * @param size The size of the array.
  * @param file_name The name of the file.
  */
-void WriteArray(int* array, const int& size, const std::string& file_name) {
+void WriteArray(const std::vector<int>& array, const std::string& file_name) {
   std::ofstream file(file_name);
-  for (int i = 0; i < size; i++) {
+  for (size_t i = 0; i < array.size(); i++) {
     file << array[i] << std::endl;
   }
   file.close();

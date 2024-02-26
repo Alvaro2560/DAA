@@ -22,12 +22,12 @@
 int main(int argc, char** argv) {
   try {
     DyV::QuickSort quicksort;
-    int* array = GenerateRandom(10);
-    PrintArray(array, 10);
-    int* solution = quicksort.Solve(array, 10);
-    PrintArray(solution, 10);
+    std::vector<int> array = GenerateRandom(10);
+    PrintArray(array);
+    std::vector<int> solution = quicksort.Solve(array, 10);
+    PrintArray(solution);
     return 0;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     std::cerr << e.what() << '\n';
   }
 }

@@ -17,8 +17,9 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 void Help(void);
-int* GenerateRandom(int size);
-void PrintArray(int* array, const int& size);
-void WriteArray(int* array, const int& size, const std::string& file_name);
+std::vector<int> GenerateRandom(const size_t& size);
+void PrintArray(const std::vector<int>& array);
+void WriteArray(const std::vector<int>& array, const std::string& file_name);
