@@ -18,4 +18,3 @@
 
 #include "quicksort.h"
 #include "mergesort.h"
-#include "algorithm.h"
