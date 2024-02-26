@@ -16,6 +16,8 @@
 
 #include "../include/quicksort.h"
 
+#include <iostream>
+
 /**
  * @brief Checks if the array is small enough to be solved.
  * 
@@ -23,8 +25,8 @@
  * @return true If the array is small enough to be solved.
  * @return false If the array is not small enough to be solved.
  */
-bool DyV::QuickSort::Small(int* array, int size) {
-  if (size <= 1) {
+bool DyV::QuickSort::Small(const std::vector<int>& array) {
+  if (array.size() <= 2) {
     return true;
   }
   return false;
@@ -34,10 +36,16 @@ bool DyV::QuickSort::Small(int* array, int size) {
  * @brief Solves the problem for small arrays.
  * 
  * @param array The array to solve.
- * @return int* The solution to the problem.
+ * @return std::vector<int> The solution to the problem.
  */
-int* DyV::QuickSort::SolveSmall(int* array, int size) {
-  return array;
+std::vector<int> DyV::QuickSort::SolveSmall(const std::vector<int>& array) {
+  std::vector<int> solution = array;
+  if (solution[0] > solution[1]) {
+    int temp = solution[0];
+    solution[0] = solution[1];
+    solution[1] = temp;
+  }
+  return solution;
 }
 
 /**
@@ -45,52 +53,35 @@ int* DyV::QuickSort::SolveSmall(int* array, int size) {
  * 
  * @param array The array to divide.
  * @param size The size of the array.
- * @return int** The divided array.
+ * @return std::pair<std::vector<int>, std::vector<int>> The divided array.
  */
-int** DyV::QuickSort::Divide(int* array, int size) {
-  int pivot = array[size / 2];
-  int i = 0;
-  int j = size - 1;
-  while (i <= j) {
-    while (array[i] < pivot) i++;
-    while (array[j] > pivot) j--;
-    if (i <= j) {
-      std::swap(array[i], array[j]);
-      i++;
-      j--;
+std::pair<std::vector<int>, std::vector<int>> DyV::QuickSort::Divide(const std::vector<int>& array, const size_t& size) {
+  int pivot = array[0];
+  std::vector<int> divided_array1, divided_array2;
+  for (size_t i = 1; i < array.size(); i++) {
+    if (array[i] <= pivot) {
+      divided_array1.emplace_back(array[i]);
+    } else {
+      divided_array2.emplace_back(array[i]);
     }
   }
-  int** divided_array = new int*[2];
-  divided_array[0] = array;
-  divided_array[1] = array + i;
-  return divided_array;
+  divided_array1.emplace_back(pivot);
+  return std::make_pair(divided_array1, divided_array2);
 }
-// TODO: Check why two numbers converts to 0
+
 /**
  * @brief Combines the solutions to the subproblems.
  * 
  * @param solution1 The solution to the first subproblem.
  * @param solution2 The solution to the second subproblem.
- * @return int* The combined solution.
+ * @return std::vector<int> The combined solution.
  */
-int* DyV::QuickSort::Combine(int* solution1, int* solution2, int size) {
-  size_t size1 = size, size2 = size;
-  int* combined = new int[size1 + size2];
-  int i = 0, j = 0, k = 0;
-  while (i < size1 && j < size2) {
-    if (solution1[i] <= solution2[j]) {
-        combined[k++] = solution1[i++];
-    } else {
-        combined[k++] = solution2[j++];
-    }
+std::vector<int> DyV::QuickSort::Combine(const std::vector<int>& solution1, const std::vector<int>& solution2) {
+  std::vector<int> combined_solution = solution1;
+  for (size_t i = 0; i < solution2.size(); i++) {
+    combined_solution.emplace_back(solution2[i]);
   }
-  while (i < size1) {
-    combined[k++] = solution1[i++];
-  }
-  while (j < size2) {
-    combined[k++] = solution2[j++];
-  }
-  return combined;
+  return combined_solution;
 }
 
 /**
