@@ -39,6 +39,9 @@ bool DyV::QuickSort::Small(const std::vector<int>& array) {
  * @return std::vector<int> The solution to the problem.
  */
 std::vector<int> DyV::QuickSort::SolveSmall(const std::vector<int>& array) {
+  if (array.size() == 1) {
+    return array;
+  }
   std::vector<int> solution = array;
   if (solution[0] > solution[1]) {
     int temp = solution[0];
@@ -59,13 +62,17 @@ std::pair<std::vector<int>, std::vector<int>> DyV::QuickSort::Divide(const std::
   int pivot = array[0];
   std::vector<int> divided_array1, divided_array2;
   for (size_t i = 1; i < array.size(); i++) {
-    if (array[i] <= pivot) {
+    if (array[i] < pivot) {
       divided_array1.emplace_back(array[i]);
     } else {
       divided_array2.emplace_back(array[i]);
     }
   }
-  divided_array1.emplace_back(pivot);
+  if (divided_array2.size() == 0){
+    divided_array2.emplace_back(pivot);
+  } else {
+    divided_array1.emplace_back(pivot);
+  }
   return std::make_pair(divided_array1, divided_array2);
 }
 
