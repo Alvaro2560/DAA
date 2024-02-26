@@ -17,15 +17,16 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 class Algorithm {
   public:
-    int* Solve(int* array, int size);
+    std::vector<int> Solve(const std::vector<int>& array, const size_t& size);
     std::string Recurrence(void);
   protected:
-    virtual bool Small(int* array, int size) = 0;
-    virtual int* SolveSmall(int* array, int size) = 0;
-    virtual int** Divide(int* array, int size) = 0;
-    virtual int* Combine(int* solution1, int* solution2, int size) = 0;
+    virtual bool Small(const std::vector<int>& array) = 0;
+    virtual std::vector<int> SolveSmall(const std::vector<int>& array) = 0;
+    virtual std::pair<std::vector<int>, std::vector<int>> Divide(const std::vector<int>& array, const size_t& size) = 0;
+    virtual std::vector<int> Combine(const std::vector<int>& solution1, const std::vector<int>& solution2) = 0;
     virtual std::string getRecurrence(void) = 0;
 };
