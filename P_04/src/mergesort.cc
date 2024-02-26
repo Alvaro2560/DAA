@@ -4,9 +4,9 @@
  * Grado en Ingeniería Informática
  * Diseño y Análisis de Algoritmos 2023-2024
  * 
- * @file DyV::mergesort.cc
+ * @file mergesort.cc
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
- * @brief Definition of the class DyV::MergeSort.
+ * @brief Definition of the class MergeSort.
  * @version 0.1
  * @since Feb 22 2024
  * 
@@ -23,7 +23,10 @@
  * @return true If the array is small enough to be solved.
  * @return false If the array is not small enough to be solved.
  */
-bool DyV::MergeSort::Small(int* array, int size) {
+bool DyV::MergeSort::Small(const std::vector<int>& array) {
+  if (array.size() <= 2) {
+    return true;
+  }
   return false;
 }
 
@@ -31,10 +34,19 @@ bool DyV::MergeSort::Small(int* array, int size) {
  * @brief Solves the problem for small arrays.
  * 
  * @param array The array to solve.
- * @return int* The solution to the problem.
+ * @return std::vector<int> The solution to the problem.
  */
-int* DyV::MergeSort::SolveSmall(int* array, int size) {
-  return array;
+std::vector<int> DyV::MergeSort::SolveSmall(const std::vector<int>& array) {
+  if (array.size() == 1) {
+    return array;
+  }
+  std::vector<int> solution = array;
+  if (solution[0] > solution[1]) {
+    int temp = solution[0];
+    solution[0] = solution[1];
+    solution[1] = temp;
+  }
+  return solution;
 }
 
 /**
@@ -42,20 +54,22 @@ int* DyV::MergeSort::SolveSmall(int* array, int size) {
  * 
  * @param array The array to divide.
  * @param size The size of the array.
- * @return int** The divided array.
+ * @return std::pair<std::vector<int>, std::vector<int>> The divided array.
  */
-int** DyV::MergeSort::Divide(int* array, int size) {
-  int mid = size / 2;
-  int** divided_array = new int*[2];
-  divided_array[0] = new int[mid];
-  divided_array[1] = new int[size - mid];
-  for (int i = 0; i < mid; ++i) {
-    divided_array[0][i] = array[i];
+std::pair<std::vector<int>, std::vector<int>> DyV::MergeSort::Divide(const std::vector<int>& array, const size_t& size) {
+  std::vector<int> first_half;
+  std::vector<int> second_half;
+  size_t half = size / 2;
+  if (size % 2 != 0) {
+    half = size / 2 + 1;
   }
-  for (int i = mid; i < size; ++i) {
-    divided_array[1][i - mid] = array[i];
+  for (size_t i = 0; i < half; i++) {
+    first_half.emplace_back(array[i]);
   }
-  return divided_array;
+  for (size_t i = half; i < size; i++) {
+    second_half.emplace_back(array[i]);
+  }
+  return std::make_pair(first_half, second_half);
 }
 
 /**
@@ -63,26 +77,30 @@ int** DyV::MergeSort::Divide(int* array, int size) {
  * 
  * @param solution1 The solution to the first subproblem.
  * @param solution2 The solution to the second subproblem.
- * @return int* The combined solution.
+ * @return std::vector<int> The combined solution.
  */
-int* DyV::MergeSort::Combine(int* solution1, int* solution2, int size) {
-  int size1 = sizeof(solution1), size2 = sizeof(solution2);
-  int* combined = new int[size1 + size2];
-  int i = 0, j = 0, k = 0;
-  while (i < size1 && j < size2) {
-    if (solution1[i] <= solution2[j]) {
-        combined[k++] = solution1[i++];
+std::vector<int> DyV::MergeSort::Combine(const std::vector<int>& solution1, const std::vector<int>& solution2) {
+  std::vector<int> solution;
+  size_t i = 0;
+  size_t j = 0;
+  while (i < solution1.size() && j < solution2.size()) {
+    if (solution1[i] < solution2[j]) {
+      solution.emplace_back(solution1[i]);
+      i++;
     } else {
-        combined[k++] = solution2[j++];
+      solution.emplace_back(solution2[j]);
+      j++;
     }
   }
-  while (i < size1) {
-    combined[k++] = solution1[i++];
+  while (i < solution1.size()) {
+    solution.emplace_back(solution1[i]);
+    i++;
   }
-  while (j < size2) {
-    combined[k++] = solution2[j++];
+  while (j < solution2.size()) {
+    solution.emplace_back(solution2[j]);
+    j++;
   }
-  return combined;
+  return solution;
 }
 
 /**

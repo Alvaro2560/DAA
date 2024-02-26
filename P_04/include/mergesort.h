@@ -17,15 +17,14 @@
 #pragma once
 
 #include "algorithm.h"
-#include "dyv.h"
 
 namespace DyV {
   class MergeSort : public Algorithm {
     private:
-      bool Small(int* array, int size) override;
-      int* SolveSmall(int* array, int size) override;
-      int** Divide(int* array, int size) override;
-      int* Combine(int* solution1, int* solution2, int size) override;
+      bool Small(const std::vector<int>& array) override;
+      std::vector<int> SolveSmall(const std::vector<int>& array) override;
+      std::pair<std::vector<int>, std::vector<int>> Divide(const std::vector<int>& array, const size_t& size) override;
+      std::vector<int> Combine(const std::vector<int>& solution1, const std::vector<int>& solution2) override;
       std::string getRecurrence(void) override;
   };
 }
