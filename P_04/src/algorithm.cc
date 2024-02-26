@@ -16,53 +16,21 @@
 
 #include "../include/algorithm.h"
 
-#include <iostream>
-
 /**
  * @brief Solves the problem.
  * 
  * @param array The array to solve.
  * @param size The size of the array.
- * @return int* The solution to the problem.
+ * @return std::vector<int> The solution to the problem.
  */
 std::vector<int> Algorithm::Solve(const std::vector<int>& array, const size_t& size) {
-  std::cout << "Array: ";
-  for (size_t i = 0; i < array.size(); i++) {
-    std::cout << array[i] << " ";
-  }
-  std::cout << std::endl << std::endl;
   if (Small(array)) {
     return SolveSmall(array);
   } else {
     std::pair<std::vector<int>, std::vector<int>> divided_array = Divide(array, size);
-    std::cout << "Divided array 1: ";
-    for (size_t i = 0; i < divided_array.first.size(); i++) {
-      std::cout << divided_array.first[i] << " ";
-    }
-    std::cout << std::endl;
-    std::cout << "Divided array 2: ";
-    for (size_t i = 0; i < divided_array.second.size(); i++) {
-      std::cout << divided_array.second[i] << " ";
-    }
-    std::cout << std::endl << std::endl;
-    std::vector<int> solution1 = Solve(divided_array.first, size / 2);
-    std::cout << "Solution 1: ";
-    for (size_t i = 0; i < solution1.size(); i++) {
-      std::cout << solution1[i] << " ";
-    }
-    std::cout << std::endl;
-    std::vector<int> solution2 = Solve(divided_array.second, size / 2);
-    std::cout << "Solution 2: ";
-    for (size_t i = 0; i < solution2.size(); i++) {
-      std::cout << solution2[i] << " ";
-    }
-    std::cout << std::endl;
+    std::vector<int> solution1 = Solve(divided_array.first, divided_array.first.size());
+    std::vector<int> solution2 = Solve(divided_array.second, divided_array.second.size());
     std::vector<int> solution = Combine(solution1, solution2);
-    std::cout << "Combined solution: ";
-    for (size_t i = 0; i < solution.size(); i++) {
-      std::cout << solution[i] << " ";
-    }
-    std::cout << std::endl << std::endl;
     return solution;
   }
 }
