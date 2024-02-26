@@ -16,10 +16,22 @@
 
 #pragma once
 
+#include "../include/dyv.h"
+
 #include <string>
 #include <vector>
 
 void Help(void);
 std::vector<int> GenerateRandom(const size_t& size);
-void PrintArray(const std::vector<int>& array);
-void WriteArray(const std::vector<int>& array, const std::string& file_name);
+void CalculateTime(const std::vector<int>& array, DyV::QuickSort& quicksort,
+                   DyV::MergeSort& mergesort, std::vector<std::vector<int>>& quicksort_solutions,
+                   std::vector<std::vector<int>>& mergesort_solutions, std::vector<float>& quicksort_times,
+                   std::vector<float>& mergesort_times);
+void PrintData(std::vector<std::vector<int>>& quicksort_solutions,
+               std::vector<std::vector<int>>& mergesort_solutions,
+               std::vector<float>& quicksort_times,
+               std::vector<float>& mergesort_times);
+void WriteData(std::vector<std::vector<int>>& quicksort_solutions,
+               std::vector<std::vector<int>>& mergesort_solutions,
+               std::vector<float>& quicksort_times,
+               std::vector<float>& mergesort_times);
