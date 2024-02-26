@@ -4,9 +4,9 @@
  * Grado en Ingeniería Informática
  * Diseño y Análisis de Algoritmos 2023-2024
  * 
- * @file DyV::quicksort.cc
+ * @file quicksort.cc
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
- * @brief Definition of the class DyV::QuickSort.
+ * @brief Definition of the class QuickSort.
  * @version 0.1
  * @since Feb 22 2024
  * 
@@ -15,8 +15,6 @@
  */
 
 #include "../include/quicksort.h"
-
-#include <iostream>
 
 /**
  * @brief Checks if the array is small enough to be solved.

@@ -17,7 +17,6 @@
 #pragma once
 
 #include "algorithm.h"
-#include "dyv.h"
 
 namespace DyV {
   class QuickSort : public Algorithm {
