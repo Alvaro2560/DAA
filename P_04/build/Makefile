@@ -1,5 +1,5 @@
 CC=g++
-CXXFLAGS=-g -std=c++17
+CXXFLAGS=-g -std=c++17 -Wall
 
 OBJS = ../src/main.o ../src/functions.o ../src/algorithm.o ../src/mergesort.o ../src/quicksort.o
 
