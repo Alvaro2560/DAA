@@ -59,7 +59,7 @@ std::vector<int> DyV::QuickSort::SolveSmall(const std::vector<int>& array) {
 std::pair<std::vector<int>, std::vector<int>> DyV::QuickSort::Divide(const std::vector<int>& array, const size_t& size) {
   int pivot = array[0];
   std::vector<int> divided_array1, divided_array2;
-  for (size_t i = 1; i < array.size(); i++) {
+  for (size_t i = 1; i < size; i++) {
     if (array[i] < pivot) {
       divided_array1.emplace_back(array[i]);
     } else {
