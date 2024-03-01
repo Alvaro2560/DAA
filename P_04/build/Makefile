@@ -1,7 +1,7 @@
 CC=g++
 CXXFLAGS=-g -std=c++17 -Wall
 
-OBJS = ../src/main.o ../src/functions.o ../src/algorithm.o ../src/mergesort.o ../src/quicksort.o
+OBJS = ../src/main.o ../src/functions.o
 
 all: ${OBJS}
 	$(CC) $(CXXFLAGS) -o dyv ${OBJS}
