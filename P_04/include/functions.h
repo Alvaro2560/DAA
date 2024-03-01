@@ -18,20 +18,44 @@
 
 #include "../include/dyv.h"
 
-#include <string>
-#include <vector>
+#include <iostream>
+#include <chrono>
 
 void Help(void);
 std::vector<int> GenerateRandom(const size_t& size);
-void CalculateTime(const std::vector<int>& array, DyV::QuickSort& quicksort,
-                   DyV::MergeSort& mergesort, std::vector<std::vector<int>>& quicksort_solutions,
-                   std::vector<std::vector<int>>& mergesort_solutions, std::vector<float>& quicksort_times,
-                   std::vector<float>& mergesort_times);
-void PrintData(std::vector<std::vector<int>>& quicksort_solutions,
-               std::vector<std::vector<int>>& mergesort_solutions,
-               std::vector<float>& quicksort_times,
-               std::vector<float>& mergesort_times);
-void WriteData(std::vector<std::vector<int>>& quicksort_solutions,
-               std::vector<std::vector<int>>& mergesort_solutions,
-               std::vector<float>& quicksort_times,
-               std::vector<float>& mergesort_times);
+void PrintInfo(const std::vector<std::pair<size_t, float>>& quicksort_times,
+               const std::vector<std::pair<size_t, float>>& mergesort_times);
+
+/**
+ * @brief Calculates the time it took to solve the problem using Quick Sort.
+ * 
+ * @tparam T 
+ * @param array Problem to solve.
+ * @return float Time it took to solve the problem.
+ */
+template <typename T>
+float QuickSortTime(const DyV::Problem<T>& array) {
+  DyV::QuickSort<T> quicksort;
+  std::chrono::time_point<std::chrono::system_clock> start, end;
+  start = std::chrono::system_clock::now();
+  DyV::Solution<T> solution = quicksort.Solve(array, array.size());
+  end = std::chrono::system_clock::now();
+  return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+}
+
+/**
+ * @brief Calculates the time it took to solve the problem using Merge Sort.
+ * 
+ * @tparam T 
+ * @param array Problem to solve.
+ * @return float Time it took to solve the problem.
+ */
+template <typename T>
+float MergeSortTime(const DyV::Problem<T>& array) {
+  DyV::MergeSort<T> mergesort;
+  std::chrono::time_point<std::chrono::system_clock> start, end;
+  start = std::chrono::system_clock::now();
+  DyV::Solution<T> solution = mergesort.Solve(array, array.size());
+  end = std::chrono::system_clock::now();
+  return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+}
