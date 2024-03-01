@@ -18,3 +18,5 @@
 
 #include "quicksort.h"
 #include "mergesort.h"
+#include "solution.h"
+#include "problem.h"
