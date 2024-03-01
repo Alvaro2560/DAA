@@ -16,17 +16,55 @@
 
 #pragma once
 
+#include "problem.h"
+#include "solution.h"
+
 #include <string>
 #include <vector>
 
+/**
+ * @brief Class that acts as a base for the Divide and Conquer algorithms.
+ * 
+ */
+template <typename T>
 class Algorithm {
   public:
-    std::vector<int> Solve(const std::vector<int>& array, const size_t& size);
-    std::string Recurrence(void);
+    /**
+     * @brief Solves the problem using the Divide and Conquer paradigm.
+     * 
+     * @param array The problem to solve.
+     * @param size The size of the problem.
+     * @return DyV::Solution<T> The solution to the problem.
+     */
+    DyV::Solution<T> Solve(const DyV::Problem<T>& array, const size_t& size) {
+      if (Small(array)) {
+        return SolveSmall(array);
+      } else {
+        std::vector<DyV::Problem<T>> subproblems = Divide(array, size);
+        std::vector<DyV::Solution<T>> solutions;
+        for (size_t i = 0; i < subproblems.size(); i++) {
+          solutions.emplace_back(DyV::Solution<T>(Solve(subproblems[i], subproblems[i].size())));
+        }
+        DyV::Solution<T> solution = solutions[0];
+        for (size_t i = 1; i < solutions.size(); i++) {
+          solution = Combine(solution, solutions[i]);
+        }
+        return solution;
+      }
+    }
+
+    /**
+     * @brief Returns the recurrence of the algorithm.
+     * 
+     * @return std::string The recurrence of the algorithm.
+     */
+    std::string Recurrence(void) {
+      return getRecurrence();
+    }
   protected:
-    virtual bool Small(const std::vector<int>& array) = 0;
-    virtual std::vector<int> SolveSmall(const std::vector<int>& array) = 0;
-    virtual std::pair<std::vector<int>, std::vector<int>> Divide(const std::vector<int>& array, const size_t& size) = 0;
-    virtual std::vector<int> Combine(const std::vector<int>& solution1, const std::vector<int>& solution2) = 0;
+    virtual bool Small(const DyV::Problem<T>& array) = 0;
+    virtual DyV::Solution<T> SolveSmall(const DyV::Problem<T>& array) = 0;
+    virtual std::vector<DyV::Problem<T>> Divide(const DyV::Problem<T>& array, const size_t& size) = 0;
+    virtual DyV::Solution<T> Combine(const DyV::Solution<T>& solution1, const DyV::Solution<T>& solution2) = 0;
     virtual std::string getRecurrence(void) = 0;
 };
