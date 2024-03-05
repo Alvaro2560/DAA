@@ -26,7 +26,11 @@ namespace DyV {
   template <typename T>
   class MergeSort : public Algorithm<T> {
     public:
-      MergeSort(void) = default;
+      MergeSort(void) {
+        Algorithm<T>::a_ = "2";
+        Algorithm<T>::b_ = "n/2";
+        Algorithm<T>::c_ = "O(n)";
+      };
     private:
       /**
        * @brief Checks if the array is small enough to be solved.
@@ -116,15 +120,6 @@ namespace DyV {
           j++;
         }
         return solution;
-      }
-
-      /**
-       * @brief Returns the recurrence of the algorithm.
-       * 
-       * @return std::string The recurrence of the algorithm.
-       */
-      std::string getRecurrence(void) {
-        return "T(n) = 2T(n/2) + O(n)";
       }
   };
 }
