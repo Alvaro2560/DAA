@@ -58,13 +58,22 @@ class Algorithm {
      * 
      * @return std::string The recurrence of the algorithm.
      */
-    std::string Recurrence(void) {
-      return getRecurrence();
+    std::string getRecurrence(void) {
+      std::string recurrence = "T(n) <= ";
+      recurrence += a_;
+      recurrence += "T(";
+      recurrence += b_;
+      recurrence += ") + ";
+      recurrence += c_;
+      return recurrence;
     }
   protected:
     virtual bool Small(const DyV::Problem<T>& array) = 0;
     virtual DyV::Solution<T> SolveSmall(const DyV::Problem<T>& array) = 0;
     virtual std::vector<DyV::Problem<T>> Divide(const DyV::Problem<T>& array, const size_t& size) = 0;
     virtual DyV::Solution<T> Combine(const DyV::Solution<T>& solution1, const DyV::Solution<T>& solution2) = 0;
-    virtual std::string getRecurrence(void) = 0;
+  protected:
+    std::string a_;
+    std::string b_;
+    std::string c_;
 };
