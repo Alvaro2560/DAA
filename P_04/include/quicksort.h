@@ -26,7 +26,11 @@ namespace DyV {
   template <typename T>
   class QuickSort : public Algorithm<T> {
     public:
-      QuickSort(void) = default;
+      QuickSort(void) {
+        Algorithm<T>::a_ = "T(pn) + ";
+        Algorithm<T>::b_ = "(1-p)n";
+        Algorithm<T>::c_ = "O(n)";
+      };
     private:
       /**
        * @brief Checks if the array is small enough to be solved.
@@ -108,15 +112,6 @@ namespace DyV {
           j++;
         }
         return combined_solution;
-      }
-
-      /**
-       * @brief Returns the recurrence of the algorithm.
-       * 
-       * @return std::string The recurrence of the algorithm.
-       */
-      std::string getRecurrence(void) {
-        return "T(n) <= T(pn) + T((1-p)n) + O(n)";
       }
   };
 }
