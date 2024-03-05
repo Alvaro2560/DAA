@@ -19,6 +19,13 @@
 #include <iostream>
 #include <fstream>
 
+/**
+ * @brief Main function of the program.
+ * 
+ * @param argc Number of arguments.
+ * @param argv Arguments.
+ * @return int 
+ */
 int main(int argc, char** argv) {
   try {
     std::ofstream quicksort_file, mergesort_file;
