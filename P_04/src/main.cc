@@ -37,21 +37,30 @@ int main(int argc, char** argv) {
       quicksort_file.open("quicksort_times.csv");
       mergesort_file.open("mergesort_times.csv");
     }
+    // Index of instances to print.
     const size_t kInstances = (size_t)std::stoi(argv[1]);
     const size_t kPrintableIndex = kInstances / 10;
     size_t printable_element = kPrintableIndex;
+    // Declarations.
     std::vector<std::pair<size_t, float>> quicksort_times, mergesort_times;
+    std::vector<std::pair<int, int>> quicksort_recurrences, mergesort_recurrences;
     std::vector<int> instance;
+    DyV::Solution<std::vector<int>> quicksort_solution, mergesort_solution;
     float quicksort_time, mergesort_time;
+    // Solve the problems.
     for (size_t i = 2; i < kInstances + 1; i++) {
       instance = GenerateRandom(i);
       DyV::Problem<std::vector<int>> problem(instance);
-      quicksort_time = QuickSortTime(problem);
-      mergesort_time = MergeSortTime(problem);
+      // If the problem is printable, the time it took to solve it is stored in a vector and its recurrence tree.
       if (i == printable_element) {
+        quicksort_time = QuickSortTime(problem, quicksort_recurrences, quicksort_solution, true);
+        mergesort_time = MergeSortTime(problem, mergesort_recurrences, mergesort_solution, true);
         quicksort_times.emplace_back(std::pair<size_t, float>(i, quicksort_time));
         mergesort_times.emplace_back(std::pair<size_t, float>(i, mergesort_time));
         printable_element += kPrintableIndex;
+      } else {
+        quicksort_time = QuickSortTime(problem, quicksort_recurrences, quicksort_solution);
+        mergesort_time = MergeSortTime(problem, mergesort_recurrences, mergesort_solution);
       }
       if (quicksort_file.is_open()) {
         quicksort_file << i << "," << quicksort_time << std::endl;
@@ -62,7 +71,7 @@ int main(int argc, char** argv) {
       quicksort_file.close();
       mergesort_file.close();
     }
-    PrintInfo(quicksort_times, mergesort_times);
+    PrintInfo(quicksort_times, mergesort_times, quicksort_recurrences, mergesort_recurrences);
     return 0;
   } catch (const std::exception& e) {
     std::cerr << e.what() << '\n';
