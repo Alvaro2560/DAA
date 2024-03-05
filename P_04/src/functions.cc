@@ -49,18 +49,24 @@ std::vector<int> GenerateRandom(const size_t& size) {
  * @param mergesort_times Times it took to solve the problems using Merge Sort.
  */
 void PrintInfo(const std::vector<std::pair<size_t, float>>& quicksort_times,
-               const std::vector<std::pair<size_t, float>>& mergesort_times) {
+               const std::vector<std::pair<size_t, float>>& mergesort_times,
+               const std::vector<std::pair<int, int>>& quicksort_recurrences,
+               const std::vector<std::pair<int, int>>& mergesort_recurrences) {
   std::cout << "QuickSort times:" << std::endl << std::endl;
-  std::cout << "Size             Time (ms)" << std::endl;
-  std::cout << "----------------------------" << std::endl;
+  std::cout << "Size             Time (ms)              Max. Rec. Level          Calls" << std::endl;
+  std::cout << "--------------------------------------------------------------------------" << std::endl;
   for (size_t i = 0; i < quicksort_times.size(); i++) {
-    std::cout << quicksort_times[i].first << "                 " << quicksort_times[i].second << std::endl;
+    std::cout << quicksort_times[i].first << "                 " << quicksort_times[i].second;
+    std::cout << "                         " << quicksort_recurrences[i].first;
+    std::cout << "                   " << quicksort_recurrences[i].second << std::endl;
   }
   std::cout << std::endl;
   std::cout << "MergeSort times:" << std::endl << std::endl;
-  std::cout << "Size             Time (ms)" << std::endl;
-  std::cout << "----------------------------" << std::endl;
+  std::cout << "Size             Time (ms)              Max. Rec. Level          Calls" << std::endl;
+  std::cout << "-------------------------------------------------------------------------" << std::endl;
   for (size_t i = 0; i < mergesort_times.size(); i++) {
-    std::cout << mergesort_times[i].first << "                 " << mergesort_times[i].second << std::endl;
+    std::cout << mergesort_times[i].first << "                 " << mergesort_times[i].second;
+    std::cout << "                         " << mergesort_recurrences[i].first;
+    std::cout << "                   " << mergesort_recurrences[i].second << std::endl;
   }
 } 
