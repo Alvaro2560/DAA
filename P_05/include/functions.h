@@ -34,9 +34,9 @@ void PrintInfo(const std::vector<std::pair<size_t, float>>& quicksort_times,
  * @param solution Solution of the problem.
  * @return float Time it took to solve the problem.
  */
-template <typename T>
-float QuickSortTime(const DyV::Problem<T>& array, DyV::Solution<T> solution) {
-  DyV::QuickSort<T> quicksort;
+template <typename T, typename U, typename V>
+float QuickSortTime(const DyV::Problem<T>& array, DyV::Solution<V> solution) {
+  DyV::QuickSort<T, U, V> quicksort;
   std::chrono::time_point<std::chrono::system_clock> start, end;
   start = std::chrono::system_clock::now();
   solution = quicksort.Solve(array, array.size());
@@ -52,9 +52,9 @@ float QuickSortTime(const DyV::Problem<T>& array, DyV::Solution<T> solution) {
  * @param solution Solution of the problem.
  * @return float Time it took to solve the problem.
  */
-template <typename T>
-float MergeSortTime(const DyV::Problem<T>& array, DyV::Solution<T> solution) {
-  DyV::MergeSort<T> mergesort;
+template <typename T, typename U, typename V>
+float MergeSortTime(const DyV::Problem<T>& array, DyV::Solution<V> solution) {
+  DyV::MergeSort<T, U, V> mergesort;
   std::chrono::time_point<std::chrono::system_clock> start, end;
   start = std::chrono::system_clock::now();
   solution = mergesort.Solve(array, array.size());
