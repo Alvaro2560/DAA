@@ -44,7 +44,7 @@ class Algorithm {
         std::vector<DyV::Solution<T>> solutions;
         // Solve the subproblems.
         for (size_t i = 0; i < subproblems.size(); i++) {
-          solutions.emplace_back(DyV::Solution<T>(Solve(subproblems[i], subproblems[i].size(), recursion_level + 1)));
+          solutions.emplace_back(DyV::Solution<T>(Solve(subproblems[i], subproblems[i].size()));
         }
         DyV::Solution<T> solution = solutions[0];
         // Combine the solutions.
