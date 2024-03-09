@@ -23,13 +23,13 @@ namespace DyV {
    * @brief Class that executes the MergeSort algorithm.
    * 
    */
-  template <typename T>
-  class MergeSort : public Algorithm<T> {
+  template <typename T, typename U, typename V>
+  class MergeSort : public Algorithm<T, U, V> {
     public:
       MergeSort(void) {
-        Algorithm<T>::a_ = "2";
-        Algorithm<T>::b_ = "n/2";
-        Algorithm<T>::c_ = "O(n)";
+        Algorithm<T, U, V>::a_ = "2";
+        Algorithm<T, U, V>::b_ = "n/2";
+        Algorithm<T, U, V>::c_ = "O(n)";
       };
     private:
       /**
@@ -52,11 +52,11 @@ namespace DyV {
        * @param array The array to solve.
        * @return std::vector<int> The solution to the problem.
        */
-      DyV::Solution<T> SolveSmall(const DyV::Problem<T>& array) {
+      DyV::Solution<V> SolveSmall(const DyV::Problem<T>& array, const U& key) {
         if (array.size() == 1) {
-          return Solution<T>(array.getData());
+          return Solution<V>(array.getData());
         }
-        Solution<T> solution(array.getData());
+        Solution<V> solution(array.getData());
         if (solution[0] > solution[1]) {
           int temp = solution[0];
           solution[0] = solution[1];
@@ -69,20 +69,20 @@ namespace DyV {
        * @brief Divides the problem into subproblems.
        * 
        * @param array The array to divide.
-       * @param size The size of the array.
-       * @return std::pair<std::vector<int>, std::vector<int>> The divided array.
+       * @param key The key to divide the array.
+       * @return std::vector<DyV::Problem<T>> The divided array.
        */
-      std::vector<DyV::Problem<T>> Divide(const DyV::Problem<T>& array, const size_t& size) {
+      std::vector<DyV::Problem<T>> Divide(const DyV::Problem<T>& array, const U& key) {
         Problem<T> first_half;
         Problem<T> second_half;
-        size_t half = size / 2;
-        if (size % 2 != 0) {
-          half = size / 2 + 1;
+        size_t half = array.size() / 2;
+        if (array.size() % 2 != 0) {
+          half = array.size() / 2 + 1;
         }
         for (size_t i = 0; i < half; i++) {
           first_half.emplace_back(array[i]);
         }
-        for (size_t i = half; i < size; i++) {
+        for (size_t i = half; i < array.size(); i++) {
           second_half.emplace_back(array[i]);
         }
         std::vector<Problem<T>> divided_arrays;
@@ -98,8 +98,8 @@ namespace DyV {
        * @param solution2 The solution to the second subproblem.
        * @return std::vector<int> The combined solution.
        */
-      DyV::Solution<T> Combine(const DyV::Solution<T>& solution1, const DyV::Solution<T>& solution2) {
-        Solution<T> solution;
+      DyV::Solution<V> Combine(const DyV::Solution<V>& solution1, const DyV::Solution<V>& solution2) {
+        Solution<V> solution;
         size_t i = 0;
         size_t j = 0;
         while (i < solution1.size() && j < solution2.size()) {
