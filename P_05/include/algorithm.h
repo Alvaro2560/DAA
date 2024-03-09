@@ -34,7 +34,6 @@ class Algorithm {
      * 
      * @param array The problem to solve.
      * @param size The size of the problem.
-     * @param recursion_level Level of the recursion tree.
      * @return DyV::Solution<T> The solution to the problem.
      */
     DyV::Solution<T> Solve(const DyV::Problem<T>& array, const size_t& size) {
