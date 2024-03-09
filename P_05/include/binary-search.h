@@ -57,8 +57,11 @@ namespace DyV {
        */
       DyV::Solution<V> SolveSmall(const DyV::Problem<T>& array, const U& key) {
         if (array[0] == key) {
-          return Solution<V>(index_);
+          V index = index_;
+          index_ = 0;
+          return Solution<V>(index);
         } else {
+          index_ = 0;
           return Solution<V>(-1);
         }
       }
@@ -76,11 +79,11 @@ namespace DyV {
         std::size_t const half_size = problem.size() / 2;
         std::vector<int> split_lo(problem.begin(), problem.begin() + half_size);
         std::vector<int> split_hi(problem.begin() + half_size, problem.end());
-        if (split_lo[split_lo.size() - 1] > key) {
+        if (split_hi[0] > key) {
           subproblem.emplace_back(DyV::Problem<T>(split_lo));
-          index_ += split_lo.size();
         } else {
           subproblem.emplace_back(DyV::Problem<T>(split_hi));
+          index_ += half_size;
         }
         return subproblem;
       }
