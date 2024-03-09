@@ -37,7 +37,7 @@ class Algorithm {
      * @param recursion_level Level of the recursion tree.
      * @return DyV::Solution<T> The solution to the problem.
      */
-    DyV::Solution<T> Solve(const DyV::Problem<T>& array, const size_t& size, int recursion_level = 0) {
+    DyV::Solution<T> Solve(const DyV::Problem<T>& array, const size_t& size) {
       if (Small(array)) {
         return SolveSmall(array);
       } else {
