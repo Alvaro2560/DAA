@@ -19,5 +19,6 @@
 #include "quicksort.h"
 #include "mergesort.h"
 #include "binary-search.h"
+#include "hanoi.h"
 #include "solution.h"
 #include "problem.h"
