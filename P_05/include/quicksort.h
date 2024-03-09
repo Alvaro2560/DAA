@@ -30,8 +30,6 @@ namespace DyV {
         Algorithm<T>::a_ = "T(pn) + ";
         Algorithm<T>::b_ = "(1-p)n";
         Algorithm<T>::c_ = "O(n)";
-        Algorithm<T>::max_depth_ = 0;
-        Algorithm<T>::total_calls_ = 0;
       };
     private:
       /**
