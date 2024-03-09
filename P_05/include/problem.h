@@ -17,6 +17,7 @@
 #pragma once
 
 #include <stdlib.h>
+#include <type_traits>
 
 namespace DyV {
   /**
@@ -58,24 +59,28 @@ namespace DyV {
       }
 
       /**
-       * @brief Operator to access the data of the solution.
+       * @brief Operator to access the data of the problem.
        * 
-       * @tparam T Type of the data that the solution contains.
+       * @tparam Container 
        * @param index Index of the data to access.
-       * @return T& Reference to the data at the given index.
+       * @return std::enable_if<std::is_class<Container>::value, typename Container::value_type&>::type 
        */
-      typename T::value_type& operator[](const size_t& index) {
+      template<typename Container = T>
+      typename std::enable_if<std::is_class<Container>::value, typename Container::value_type&>::type
+      operator[](size_t index) {
         return data_[index];
       }
-
+      
       /**
-       * @brief Operator to access the data of the solution.
+       * @brief Operator to access the data of the problem.
        * 
-       * @tparam T Type of the data that the solution contains.
+       * @tparam Container 
        * @param index Index of the data to access.
-       * @return T& Reference to the data at the given index.
+       * @return std::enable_if<std::is_class<Container>::value, typename Container::value_type&>::type 
        */
-      const typename T::value_type& operator[](const size_t& index) const {
+      template<typename Container = T>
+      typename std::enable_if<std::is_class<Container>::value, const typename Container::value_type&>::type
+      operator[](size_t index) const {
         return data_[index];
       }
 
@@ -85,7 +90,9 @@ namespace DyV {
        * @tparam T Type of the data that the solution contains.
        * @return size_t Size of the data that the solution contains.
        */
-      size_t size(void) const {
+      template<typename Container = T>
+      typename std::enable_if<std::is_class<Container>::value, size_t>::type
+      size(void) const {
         return data_.size();
       }
 
@@ -95,7 +102,9 @@ namespace DyV {
        * @tparam T Type of the data that the solution contains.
        * @param data Data to add to the end of the data.
        */
-      void emplace_back(const typename T::value_type& data) {
+      template<typename Container = T>
+      typename std::enable_if<std::is_class<Container>::value, void>::type
+      emplace_back(const typename T::value_type& data) {
         data_.emplace_back(data);
       }
     private:
