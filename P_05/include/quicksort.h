@@ -23,13 +23,13 @@ namespace DyV {
    * @brief Class that executes the QuickSort algorithm.
    * 
    */
-  template <typename T>
-  class QuickSort : public Algorithm<T> {
+  template <typename T, typename U, typename V>
+  class QuickSort : public Algorithm<T, U, V> {
     public:
       QuickSort(void) {
-        Algorithm<T>::a_ = "T(pn) + ";
-        Algorithm<T>::b_ = "(1-p)n";
-        Algorithm<T>::c_ = "O(n)";
+        Algorithm<T, U, V>::a_ = "T(pn) + ";
+        Algorithm<T, U, V>::b_ = "(1-p)n";
+        Algorithm<T, U, V>::c_ = "O(n)";
       };
     private:
       /**
@@ -52,21 +52,21 @@ namespace DyV {
        * @param array The array to solve.
        * @return std::vector<int> The solution to the problem.
        */
-      DyV::Solution<T> SolveSmall(const DyV::Problem<T>& array) {
-        return Solution<T>(array.getData());
+      DyV::Solution<V> SolveSmall(const DyV::Problem<T>& array, const U& key) {
+        return Solution<V>(array.getData());
       }
 
       /**
        * @brief Divides the problem into subproblems.
        * 
        * @param array The array to divide.
-       * @param size The size of the array.
-       * @return std::pair<std::vector<int>, std::vector<int>> The divided array.
+       * @param key The key to divide the array.
+       * @return std::vector<Problem<T>> The divided array.
        */
-      std::vector<Problem<T>> Divide(const DyV::Problem<T>& array, const size_t& size) {
+      std::vector<Problem<T>> Divide(const DyV::Problem<T>& array, const U& key) {
         typename T::value_type pivot = array[0];
         Problem<T> divided_array1, divided_array2;
-        for (size_t i = 1; i < size; i++) {
+        for (size_t i = 1; i < array.size(); i++) {
           if (array[i] < pivot) {
             divided_array1.emplace_back(array[i]);
           } else {
@@ -91,9 +91,9 @@ namespace DyV {
        * @param solution2 The solution to the second subproblem.
        * @return std::vector<int> The combined solution.
        */
-      DyV::Solution<T> Combine(const DyV::Solution<T>& solution1, const DyV::Solution<T>& solution2) {
+      DyV::Solution<V> Combine(const DyV::Solution<V>& solution1, const DyV::Solution<V>& solution2) {
         size_t i = 0, j = 0;
-        Solution<T> combined_solution;
+        Solution<V> combined_solution;
         while (i < solution1.size() && j < solution2.size()) {
           if (solution1[i] < solution2[j]) {
             combined_solution.emplace_back(solution1[i]);
