@@ -28,6 +28,7 @@
  */
 int main(int argc, char** argv) {
   try {
+    srand(time(NULL));
     std::ofstream quicksort_file, mergesort_file;
     if ((argc == 3 && std::string(argv[2]) != "-f") || 
         (argc == 2 && std::string(argv[1]) == "-h") || (argc > 3) || (argc < 2)) {
@@ -52,14 +53,14 @@ int main(int argc, char** argv) {
       DyV::Problem<std::vector<int>> problem(instance);
       // If the problem is printable, the time it took to solve it is stored in a vector and its recurrence tree.
       if (i == printable_element) {
-        quicksort_time = QuickSortTime(problem, quicksort_solution);
-        mergesort_time = MergeSortTime(problem, mergesort_solution);
+        quicksort_time = QuickSortTime<std::vector<int>, size_t, std::vector<int>>(problem, quicksort_solution);
+        mergesort_time = MergeSortTime<std::vector<int>, size_t, std::vector<int>>(problem, mergesort_solution);
         quicksort_times.emplace_back(std::pair<size_t, float>(i, quicksort_time));
         mergesort_times.emplace_back(std::pair<size_t, float>(i, mergesort_time));
         printable_element += kPrintableIndex;
       } else {
-        quicksort_time = QuickSortTime(problem, quicksort_solution);
-        mergesort_time = MergeSortTime(problem, mergesort_solution);
+        quicksort_time = QuickSortTime<std::vector<int>, size_t, std::vector<int>>(problem, quicksort_solution);
+        mergesort_time = MergeSortTime<std::vector<int>, size_t, std::vector<int>>(problem, mergesort_solution);
       }
       if (quicksort_file.is_open()) {
         quicksort_file << i << "," << quicksort_time << std::endl;
