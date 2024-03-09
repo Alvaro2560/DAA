@@ -43,7 +43,6 @@ int main(int argc, char** argv) {
     size_t printable_element = kPrintableIndex;
     // Declarations.
     std::vector<std::pair<size_t, float>> quicksort_times, mergesort_times;
-    std::vector<std::pair<int, int>> quicksort_recurrences, mergesort_recurrences;
     std::vector<int> instance;
     DyV::Solution<std::vector<int>> quicksort_solution, mergesort_solution;
     float quicksort_time, mergesort_time;
@@ -53,14 +52,14 @@ int main(int argc, char** argv) {
       DyV::Problem<std::vector<int>> problem(instance);
       // If the problem is printable, the time it took to solve it is stored in a vector and its recurrence tree.
       if (i == printable_element) {
-        quicksort_time = QuickSortTime(problem, quicksort_recurrences, quicksort_solution, true);
-        mergesort_time = MergeSortTime(problem, mergesort_recurrences, mergesort_solution, true);
+        quicksort_time = QuickSortTime(problem, quicksort_solution);
+        mergesort_time = MergeSortTime(problem, mergesort_solution);
         quicksort_times.emplace_back(std::pair<size_t, float>(i, quicksort_time));
         mergesort_times.emplace_back(std::pair<size_t, float>(i, mergesort_time));
         printable_element += kPrintableIndex;
       } else {
-        quicksort_time = QuickSortTime(problem, quicksort_recurrences, quicksort_solution);
-        mergesort_time = MergeSortTime(problem, mergesort_recurrences, mergesort_solution);
+        quicksort_time = QuickSortTime(problem, quicksort_solution);
+        mergesort_time = MergeSortTime(problem, mergesort_solution);
       }
       if (quicksort_file.is_open()) {
         quicksort_file << i << "," << quicksort_time << std::endl;
@@ -71,7 +70,7 @@ int main(int argc, char** argv) {
       quicksort_file.close();
       mergesort_file.close();
     }
-    PrintInfo(quicksort_times, mergesort_times, quicksort_recurrences, mergesort_recurrences);
+    PrintInfo(quicksort_times, mergesort_times);
     return 0;
   } catch (const std::exception& e) {
     std::cerr << e.what() << '\n';
