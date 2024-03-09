@@ -34,7 +34,6 @@ void Help(void) {
  * @return int* The generated array.
  */
 std::vector<int> GenerateRandom(const size_t& size) {
-  srand(time(NULL));
   std::vector<int> array(size);
   for (size_t i = 0; i < size; i++) {
     array[i] = rand() % 100;
