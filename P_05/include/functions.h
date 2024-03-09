@@ -24,9 +24,7 @@
 void Help(void);
 std::vector<int> GenerateRandom(const size_t& size);
 void PrintInfo(const std::vector<std::pair<size_t, float>>& quicksort_times,
-               const std::vector<std::pair<size_t, float>>& mergesort_times,
-               const std::vector<std::pair<int, int>>& quicksort_recurrences,
-               const std::vector<std::pair<int, int>>& mergesort_recurrences);
+               const std::vector<std::pair<size_t, float>>& mergesort_times);
 
 /**
  * @brief Calculates the time it took to solve the problem using Quick Sort.
@@ -34,20 +32,15 @@ void PrintInfo(const std::vector<std::pair<size_t, float>>& quicksort_times,
  * @tparam T 
  * @param array Problem to solve.
  * @param solution Solution of the problem.
- * @param print Flag that indicates if the problem is printable.
  * @return float Time it took to solve the problem.
  */
 template <typename T>
-float QuickSortTime(const DyV::Problem<T>& array, std::vector<std::pair<int, int>>& quicksort_recurrences,
-                    DyV::Solution<T> solution, bool print = false) {
+float QuickSortTime(const DyV::Problem<T>& array, DyV::Solution<T> solution) {
   DyV::QuickSort<T> quicksort;
   std::chrono::time_point<std::chrono::system_clock> start, end;
   start = std::chrono::system_clock::now();
   solution = quicksort.Solve(array, array.size());
   end = std::chrono::system_clock::now();
-  if (print) {
-    quicksort_recurrences.emplace_back(std::pair<int, int>(quicksort.getMaxRecursionLevel(), quicksort.getTotalCalls()));
-  }
   return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 }
 
@@ -57,19 +50,14 @@ float QuickSortTime(const DyV::Problem<T>& array, std::vector<std::pair<int, int
  * @tparam T 
  * @param array Problem to solve.
  * @param solution Solution of the problem.
- * @param print Flag that indicates if the problem is printable.
  * @return float Time it took to solve the problem.
  */
 template <typename T>
-float MergeSortTime(const DyV::Problem<T>& array, std::vector<std::pair<int, int>>& mergesort_recurrences,
-                    DyV::Solution<T> solution, bool print = false) {
+float MergeSortTime(const DyV::Problem<T>& array, DyV::Solution<T> solution) {
   DyV::MergeSort<T> mergesort;
   std::chrono::time_point<std::chrono::system_clock> start, end;
   start = std::chrono::system_clock::now();
   solution = mergesort.Solve(array, array.size());
   end = std::chrono::system_clock::now();
-  if (print) {
-    mergesort_recurrences.emplace_back(std::pair<int, int>(mergesort.getMaxRecursionLevel(), mergesort.getTotalCalls()));
-  }
   return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 }
