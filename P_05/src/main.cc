@@ -29,49 +29,140 @@
 int main(int argc, char** argv) {
   try {
     srand(time(NULL));
-    std::ofstream quicksort_file, mergesort_file;
-    if ((argc == 3 && std::string(argv[2]) != "-f") || 
-        (argc == 2 && std::string(argv[1]) == "-h") || (argc > 3) || (argc < 2)) {
+    std::ofstream output_file;
+    bool debug = false;
+    if ((argc == 2 && std::string(argv[1]) == "-h") || (argc > 2)) {
       Help();
       return 1;
-    } else if (argc == 3 && std::string(argv[2]) == "-f") {
-      quicksort_file.open("quicksort_times.csv");
-      mergesort_file.open("mergesort_times.csv");
     }
-    // Index of instances to print.
-    const size_t kInstances = (size_t)std::stoi(argv[1]);
-    const size_t kPrintableIndex = kInstances / 10;
-    size_t printable_element = kPrintableIndex;
-    // Declarations.
-    std::vector<std::pair<size_t, float>> quicksort_times, mergesort_times;
-    std::vector<int> instance;
-    DyV::Solution<std::vector<int>> quicksort_solution, mergesort_solution;
-    float quicksort_time, mergesort_time;
-    // Solve the problems.
-    for (size_t i = 2; i < kInstances + 1; i++) {
-      instance = GenerateRandom(i);
-      DyV::Problem<std::vector<int>> problem(instance);
-      // If the problem is printable, the time it took to solve it is stored in a vector and its recurrence tree.
-      if (i == printable_element) {
-        quicksort_time = QuickSortTime<std::vector<int>, size_t, std::vector<int>>(problem, quicksort_solution);
-        mergesort_time = MergeSortTime<std::vector<int>, size_t, std::vector<int>>(problem, mergesort_solution);
-        quicksort_times.emplace_back(std::pair<size_t, float>(i, quicksort_time));
-        mergesort_times.emplace_back(std::pair<size_t, float>(i, mergesort_time));
-        printable_element += kPrintableIndex;
-      } else {
-        quicksort_time = QuickSortTime<std::vector<int>, size_t, std::vector<int>>(problem, quicksort_solution);
-        mergesort_time = MergeSortTime<std::vector<int>, size_t, std::vector<int>>(problem, mergesort_solution);
-      }
-      if (quicksort_file.is_open()) {
-        quicksort_file << i << "," << quicksort_time << std::endl;
-        mergesort_file << i << "," << mergesort_time << std::endl;
-      }
+    if (argc == 2 && std::string(argv[1]) == "-d") {
+      debug = true;
     }
-    if (quicksort_file.is_open()) {
-      quicksort_file.close();
-      mergesort_file.close();
+    std::cout << "Introduce the algorithm to use:\n\t1. Quick Sort\n\t2. Merge Sort\n"
+              << "\t3. Binary Search\n\t4. Hanoi Towers\n";
+    int option;
+    std::cin >> option;
+    std::cout << std::endl;
+    switch (option) {
+      case 1:
+        if (!debug) {
+          std::cout << "Size             Time (ms)" << std::endl;
+          for (size_t i = 100; i <= 10000; i += 100) {
+            std::vector<int> array = GenerateRandom(i);
+            DyV::Problem<std::vector<int>> problem(array);
+            DyV::Solution<std::vector<int>> solution;
+            float time = QuickSortTime<std::vector<int>, int, std::vector<int>>(problem, solution);
+            std::cout << i << "                 " << time << std::endl;
+          }
+        } else {
+          std::cout << "\nIntroduce the array size: ";
+          size_t size;
+          std::cin >> size;
+          std::vector<int> array = GenerateRandom(size);
+          DyV::Problem<std::vector<int>> problem(array);
+          DyV::Solution<std::vector<int>> solution;
+          float time = QuickSortTime<std::vector<int>, int, std::vector<int>>(problem, solution);
+          std::cout << "Problem: ";
+          for (size_t i = 0; i < problem.size(); i++) {
+            std::cout << problem[i] << " ";
+          }
+          std::cout << "\nSolution: ";
+          std::cout << "Time: " << time << " ms" << std::endl;
+          for (size_t i = 0; i < solution.size(); i++) {
+            std::cout << solution[i] << " ";
+          }
+          std::cout << std::endl;
+        }
+        break;
+      case 2:
+        if (!debug) {
+          std::cout << "Size             Time (ms)" << std::endl;
+          for (size_t i = 100; i <= 10000; i += 100) {
+            std::vector<int> array = GenerateRandom(i);
+            DyV::Problem<std::vector<int>> problem(array);
+            DyV::Solution<std::vector<int>> solution;
+            float time = MergeSortTime<std::vector<int>, int, std::vector<int>>(problem, solution);
+            std::cout << i << "                 " << time << std::endl;
+          }
+        } else {
+          std::cout << "\nIntroduce the array size: ";
+          size_t size;
+          std::cin >> size;
+          std::vector<int> array = GenerateRandom(size);
+          DyV::Problem<std::vector<int>> problem(array);
+          DyV::Solution<std::vector<int>> solution;
+          float time = MergeSortTime<std::vector<int>, int, std::vector<int>>(problem, solution);
+          std::cout << "Problem: ";
+          for (size_t i = 0; i < problem.size(); i++) {
+            std::cout << problem[i] << " ";
+          }
+          std::cout << "\nSolution: ";
+          std::cout << "Time: " << time << " ms" << std::endl;
+          for (size_t i = 0; i < solution.size(); i++) {
+            std::cout << solution[i] << " ";
+          }
+          std::cout << std::endl;
+        }
+        break;
+      case 3:
+        if (!debug) {
+          std::cout << "Size             Time (ms)" << std::endl;
+          const int candidate = 50;
+          for (size_t i = 100; i <= 10000; i += 100) {
+            std::vector<int> array = GenerateRandom(i);
+            DyV::MergeSort<std::vector<int>, int, std::vector<int>> mergesort;
+            DyV::Problem<std::vector<int>> problem(mergesort.Solve(DyV::Problem<std::vector<int>>(array), array.size()).getData());
+            DyV::Solution<int> solution;
+            float time = BinarySearchTime<std::vector<int>, int, int>(problem, candidate, solution);
+            std::cout << i << "                 " << time << std::endl;
+          }
+        } else {
+          std::cout << "\nIntroduce the array size: ";
+          size_t size;
+          std::cin >> size;
+          std::vector<int> array = GenerateRandom(size);
+          DyV::MergeSort<std::vector<int>, int, std::vector<int>> mergesort;
+          DyV::Problem<std::vector<int>> problem(mergesort.Solve(DyV::Problem<std::vector<int>>(array), array.size()).getData());
+          DyV::Solution<int> solution;
+          std::cout << "Problem: ";
+          for (size_t i = 0; i < problem.size(); i++) {
+            std::cout << problem[i] << " ";
+          }
+          std::cout << "\nIntroduce the number to search: ";
+          int candidate;
+          std::cin >> candidate;
+          float time = BinarySearchTime<std::vector<int>, int, int>(problem, candidate, solution);
+          std::cout << "\nSolution: " << solution.getData() << std::endl;
+          std::cout << "Time: " << time << " ms" << std::endl;
+        }
+        break;
+      case 4:
+        if (!debug) {
+          std::cout << "Size             Time (ms)" << std::endl;
+          for (size_t i = 1; i <= 25; i++) {
+            DyV::HanoiSolver<int, int, int> hanoi;
+            DyV::Problem<int> problem(i);
+            DyV::Solution<int> solution;
+            float time = HanoiTime<int, int, int>(problem, solution);
+            std::cout << i << "                 " << time << std::endl;
+          }
+        } else {
+          std::cout << "\nIntroduce the number of disks: ";
+          size_t disks;
+          std::cin >> disks;
+          DyV::HanoiSolver<int, int, int> hanoi;
+          DyV::Problem<int> problem(disks);
+          DyV::Solution<int> solution;
+          float time = HanoiTime<int, int, int>(problem, solution);
+          std::cout << "\nProblem: " << problem.getData() << std::endl;
+          std::cout << "Solution: " << solution.getData() << " steps" << std::endl;
+          std::cout << "Time: " << time << " ms" << std::endl;
+        }
+        break;
+      default:
+        throw std::invalid_argument("Opción no válida.");
+        break;
     }
-    PrintInfo(quicksort_times, mergesort_times);
     return 0;
   } catch (const std::exception& e) {
     std::cerr << e.what() << '\n';
