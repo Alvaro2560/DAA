@@ -4,9 +4,9 @@
  * Grado en Ingeniería Informática
  * Diseño y Análisis de Algoritmos 2023-2024
  * 
- * @file hanoi.h
+ * @file hanoi-solver.h
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
- * @brief Declaration of the class HanoiTowers.
+ * @brief Declaration of the class HanoiSolver.
  * @version 0.1
  * @since Mar 9 2024
  * 
@@ -17,86 +17,79 @@
 #pragma once
 
 #include "algorithm.h"
+#include "hanoi.h"
 
 namespace DyV {
   /**
-   * @brief Class that executes the HanoiTowers algorithm.
+   * @brief Class that executes the HanoiSolver algorithm.
    * 
    */
   template <typename T, typename U, typename V>
-  class HanoiTowers : public Algorithm<T, U, V> {
+  class HanoiSolver : public Algorithm<T, U, V> {
     public:
-      HanoiTowers(void) {
-        Algorithm<T, U, V>::a_ = "2";
-        Algorithm<T, U, V>::b_ = "n/2";
+      HanoiSolver(void) {
+        Algorithm<T, U, V>::a_ = "T(pn) + ";
+        Algorithm<T, U, V>::b_ = "2T((1-p)n) + ";
         Algorithm<T, U, V>::c_ = "O(n)";
-        index_ = 0;
+        steps_ = 0;
       };
     private:
       /**
-       * @brief Checks if the array is small enough to be solved.
+       * @brief Checks if the problem is small enough to be solved.
        * 
-       * @param array The array to check.
-       * @return true If the array is small enough to be solved.
-       * @return false If the array is not small enough to be solved.
+       * @param problem The number of disks.
+       * @return true If the problem is small enough to be solved.
+       * @return false If the problem is not small enough to be solved.
        */
-      bool Small(const DyV::Problem<T>& array) {
-        if (array.size() == 1) {
+      bool Small(const DyV::Problem<T>& problem) {
+        if (problem.getData() == 0) {
           return true;
+        } else {
+          return false;
         }
-        return false;
       }
 
       /**
-       * @brief Solves the problem for small arrays.
+       * @brief Solves the problem if it is small enough.
        * 
-       * @param array The array to solve.
-       * @return std::vector<int> The solution to the problem.
+       * @param problem The problem to solve.
+       * @param key Key to solve the problem.
+       * @return DyV::Solution<V> The solution to the problem.
        */
-      DyV::Solution<V> SolveSmall(const DyV::Problem<T>& array, const U& key) {
-        if (array[0] == key) {
-          V index = index_;
-          index_ = 0;
-          return Solution<V>(index);
-        } else {
-          index_ = 0;
-          return Solution<V>(-1);
-        }
+      DyV::Solution<V> SolveSmall(const DyV::Problem<T>& problem, const U& key) {
+        DyV::Solution<V> solution;
+        solution.setData(steps_);
+        return solution;
       }
 
       /**
        * @brief Divides the problem into subproblems.
        * 
-       * @param array The array to divide.
-       * @param key The key to divide the array.
-       * @return std::vector<DyV::Problem<T>> The divided array.
+       * @param problem The problem to divide.
+       * @param key Key to divide the problem.
+       * @return std::vector<DyV::Problem<T>> The subproblems.
        */
-      std::vector<DyV::Problem<T>> Divide(const DyV::Problem<T>& array, const U& key) {
-        std::vector<DyV::Problem<T>> subproblem;
-        std::vector<int> problem = array.getData();
-        std::size_t const half_size = problem.size() / 2;
-        std::vector<int> split_lo(problem.begin(), problem.begin() + half_size);
-        std::vector<int> split_hi(problem.begin() + half_size, problem.end());
-        if (split_hi[0] > key) {
-          subproblem.emplace_back(DyV::Problem<T>(split_lo));
-        } else {
-          subproblem.emplace_back(DyV::Problem<T>(split_hi));
-          index_ += half_size;
-        }
-        return subproblem;
+      std::vector<DyV::Problem<T>> Divide(const DyV::Problem<T>& problem, const U& key) {
+        std::vector<DyV::Problem<T>> subproblems;
+        subproblems.emplace_back(DyV::Problem<T>(problem.getData() - 1));
+        subproblems.emplace_back(DyV::Problem<T>(problem.getData() - 1));
+        ++steps_;
+        return subproblems;
       }
 
       /**
-       * @brief Combines the solutions to the subproblems.
+       * @brief Combines the solutions of the subproblems.
        * 
-       * @param solution1 The solution to the first subproblem.
-       * @param solution2 The solution to the second subproblem.
-       * @return std::vector<int> The combined solution.
+       * @param solution1 The first solution.
+       * @param solution2 The second solution.
+       * @return DyV::Solution<V> The combined solution.
        */
       DyV::Solution<V> Combine(const DyV::Solution<V>& solution1, const DyV::Solution<V>& solution2) {
-        return solution1;
+        DyV::Solution<V> solution;
+        solution.setData(steps_);
+        return solution;
       }
     private:
-      int index_;
+      int steps_;
   };
 }
