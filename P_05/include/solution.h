@@ -70,7 +70,7 @@ namespace DyV {
       operator[](size_t index) {
         return data_[index];
       }
-
+      
       /**
        * @brief Operator to access the data of the problem.
        * 
@@ -79,7 +79,7 @@ namespace DyV {
        * @return std::enable_if<std::is_class<Container>::value, typename Container::value_type&>::type 
        */
       template<typename Container = T>
-      typename std::enable_if<std::is_class<Container>::value, typename Container::value_type&>::type
+      typename std::enable_if<std::is_class<Container>::value, const typename Container::value_type&>::type
       operator[](size_t index) const {
         return data_[index];
       }
