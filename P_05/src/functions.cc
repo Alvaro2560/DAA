@@ -23,8 +23,8 @@
  * 
  */
 void Help(void) {
-  std::cout << "Usage: ./dyv [arrays] [-f]" << std::endl;
-  std::cout << "Generates a random set of arrays and sorts them using Quick Sort and Merge Sort." << std::endl;
+  std::cout << "Usage: ./dyv [-d] [-h]" << std::endl;
+  std::cout << "Client program thar executes four divide and conquer problems." << std::endl;
 }
 
 /**
@@ -62,4 +62,4 @@ void PrintInfo(const std::vector<std::pair<size_t, float>>& quicksort_times,
   for (size_t i = 0; i < mergesort_times.size(); i++) {
     std::cout << mergesort_times[i].first << "                 " << mergesort_times[i].second << std::endl;
   }
-} 
+}
