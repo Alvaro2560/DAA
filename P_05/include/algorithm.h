@@ -22,6 +22,8 @@
 #include <string>
 #include <vector>
 
+#include <iostream>
+
 /**
  * @brief Class that acts as a base for the Divide and Conquer algorithms.
  * 
@@ -44,7 +46,7 @@ class Algorithm {
         std::vector<DyV::Solution<V>> solutions;
         // Solve the subproblems.
         for (size_t i = 0; i < subproblems.size(); i++) {
-          solutions.emplace_back(DyV::Solution<V>(Solve(subproblems[i], subproblems[i].size())));
+          solutions.emplace_back(DyV::Solution<V>(Solve(subproblems[i], key)));
         }
         DyV::Solution<V> solution = solutions[0];
         // Combine the solutions.
