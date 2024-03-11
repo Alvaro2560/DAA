@@ -35,7 +35,7 @@ void PrintInfo(const std::vector<std::pair<size_t, float>>& quicksort_times,
  * @return float Time it took to solve the problem.
  */
 template <typename T, typename U, typename V>
-float QuickSortTime(const DyV::Problem<T>& array, DyV::Solution<V> solution) {
+float QuickSortTime(const DyV::Problem<T>& array, DyV::Solution<V>& solution) {
   DyV::QuickSort<T, U, V> quicksort;
   std::chrono::time_point<std::chrono::system_clock> start, end;
   start = std::chrono::system_clock::now();
@@ -53,11 +53,47 @@ float QuickSortTime(const DyV::Problem<T>& array, DyV::Solution<V> solution) {
  * @return float Time it took to solve the problem.
  */
 template <typename T, typename U, typename V>
-float MergeSortTime(const DyV::Problem<T>& array, DyV::Solution<V> solution) {
+float MergeSortTime(const DyV::Problem<T>& array, DyV::Solution<V>& solution) {
   DyV::MergeSort<T, U, V> mergesort;
   std::chrono::time_point<std::chrono::system_clock> start, end;
   start = std::chrono::system_clock::now();
   solution = mergesort.Solve(array, array.size());
+  end = std::chrono::system_clock::now();
+  return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+}
+
+/**
+ * @brief Calculates the time it took to solve the problem using Binary Search.
+ * 
+ * @tparam T 
+ * @param array Problem to solve.
+ * @param solution Solution of the problem.
+ * @return float Time it took to solve the problem.
+ */
+template <typename T, typename U, typename V>
+float BinarySearchTime(const DyV::Problem<T>& array, const int& candidate, DyV::Solution<V>& solution) {
+  DyV::BinarySearch<T, U, V> binarysearch;
+  std::chrono::time_point<std::chrono::system_clock> start, end;
+  start = std::chrono::system_clock::now();
+  solution = binarysearch.Solve(array, candidate);
+  end = std::chrono::system_clock::now();
+  return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+}
+
+/**
+ * @brief Calculates the time it took to solve the problem using Hanoi.
+ * 
+ * @tparam T 
+ * @param array Problem to solve.
+ * @param solution Solution of the problem.
+ * @return float Time it took to solve the problem.
+ */
+template <typename T, typename U, typename V>
+float HanoiTime(const DyV::Problem<T>& array, DyV::Solution<V>& solution) {
+  DyV::HanoiSolver<T, U, V> hanoi;
+  std::chrono::time_point<std::chrono::system_clock> start, end;
+  start = std::chrono::system_clock::now();
+  solution = hanoi.Solve(array);
   end = std::chrono::system_clock::now();
   return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 }
