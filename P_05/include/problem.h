@@ -103,8 +103,8 @@ namespace DyV {
        * @param data Data to add to the end of the data.
        */
       template<typename Container = T>
-      typename std::enable_if<std::is_class<Container>::value, void>::type
-      emplace_back(const typename T::value_type& data) {
+      typename std::enable_if<std::is_class<Container>::value>::type
+      emplace_back(const typename Container::value_type& data) {
         data_.emplace_back(data);
       }
     private:
