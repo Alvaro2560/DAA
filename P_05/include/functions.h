@@ -97,3 +97,21 @@ float HanoiTime(const DyV::Problem<T>& array, DyV::Solution<V>& solution) {
   end = std::chrono::system_clock::now();
   return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 }
+
+/**
+ * @brief Calculates the time it took to solve the problem using MCD.
+ * 
+ * @tparam T 
+ * @param array Problem to solve.
+ * @param solution Solution of the problem.
+ * @return float Time it took to solve the problem.
+ */
+template <typename T, typename U, typename V>
+float MCDTime(const DyV::Problem<T>& array, DyV::Solution<V>& solution) {
+  DyV::MCD<T, U, V> mcd;
+  std::chrono::time_point<std::chrono::system_clock> start, end;
+  start = std::chrono::system_clock::now();
+  solution = mcd.Solve(array);
+  end = std::chrono::system_clock::now();
+  return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+}
