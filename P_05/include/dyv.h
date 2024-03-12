@@ -20,5 +20,6 @@
 #include "mergesort.h"
 #include "binary-search.h"
 #include "hanoi.h"
+#include "mcd.h"
 #include "solution.h"
 #include "problem.h"
