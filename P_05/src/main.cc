@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
       debug = true;
     }
     std::cout << "Introduce the algorithm to use:\n\t1. Quick Sort\n\t2. Merge Sort\n"
-              << "\t3. Binary Search\n\t4. Hanoi Towers\n";
+              << "\t3. Binary Search\n\t4. Hanoi Towers\n\t5. MCD\n";
     int option;
     std::cin >> option;
     std::cout << std::endl;
@@ -156,6 +156,34 @@ int main(int argc, char** argv) {
           float time = HanoiTime<int, int, int>(problem, solution);
           std::cout << "\nProblem: " << problem.getData() << std::endl;
           std::cout << "Solution: " << solution.getData() << " steps" << std::endl;
+          std::cout << "Time: " << time << " ms" << std::endl;
+        }
+        break;
+      case 5:
+        if (!debug) {
+          std::cout << "Size             Time (ms)" << std::endl;
+          for (size_t i = 100; i <= 10000; i += 100) {
+            int number1 = rand() % 100 + 1;
+            int number2 = rand() % 100 + 1;
+            DyV::MCD<std::pair<int, int>, int, int> mcd;
+            DyV::Problem<std::pair<int, int>> problem(std::make_pair(number1, number2));
+            DyV::Solution<int> solution;
+            float time = MCDTime<std::pair<int, int>, int, int>(problem, solution);
+            std::cout << i << "                 " << time << std::endl;
+          }
+        } else {
+          std::cout << "\nIntroduce the first number: ";
+          int number1;
+          std::cin >> number1;
+          std::cout << "Introduce the second number: ";
+          int number2;
+          std::cin >> number2;
+          DyV::MCD<std::pair<int, int>, int, int> mcd;
+          DyV::Problem<std::pair<int, int>> problem(std::make_pair(number1, number2));
+          DyV::Solution<int> solution;
+          float time = MCDTime<std::pair<int, int>, int, int>(problem, solution);
+          std::cout << "\nProblem: " << problem.getData().first << ", " << problem.getData().second << std::endl;
+          std::cout << "Solution: " << solution.getData() << std::endl;
           std::cout << "Time: " << time << " ms" << std::endl;
         }
         break;
