@@ -18,6 +18,23 @@
 
 #include "node.h"
 
-class Graph {
+#include <unordered_set>
+#include <vector>
+#include <unordered_map>
 
+class Graph {
+  public:
+    Graph(void) = default;
+    void AddNode(Node* node);
+    void AddEdge(Node* node1, Node* node2, int weight);
+    std::unordered_set<Node*> get_nodes(void) const;
+    std::vector<std::pair<Node*, int>> get_edges(Node* node) const;
+    Node* get_first_node(void);
+    Node* get_lowest_neighbour(Node* node);
+    bool all_nodes_visited(void) const;
+    void Print(void);
+    ~Graph(void);
+  private:
+    std::unordered_set<Node*> nodes_;
+    std::unordered_map<Node*, std::vector<std::pair<Node*, int>>> edges_;
 };
