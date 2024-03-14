@@ -1,7 +1,7 @@
 CC=g++
 CXXFLAGS=-g -std=c++17 -Wall
 
-OBJS = ../src/main.o ../src/functions.o
+OBJS = ../src/main.o ../src/functions.o ../src/greedy-solver.o ../src/graph.o ../src/node.o
 
 all: ${OBJS}
 	$(CC) $(CXXFLAGS) -o tsp ${OBJS}
