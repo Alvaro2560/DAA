@@ -19,5 +19,12 @@
 #include "graph.h"
 
 class Solver {
-  
+  public:
+    Solver(void) = default;
+    std::vector<std::string> Solve(Graph* graph) {
+      RunAlgorithm(graph);
+    }
+    ~Solver(void) = default;
+  protected:
+    virtual void RunAlgorithm(Graph* graph) = 0;
 };
