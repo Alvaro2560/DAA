@@ -16,6 +16,16 @@
 
 #pragma once
 
-class Node {
+#include <string>
 
+class Node {
+  public:
+    Node(std::string id) : id_(id), visited_(false) { };
+    std::string get_id(void) const;
+    bool is_visited(void) const;
+    void set_visited(void);
+    ~Node(void) = default;
+  private:
+    std::string id_;
+    bool visited_;
 };
