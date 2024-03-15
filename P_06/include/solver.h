@@ -18,13 +18,18 @@
 
 #include "graph.h"
 
+typedef std::pair<std::vector<Node*>, int> Solution;
+
+/**
+ * @brief Class that represents a solver for a graph.
+ */
 class Solver {
   public:
     Solver(void) = default;
-    std::vector<std::string> Solve(Graph* graph) {
-      RunAlgorithm(graph);
+    Solution Solve(Graph* graph) {
+      return RunAlgorithm(graph);
     }
     ~Solver(void) = default;
   protected:
-    virtual void RunAlgorithm(Graph* graph) = 0;
+    virtual Solution RunAlgorithm(Graph* graph) = 0;
 };
