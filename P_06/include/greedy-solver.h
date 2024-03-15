@@ -18,10 +18,13 @@
 
 #include "solver.h"
 
+/**
+ * @brief Class that represents a greedy solver for a graph.
+ */
 class Greedy : public Solver {
   public:
     Greedy(void) = default;
     ~Greedy(void) = default;
   private:
-    void RunAlgorithm(Graph* graph) override;
+    Solution RunAlgorithm(Graph* graph) override;
 };
