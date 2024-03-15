@@ -16,14 +16,30 @@
 
 #include "../include/node.h"
 
-std::string Node::get_id(void) const {
+/**
+ * @brief Returns the id of the node.
+ * 
+ * @return std::string ID of the node.
+ */
+std::string Node::getId(void) const {
   return id_;
 }
 
-bool Node::is_visited(void) const {
+/**
+ * @brief Returns if the node has been visited.
+ * 
+ * @return true If the node has been visited.
+ * @return false If the node has not been visited.
+ */
+bool Node::isVisited(void) const {
   return visited_;
 }
 
-void Node::set_visited(void) {
-  visited_ = true;
+/**
+ * @brief Sets the visited status of the node.
+ * 
+ * @param visited New visited status of the node.
+ */
+void Node::setVisited(bool visited) {
+  visited_ = visited;
 }
