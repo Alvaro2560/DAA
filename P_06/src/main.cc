@@ -15,21 +15,58 @@
  */
 
 #include "../include/functions.h"
-#include "../include/greedy-solver.h"
 
 #include <iostream>
+#include <filesystem>
 
 int main(int argc, char* argv[]) {
   try {
-    if (argc != 2) {
-      std::cerr << "Usage: " << argv[0] << " <file_name>" << std::endl;
+    srand(time(NULL));
+    int nodes = 0;
+    double time_limit = 5 * 60000;
+    if (argc != 2 && argc != 3 && argc != 4) {
+      std::cerr << "Usage: " << argv[0] << " <files_directory> <-t [time_limit]> <-g [files to generate]>" << std::endl;
       throw std::invalid_argument("Invalid number of arguments");
+    } else if (argc == 4) {
+      if (std::string(argv[2]) == "-t") {
+        time_limit = double(std::stoi(argv[3]) * 60000);
+      } else if (std::string(argv[2]) == "-g") {
+        nodes = std::stoi(argv[3]);
+        for (int i = 0; i < 3; i++) {
+          GenerateRandomInstance(nodes, "instance" + std::to_string(i + 1) + ".txt");
+        }
+      }
+    } else if (argc == 6) {
+      if (std::string(argv[2]) == "-t") {
+        time_limit = double(std::stoi(argv[3]) * 60000);
+      } else if (std::string(argv[2]) == "-g") {
+        nodes = std::stoi(argv[3]);
+        for (int i = 0; i < 3; i++) {
+          GenerateRandomInstance(nodes, "instance" + std::to_string(i + 1) + ".txt");
+        }
+      }
+      if (std::string(argv[4]) == "-t") {
+        time_limit = double(std::stoi(argv[5]) * 60000);
+      } else if (std::string(argv[4]) == "-g") {
+        nodes = std::stoi(argv[5]);
+        for (int i = 0; i < 3; i++) {
+          GenerateRandomInstance(nodes, "instance" + std::to_string(i + 1) + ".txt");
+        }
+      }
     }
-    std::string file_name = argv[1];
-    std::vector<std::string> file_content = ReadFile(file_name);
-    Graph* graph = CreateGraph(file_content);
-    Greedy greedy;
-    greedy.Solve(graph);
+    std::string files_directory = argv[1];
+    std::vector<std::string> file_names;
+    for (const auto& entry : std::filesystem::directory_iterator(files_directory)) {
+      file_names.emplace_back(entry.path());
+    }
+    std::cout << "Instancia\tValor F.B.\tTiempo F.B. (ms)\tValor P.D.\tTiempo P.D. (ms)\t"
+                 "Valor Greedy\tTiempo Greedy (ms)" << std::endl;
+    for (const auto& file_name : file_names) {
+      std::vector<std::string> file_content = ReadFile(file_name);
+      Graph* graph = CreateGraph(file_content);
+      Data data = CalculateTimes(graph, time_limit);
+      PrintResults(data, file_name);
+    }
     return 0;
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
