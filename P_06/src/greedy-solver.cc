@@ -18,20 +18,30 @@
 
 #include <iostream>
 
-void Greedy::RunAlgorithm(Graph* graph) {
-  Node* current_node = graph->get_first_node();
-  current_node->set_visited();
+/**
+ * @brief Runs the greedy algorithm to solve the graph.
+ * 
+ * @param graph Graph to solve.
+ * @return Solution Solution to the graph.
+ */
+Solution Greedy::RunAlgorithm(Graph* graph) {
+  Node* start_node = graph->getFirstNode();
+  Node* current_node = graph->getFirstNode();
+  current_node->setVisited();
   std::vector<Node*> solution;
   solution.emplace_back(current_node);
-  std::cout << current_node->get_id() << "\n";
-  while (!graph->all_nodes_visited()) {
-    Node* next_node = graph->get_lowest_neighbour(current_node);
-    next_node->set_visited();
+  int total_cost = 0;
+  while (!graph->allNodesVisited()) {
+    Node* next_node = graph->getLowestNeighbour(current_node);
+    if (next_node == nullptr) {
+      break;
+    }
+    total_cost += graph->getWeight(current_node, next_node);
+    next_node->setVisited();
     solution.emplace_back(next_node);
     current_node = next_node;
   }
-  for (auto node : solution) {
-    std::cout << node->get_id() << " ";
-  }
-  std::cout << std::endl;
+  solution.emplace_back(start_node);
+  total_cost += graph->getWeight(current_node, start_node);
+  return Solution(solution, total_cost);
 }
