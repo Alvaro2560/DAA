@@ -18,12 +18,15 @@
 
 #include <string>
 
+/**
+ * @brief Class that represents a node in a graph.
+ */
 class Node {
   public:
     Node(std::string id) : id_(id), visited_(false) { };
-    std::string get_id(void) const;
-    bool is_visited(void) const;
-    void set_visited(void);
+    std::string getId(void) const;
+    bool isVisited(void) const;
+    void setVisited(bool visited = true);
     ~Node(void) = default;
   private:
     std::string id_;
