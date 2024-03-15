@@ -22,17 +22,22 @@
 #include <vector>
 #include <unordered_map>
 
+/**
+ * @brief Class that represents a graph.
+ */
 class Graph {
   public:
     Graph(void) = default;
-    void AddNode(Node* node);
-    void AddEdge(Node* node1, Node* node2, int weight);
-    std::unordered_set<Node*> get_nodes(void) const;
-    std::vector<std::pair<Node*, int>> get_edges(Node* node) const;
-    Node* get_first_node(void);
-    Node* get_lowest_neighbour(Node* node);
-    bool all_nodes_visited(void) const;
-    void Print(void);
+    void addNode(const std::string& id);
+    void addEdge(const std::string& node_id_1, const std::string& node_id_2, int weight);
+    std::unordered_set<Node*> getNodes(void) const;
+    std::vector<std::pair<Node*, int>> getEdges(Node* node) const;
+    Node* getFirstNode(void);
+    Node* getLowestNeighbour(Node* node);
+    Node* getNodeById(const std::string& id);
+    int getWeight(Node* node_1, Node* node_2);
+    std::vector<Node*> getVisitedNodes(void) const;
+    bool allNodesVisited(void) const;
     ~Graph(void);
   private:
     std::unordered_set<Node*> nodes_;
