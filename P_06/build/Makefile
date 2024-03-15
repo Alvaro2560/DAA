@@ -1,5 +1,5 @@
 CC=g++
-CXXFLAGS=-g -std=c++17 -Wall
+CXXFLAGS=-g -std=c++17 -Wall -pthread
 
 OBJS = ../src/main.o ../src/functions.o ../src/greedy-solver.o ../src/brute-force-solver.o ../src/dynamic-programming-solver.o ../src/graph.o ../src/node.o
 
