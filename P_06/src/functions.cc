@@ -67,54 +67,18 @@ Graph* CreateGraph(const std::vector<std::string>& file_content) {
  * @param time_limit Time limit for the execution of the algorithms.
  * @return Data Data of the execution of the algorithms.
  */
-Data CalculateTimes(Graph* graph, const int& time_limit) {
-  std::vector<std::string> times;
+void CalculateTimes(Graph* graph, const int& time_limit) {
   Greedy greedy;
   BruteForce brute_force;
   DynamicProgramming dynamic;
-  Solution brute_solution, dynamic_solution, greedy_solution;
-  bool solved = false;
-  std::chrono::time_point<std::chrono::system_clock> start, end;
-  start = std::chrono::system_clock::now();
-  while (std::chrono::duration<double>(end - start).count() < time_limit && !solved) {
-    brute_solution = brute_force.Solve(graph);
-    end = std::chrono::system_clock::now();
-    solved = true;
-  }
-  solved = false;
-  if (std::chrono::duration<double>(end - start).count() > time_limit) {
-    times.emplace_back("EXCESIVO");
-  } else {
-    times.emplace_back(std::to_string(std::chrono::duration<double>(end - start).count()));
-  }
-  start = std::chrono::system_clock::now();
-  while (std::chrono::duration<double>(end - start).count() < time_limit && !solved) {
-    dynamic_solution = dynamic.Solve(graph);
-    end = std::chrono::system_clock::now();
-    solved = true;
-  }
-  solved = false;
-  if (std::chrono::duration<double>(end - start).count() > time_limit) {
-    times.emplace_back("EXCESIVO");
-  } else {
-    times.emplace_back(std::to_string(std::chrono::duration<double>(end - start).count()));
-  }
-  start = std::chrono::system_clock::now();
-  while (std::chrono::duration<double>(end - start).count() < time_limit && !solved) {
-    greedy_solution = greedy.Solve(graph);
-    end = std::chrono::system_clock::now();
-    solved = true;
-  }
-  solved = false;
-  if (std::chrono::duration<double>(end - start).count() > time_limit) {
-    times.emplace_back("EXCESIVO");
-  } else {
-    times.emplace_back(std::to_string(std::chrono::duration<double>(end - start).count()));
-  }
-  Data data;
-  data.times = times;
-  data.solutions = {brute_solution, dynamic_solution, greedy_solution};
-  return data;
+  Solution solution;
+  std::string time;
+  solution = brute_force.Solve(graph, time_limit, time);
+  PrintResult(solution, time);
+  solution = dynamic.Solve(graph, time_limit, time);
+  PrintResult(solution, time);
+  solution = greedy.Solve(graph, time_limit, time);
+  PrintResult(solution, time);
 }
 
 /**
@@ -123,11 +87,8 @@ Data CalculateTimes(Graph* graph, const int& time_limit) {
  * @param data Data of the execution of the algorithms.
  * @param file_name Name of the file.
  */
-void PrintResults(const Data& data, const std::string& file_name) {
-  std::cout << file_name;
-  std::cout << "\t    " << data.solutions[0].second << "\t\t       " << data.times[0];
-  std::cout << "\t\t    " << data.solutions[1].second << "\t\t        " << data.times[1];
-  std::cout << "\t\t     " << data.solutions[2].second << "\t\t\t" << data.times[2] << std::endl;
+void PrintResult(const Solution& solution, const std::string& time) {
+  std::cout << solution.second << "\t" << time << "\t";
 }
 
 /**
