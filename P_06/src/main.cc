@@ -23,13 +23,13 @@ int main(int argc, char* argv[]) {
   try {
     srand(time(NULL));
     int nodes = 0;
-    double time_limit = 5 * 60000;
+    int time_limit = 5;
     if (argc != 2 && argc != 3 && argc != 4) {
       std::cerr << "Usage: " << argv[0] << " <files_directory> <-t [time_limit]> <-g [files to generate]>" << std::endl;
       throw std::invalid_argument("Invalid number of arguments");
     } else if (argc == 4) {
       if (std::string(argv[2]) == "-t") {
-        time_limit = double(std::stoi(argv[3]) * 60000);
+        time_limit = std::stoi(argv[3]);
       } else if (std::string(argv[2]) == "-g") {
         nodes = std::stoi(argv[3]);
         for (int i = 0; i < 3; i++) {
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
       }
     } else if (argc == 6) {
       if (std::string(argv[2]) == "-t") {
-        time_limit = double(std::stoi(argv[3]) * 60000);
+        time_limit = std::stoi(argv[3]);
       } else if (std::string(argv[2]) == "-g") {
         nodes = std::stoi(argv[3]);
         for (int i = 0; i < 3; i++) {
@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
         }
       }
       if (std::string(argv[4]) == "-t") {
-        time_limit = double(std::stoi(argv[5]) * 60000);
+        time_limit = std::stoi(argv[5]);
       } else if (std::string(argv[4]) == "-g") {
         nodes = std::stoi(argv[5]);
         for (int i = 0; i < 3; i++) {
@@ -64,8 +64,11 @@ int main(int argc, char* argv[]) {
     for (const auto& file_name : file_names) {
       std::vector<std::string> file_content = ReadFile(file_name);
       Graph* graph = CreateGraph(file_content);
-      Data data = CalculateTimes(graph, time_limit);
-      PrintResults(data, file_name);
+      std::cout << file_name << "\t";
+      // ! ?????
+      std::cout << file_name.size() << "\t";
+      CalculateTimes(graph, time_limit);
+      std::cout << "\n";
     }
     return 0;
   } catch (const std::exception& e) {
