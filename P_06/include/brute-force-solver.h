@@ -18,10 +18,15 @@
 
 #include "solver.h"
 
+/**
+ * @brief Class that represents a solver for a graph using the brute force algorithm.
+ */
 class BruteForce : public Solver {
   public:
     BruteForce(void) = default;
     ~BruteForce(void) = default;
   private:
-    void RunAlgorithm(Graph* graph) override;
+    Solution RunAlgorithm(Graph* graph) override;
+    void permute(std::vector<Node*>& nodes, size_t left, size_t right, Solution& best_solution, Graph* graph);
+    int calculate_cost(std::vector<Node*>& nodes, Graph* graph);
 };
