@@ -17,9 +17,22 @@
 #pragma once
 
 #include "graph.h"
+#include "solver.h"
 
 #include <vector>
 #include <unordered_map>
 
+/**
+ * @brief Struct that represents the final data of the solution.
+ */
+struct Data {
+  std::vector<Solution> solutions;
+  std::vector<std::string> times;
+};
+
 std::vector<std::string> ReadFile(const std::string& file_name);
 Graph* CreateGraph(const std::vector<std::string>& file_content);
+Data CalculateTimes(Graph* graph, const int& time_limit);
+void PrintResults(const Data& data, const std::string& file_name);
+void CreateInstances(const int& instances);
+void GenerateRandomInstance(int numNodes, std::string file_name);
