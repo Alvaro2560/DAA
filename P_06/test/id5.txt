@@ -1,0 +1,11 @@
+5
+A B 38
+A C 22
+A D 18
+A E 30
+B C 4
+B D 9
+B E 38
+C D 31
+C E 7
+D E 30

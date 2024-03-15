@@ -1,0 +1,11 @@
+5
+A B 6
+A C 46
+A D 9
+A E 27
+B C 34
+B D 3
+B E 13
+C D 46
+C E 6
+D E 25
