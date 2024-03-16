@@ -23,6 +23,7 @@
 #include <chrono>
 #include <iostream>
 #include <set>
+#include <thread>
 
 /**
  * @brief Reads the content of a file and returns it as a vector of strings.
@@ -60,35 +61,104 @@ Graph* CreateGraph(const std::vector<std::string>& file_content) {
   return graph;
 }
 
+std::vector<std::future<void>> pending_futures;
+
 /**
  * @brief Calculates the time of the execution of the algorithms.
  * 
  * @param graph Graph to solve.
  * @param time_limit Time limit for the execution of the algorithms.
- * @return Data Data of the execution of the algorithms.
  */
-void CalculateTimes(Graph* graph, const int& time_limit) {
-  Greedy greedy;
+void CalculateTimes(Graph* graph, const float& time_limit) {
   BruteForce brute_force;
   DynamicProgramming dynamic;
+  Greedy greedy;
   Solution solution;
   std::string time;
-  solution = brute_force.Solve(graph, time_limit, time);
+  auto end = std::chrono::high_resolution_clock::now();
+  auto start = std::chrono::high_resolution_clock::now();
+  auto future_brute = std::async(std::launch::async, [&] {
+    solution = brute_force.Solve(graph);
+  });
+  auto status = future_brute.wait_for(std::chrono::milliseconds(0));
+  do {
+    status = future_brute.wait_for(std::chrono::milliseconds(0));
+  } while (status != std::future_status::ready && 
+          (std::chrono::duration<float, std::milli>(std::chrono::high_resolution_clock::now() - start).count() < time_limit));
+  if (status == std::future_status::ready) {
+    future_brute.get();
+    end = std::chrono::high_resolution_clock::now();
+    time = std::to_string(std::chrono::duration<float, std::milli>(end - start).count());
+  } else {
+    time = "EXCESIVO";
+    solution.second = -1;
+  }
   PrintResult(solution, time);
-  solution = dynamic.Solve(graph, time_limit, time);
+  write(graph->getNodes().size(), time, 1);
+  start = std::chrono::high_resolution_clock::now();
+  auto future_dp = std::async(std::launch::async, [&] {
+    solution = dynamic.Solve(graph);
+  });
+  do {
+    status = future_dp.wait_for(std::chrono::milliseconds(0));
+  } while (status != std::future_status::ready && 
+          (std::chrono::duration<float, std::milli>(std::chrono::high_resolution_clock::now() - start).count() < time_limit));
+  if (status == std::future_status::ready) {
+    future_dp.get();
+    end = std::chrono::high_resolution_clock::now();
+    time = std::to_string(std::chrono::duration<float, std::milli>(end - start).count());
+  } else {
+    time = "EXCESIVO";
+    solution.second = -1;
+  }
   PrintResult(solution, time);
-  solution = greedy.Solve(graph, time_limit, time);
+  write(graph->getNodes().size(), time, 2);
+  start = std::chrono::high_resolution_clock::now();
+  auto future_greedy = std::async(std::launch::async, [&] {
+    solution = greedy.Solve(graph);
+  });
+  do {
+    status = future_greedy.wait_for(std::chrono::milliseconds(0));
+  } while (status != std::future_status::ready &&
+          (std::chrono::duration<float, std::milli>(std::chrono::high_resolution_clock::now() - start).count() < time_limit));
+  if (status == std::future_status::ready) {
+    future_greedy.get();
+    end = std::chrono::high_resolution_clock::now();
+    time = std::to_string(std::chrono::duration<float, std::milli>(end - start).count());
+  } else {
+    time = "EXCESIVO";
+    solution.second = -1;
+  }
   PrintResult(solution, time);
+  write(graph->getNodes().size(), time, 3);
+  std::cout << std::endl;
+  pending_futures.emplace_back(std::move(future_brute));
+  pending_futures.emplace_back(std::move(future_dp));
+  pending_futures.emplace_back(std::move(future_greedy));
 }
 
 /**
- * @brief Prints the results of the execution of the algorithms.
+ * @brief Prints the result of the execution.
  * 
- * @param data Data of the execution of the algorithms.
- * @param file_name Name of the file.
+ * @param solution Solution of the algorithm.
+ * @param time Time of the execution of the algorithm.
  */
 void PrintResult(const Solution& solution, const std::string& time) {
-  std::cout << solution.second << "\t" << time << "\t";
+  std::cout << solution.second << "              " << time << "               ";
+}
+
+void write(int nodes, std::string time, int line) {
+  std::ofstream file("results.csv", std::ios::app);
+  if (line == 0) {
+    file << "Nodes,Time Brute Force,Time Dynamic Programming,Time Greedy" << std::endl;
+  } else if (line == 1) {
+    file << nodes << "," << time << ",";
+  } else if  (line == 2) {
+    file << time << ",";
+  } else {
+    file << time << std::endl;
+  }
+  file.close(); 
 }
 
 /**
