@@ -69,7 +69,8 @@ std::vector<std::future<void>> pending_futures;
  * @param graph Graph to solve.
  * @param time_limit Time limit for the execution of the algorithms.
  */
-void CalculateTimes(Graph* graph, const float& time_limit) {
+std::vector<std::string> CalculateTimes(Graph* graph, const float& time_limit) {
+  std::vector<std::string> times;
   BruteForce brute_force;
   DynamicProgramming dynamic;
   Greedy greedy;
@@ -93,7 +94,8 @@ void CalculateTimes(Graph* graph, const float& time_limit) {
     time = "EXCESIVO";
     solution.second = -1;
   }
-  PrintResult(solution, time);
+  // PrintResult(solution, time);
+  times.emplace_back(time);
   write(graph->getNodes().size(), time, 1);
   start = std::chrono::high_resolution_clock::now();
   auto future_dp = std::async(std::launch::async, [&] {
@@ -111,7 +113,8 @@ void CalculateTimes(Graph* graph, const float& time_limit) {
     time = "EXCESIVO";
     solution.second = -1;
   }
-  PrintResult(solution, time);
+  // PrintResult(solution, time);
+  times.emplace_back(time);
   write(graph->getNodes().size(), time, 2);
   start = std::chrono::high_resolution_clock::now();
   auto future_greedy = std::async(std::launch::async, [&] {
@@ -129,12 +132,13 @@ void CalculateTimes(Graph* graph, const float& time_limit) {
     time = "EXCESIVO";
     solution.second = -1;
   }
-  PrintResult(solution, time);
+  // PrintResult(solution, time);
+  times.emplace_back(time);
   write(graph->getNodes().size(), time, 3);
-  std::cout << std::endl;
   pending_futures.emplace_back(std::move(future_brute));
   pending_futures.emplace_back(std::move(future_dp));
   pending_futures.emplace_back(std::move(future_greedy));
+  return times;
 }
 
 /**
