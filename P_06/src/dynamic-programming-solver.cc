@@ -37,8 +37,8 @@ Solution DynamicProgramming::RunAlgorithm(Graph* graph) {
   for (int i = 0; i < num_nodes - 1; ++i) {
     int next_node = -1;
     for (int j = 0; j < num_nodes; ++j) {
-      if (!(bitmask & (1 << j)) && (next_node == -1 || dp[bitmask][current_node] + 
-            graph->getWeight(nodes[current_node], nodes[j]) == dp[bitmask | (1 << j)][j])) {
+      if (!(bitmask & (1 << j)) && (next_node == -1 || dp[bitmask][current_node] + // Verificar si el nodo j es candidato.
+            graph->getWeight(nodes[current_node], nodes[j]) == dp[bitmask | (1 << j)][j])) { 
         next_node = j;
       }
     }
