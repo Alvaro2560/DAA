@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include <filesystem>
+#include <map>
 
 int main(int argc, char* argv[]) {
   try {
@@ -66,14 +67,30 @@ int main(int argc, char* argv[]) {
     for (const auto& entry : std::filesystem::directory_iterator(files_directory)) {
       file_names.emplace_back(entry.path().string());
     }
-    std::cout << "Instancia\tValor F.B.\tTiempo F.B. (ms)\tValor P.D.\tTiempo P.D. (ms)\t"
-                 "Valor Greedy\tTiempo Greedy (ms)" << std::endl;
+    std::cout << "Nodos\tTiempo F.B. (ms)\tTiempo P.D. (ms)\t"
+                 "Tiempo Greedy (ms)" << std::endl;
     write(0, "0", 0);
+    std::map<int, std::vector<std::vector<std::string>>> times;
+    std::vector<std::string> algorithm_times;
     for (const auto& file_name : file_names) {
       std::vector<std::string> file_content = ReadFile(file_name);
       Graph* graph = CreateGraph(file_content);
-      std::cout << file_name << "      ";
-      CalculateTimes(graph, time_limit);
+      algorithm_times = CalculateTimes(graph, time_limit);
+      times[std::stoi(file_content[0])].emplace_back(algorithm_times);
+    }
+    // Modificación
+    for (const auto& [num_nodes, times] : times) {
+      float time_fb = 0.f, time_dp = 0.f, time_greedy = 0.f;
+      for (const auto& time : times) {
+        time_fb += std::stof(time[0]);
+        time_dp += std::stof(time[1]);
+        time_greedy += std::stof(time[2]);
+      }
+      time_fb /= times.size();
+      time_dp /= times.size();
+      time_greedy /= times.size();
+      std::cout << num_nodes << "            " << time_fb << "                 ";
+      std::cout << time_dp << "                  " << time_greedy << std::endl;
     }
     std::cout << std::endl;
     std::cout << "All instances have been solved.\nPress Ctrl + C to exit." << std::endl;
