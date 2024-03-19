@@ -27,7 +27,7 @@ extern std::vector<std::future<void>> pending_futures;
 
 std::vector<std::string> ReadFile(const std::string& file_name);
 Graph* CreateGraph(const std::vector<std::string>& file_content);
-void CalculateTimes(Graph* graph, const float& time_limit);
+std::vector<std::string> CalculateTimes(Graph* graph, const float& time_limit);
 void PrintResult(const Solution& solution, const std::string& time);
 void CreateInstances(const int& instances);
 void GenerateRandomInstance(int numNodes, std::string file_name);
