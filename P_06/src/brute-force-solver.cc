@@ -31,7 +31,7 @@ Solution BruteForce::RunAlgorithm(Graph* graph) {
   }
   Solution best_solution({}, INT_MAX);
   permute(nodes, 0, nodes.size() - 1, best_solution, graph);
-  best_solution.first.push_back(best_solution.first.front());
+  best_solution.first.emplace_back(best_solution.first.front());
   return best_solution;
 }
 
