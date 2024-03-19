@@ -27,6 +27,13 @@ int main(int argc, char* argv[]) {
     if (argc != 2 && argc != 3 && argc != 4 && argc != 6) {
       std::cerr << "Usage: " << argv[0] << " <files_directory> <-t [time_limit]> <-g [files to generate]>" << std::endl;
       throw std::invalid_argument("Invalid number of arguments");
+    } else if (argc == 3 && std::string(argv[1]) == "-g") {
+      nodes = std::stoi(argv[2]);
+      for (int i = 0; i < 3; i++) {
+        GenerateRandomInstance(nodes, "instance" + std::to_string(i + 1) + ".txt");
+      }
+      std::cout << "Instances generated." << std::endl;
+      return 0;
     } else if (argc == 4) {
       if (std::string(argv[2]) == "-t") {
         time_limit = std::stof(argv[3]) * 60000.f;
