@@ -1,0 +1,22 @@
+7
+A B 32
+A C 38
+A D 37
+A E 45
+A F 10
+A G 9
+B C 49
+B D 27
+B E 6
+B F 48
+B G 46
+C D 47
+C E 21
+C F 26
+C G 23
+D E 49
+D F 37
+D G 34
+E F 45
+E G 38
+F G 10
