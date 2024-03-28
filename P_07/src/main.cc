@@ -8,20 +8,27 @@
  * @author Álvaro Fontenla León (alu0101437989@ull.edu.es)
  * @brief Main function of the program.
  * @version 0.1
- * @since Mar 21 2024
+ * @since Mar 28 2024
  * 
  * @copyright Copyright (c) 2024
  * 
  */
 
 #include <iostream>
+#include <exception>
 
-int main(int argc, char* argv[]) {
+/**
+ * @brief Main function of the program.
+ * 
+ * @param argc Number of arguments. 
+ * @param argv Array of arguments.
+ * @return int Exit status of the program.
+ */
+int main(int argc, char** argv) {
   try {
-    
     return 0;
   } catch (const std::exception& e) {
-    std::cerr << e.what() << std::endl;
+    std::cerr << "Error: " << e.what() << std::endl;
     return 1;
   }
 }
