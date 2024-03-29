@@ -13,3 +13,15 @@
  * @copyright Copyright (c) 2024
  * 
  */
+
+#include "../include/solution.hh"
+
+Solution::Solution(const int& machines) : tasks_(machines) { }
+
+void Solution::addTask(const int& machine, const Task& task) {
+  tasks_[machine].emplace_back(task);
+}
+
+std::vector<Task> Solution::getTasks(const int& machine) const {
+  return tasks_[machine];
+}
