@@ -22,7 +22,7 @@
  * @param id Task's id.
  * @param processing_time Task's processing time.
  */
-Task::Task(int id, int processing_time) : id_(id), processing_time_(processing_time), scheduled_(false) { }
+Task::Task(const int& id, const int& processing_time) : id_(id), processing_time_(processing_time), scheduled_(false) { }
 
 /**
  * @brief Destroy the Task::Task object
@@ -48,6 +48,16 @@ int Task::getProcessingTime(void) const {
 }
 
 /**
+ * @brief Get the Task's preparation time.
+ * 
+ * @param id Machine's id.
+ * @return int Task's preparation time.
+ */
+int Task::getPreparationTime(const int& id) const {
+  return preparation_times_.at(id);
+}
+
+/**
  * @brief Check if the task is scheduled.
  * 
  * @return true If the task is scheduled.
@@ -62,4 +72,14 @@ bool Task::isScheduled(void) const {
  */
 void Task::setScheduled(void) {
   scheduled_ = true;
+}
+
+/**
+ * @brief Add a preparation time for the task.
+ * 
+ * @param id Machine's id.
+ * @param time Preparation time.
+ */
+void Task::addPreparationTime(const int& id, const int& time) {
+  preparation_times_[id] = time;
 }
