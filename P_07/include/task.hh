@@ -16,20 +16,25 @@
 
 #pragma once
 
+#include <map>
+
 /**
  * @class Task
  * @brief Class that represents a task.
  */
 class Task {
   public:
-    Task(int id, int processing_time);
+    Task(const int& id, const int& processing_time);
     ~Task(void);
     int getId(void) const;
     int getProcessingTime(void) const;
+    int getPreparationTime(const int& id) const;
     bool isScheduled(void) const;
     void setScheduled(void);
+    void addPreparationTime(const int& id, const int& time);
   private:
     int id_;
     int processing_time_;
+    std::map<int, int> preparation_times_;
     bool scheduled_;
 };
