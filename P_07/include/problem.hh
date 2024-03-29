@@ -19,6 +19,8 @@
 #include <string>
 #include <vector>
 
+class Task;
+
 /**
  * @class Problem
  * @brief Class that represents a problem instance.
@@ -26,14 +28,17 @@
 class Problem {
   public:
     Problem(const std::string& file_name);
+    int getMachines(void) const;
+    const std::vector<Task>& getTasks(void) const;
+    const Task& getTask(int id) const;
+    const std::vector<std::vector<int>>& getPreparationTimes(void) const;
     friend std::ostream& operator<<(std::ostream& os, const Problem& problem);
     ~Problem(void);
   private:
     void ReadFile(const std::string& file_name);
   private:
-    int tasks_;
     int machines_;
-    std::vector<int> processing_times_;
+    std::vector<Task> tasks_;
     std::vector<std::vector<int>> preparation_times_;
 };
 
