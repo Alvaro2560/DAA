@@ -71,16 +71,17 @@ void Problem::ReadFile(const std::string& file_name) {
         tasks_.push_back(Task(i, processing_time));
       }
     } else if (key == "Sij") {
-      preparation_times_.resize(tasks + 1, std::vector<int>(tasks + 1));
       for (int i = 0; i < tasks + 1; i++) {
         if (!std::getline(file, line)) {
           throw std::runtime_error("Error: Unexpected end of file while reading preparation times.");
         }
         std::istringstream iss_sij(line);
         for (int j = 0; j < tasks + 1; j++) {
-          if (!(iss_sij >> preparation_times_[i][j])) {
+          int preparation_time;
+          if (!(iss_sij >> preparation_time)) {
             throw std::runtime_error("Error: Invalid format for preparation times.");
           }
+          tasks_[i].addPreparationTime(j, preparation_time);
         }
       }
     } else {
@@ -107,9 +108,9 @@ std::ostream& operator<<(std::ostream& os, const Problem& problem) {
   }
   os << std::endl;
   os << "Preparation times: " << std::endl;
-  for (int i = 0; i < kTaskNum + 1; i++) {
-    for (int j = 0; j < kTaskNum + 1; j++) {
-      os << problem.preparation_times_[i][j] << " ";
+  for (int i = 0; i < kTaskNum; ++i) {
+    for (int j = 0; j < kTaskNum; ++j) {
+      os << problem.tasks_[i].getPreparationTime(j) << " ";
     }
     os << std::endl;
   }
