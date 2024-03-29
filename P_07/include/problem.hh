@@ -39,7 +39,6 @@ class Problem {
   private:
     int machines_;
     std::vector<Task> tasks_;
-    std::vector<std::vector<int>> preparation_times_;
 };
 
 std::ostream& operator<<(std::ostream& os, const Problem& problem);
