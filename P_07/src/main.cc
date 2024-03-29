@@ -14,21 +14,23 @@
  * 
  */
 
+#include "../include/problem.hh"
+
 #include <iostream>
-#include <exception>
 
 /**
  * @brief Main function of the program.
  * 
- * @param argc Number of arguments. 
- * @param argv Array of arguments.
- * @return int Exit status of the program.
+ * @param argc Number of arguments.
+ * @param argv Arguments.
+ * @return int Exit status.
  */
-int main(int argc, char** argv) {
+int main(int argc, char* argv[]) {
   try {
+    Problem problem(argv[1]);
+    std::cout << problem;
     return 0;
   } catch (const std::exception& e) {
-    std::cerr << "Error: " << e.what() << std::endl;
-    return 1;
+    std::cerr << e.what() << std::endl;
   }
 }
