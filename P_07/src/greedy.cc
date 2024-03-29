@@ -15,15 +15,21 @@
  */
 
 #include "../include/greedy.hh"
+#include "../include/problem.hh"
+#include "../include/solution.hh"
+#include "../include/task.hh"
+
+#include <algorithm>
 
 Solution Greedy::Run(const Problem& problem) {
-  Solution solution;
-  std::vector<Task> tasks = problem.getTasks();
-  std::sort(tasks.begin(), tasks.end(), [](const Task& task1, const Task& task2) {
-    return task1.getProcessingTime() > task2.getProcessingTime();
+  Solution solution(problem.getMachines());
+  std::vector<Task> ordered_tasks = problem.getTasks();
+  std::sort(ordered_tasks.begin(), ordered_tasks.end(), [](const Task& task1, const Task& task2) {
+    return task1.getPreparationTime(0) > task2.getPreparationTime(0);
   });
-  for (Task& task : tasks) {
-    solution.addTask(task);
+  for (int i = 0; i < problem.getMachines(); ++i) {
+    solution.addTask(i, ordered_tasks[i]);
   }
+  
   return solution;
 }
