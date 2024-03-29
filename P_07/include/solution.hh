@@ -15,3 +15,17 @@
  */
 
 #pragma once
+
+#include <vector>
+
+class Task;
+
+class Solution {
+  public:
+    Solution(const int& machines);
+    ~Solution(void) = default;
+    void addTask(const int& machine, const Task& task);
+    std::vector<Task> getTasks(const int& machine) const;
+  private:
+    std::vector<std::vector<Task>> tasks_;
+};
