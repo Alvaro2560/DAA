@@ -20,6 +20,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <climits>
 
 /**
  * @brief Construct a new Problem:: Problem object.
@@ -68,7 +69,7 @@ void Problem::ReadFile(const std::string& file_name) {
         if (!(iss >> processing_time)) {
           throw std::runtime_error("Error: Invalid format for processing times.");
         }
-        tasks_.push_back(Task(i, processing_time));
+        tasks_.emplace_back(new Task(i, processing_time));
       }
     } else if (key == "Sij") {
       for (int i = 0; i < tasks + 1; i++) {
@@ -81,7 +82,8 @@ void Problem::ReadFile(const std::string& file_name) {
           if (!(iss_sij >> preparation_time)) {
             throw std::runtime_error("Error: Invalid format for preparation times.");
           }
-          tasks_[i].addPreparationTime(j, preparation_time);
+          tasks_[i]->addPreparationTime(j, preparation_time);
+          std::cout << i << " " << j << " " << preparation_time << std::endl;
         }
       }
     } else {
@@ -89,6 +91,67 @@ void Problem::ReadFile(const std::string& file_name) {
     }
   }
   file.close();
+}
+
+/**
+ * @brief Get the number of machines.
+ * 
+ * @return int Number of machines.
+ */
+int Problem::getMachines(void) const {
+  return machines_;
+}
+
+/**
+ * @brief Get the tasks.
+ * 
+ * @return const std::vector<Task*>& Tasks.
+ */
+const std::vector<Task*>& Problem::getTasks(void) const {
+  return tasks_;
+}
+
+/**
+ * @brief Get a task by its id.
+ * 
+ * @param id Task id.
+ * @return const Task* Task.
+ */
+const Task* Problem::getTask(const int& id) const {
+  return tasks_[id];
+}
+
+/**
+ * @brief Check if all tasks are scheduled.
+ * 
+ * @return true If all tasks are scheduled.
+ * @return false If not all tasks are scheduled.
+ */
+bool Problem::allTasksScheduled(void) const {
+  for (const Task* task : tasks_) {
+    if (!task->isScheduled()) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * @brief Get the task with the lower total completion time.
+ * 
+ * @param prev_task Id of the previous task.
+ * @return Task* Task with the lower total completion time.
+ */
+Task* Problem::getLowerTCTTask(const int& prev_task) const {
+  Task* lower_tct_task;
+  int lower_tct = INT_MAX;
+  for (Task* task : tasks_) {
+    if (!task->isScheduled() && (task->getPreparationTime(prev_task) + task->getProcessingTime()) < lower_tct) {
+      lower_tct = task->getPreparationTime(prev_task) + task->getProcessingTime();
+      lower_tct_task = task;
+    }
+  }
+  return lower_tct_task;
 }
 
 /**
@@ -103,14 +166,14 @@ std::ostream& operator<<(std::ostream& os, const Problem& problem) {
   os << "Tasks: " << kTaskNum << std::endl;
   os << "Machines: " << problem.machines_ << std::endl;
   os << "Processing times: ";
-  for (int i = 0; i < kTaskNum; ++i) {
-    os << problem.tasks_[i].getProcessingTime() << " ";
+  for (size_t i = 0; i < kTaskNum; ++i) {
+    os << problem.tasks_[i]->getProcessingTime() << " ";
   }
   os << std::endl;
   os << "Preparation times: " << std::endl;
-  for (int i = 0; i < kTaskNum; ++i) {
-    for (int j = 0; j < kTaskNum; ++j) {
-      os << problem.tasks_[i].getPreparationTime(j) << " ";
+  for (size_t i = 0; i < kTaskNum; ++i) {
+    for (size_t j = 0; j < kTaskNum; ++j) {
+      os << problem.tasks_[i]->getPreparationTime(j) << " ";
     }
     os << std::endl;
   }
