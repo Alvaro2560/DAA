@@ -15,13 +15,29 @@
  */
 
 #include "../include/solution.hh"
+#include "../include/task.hh"
 
 Solution::Solution(const int& machines) : tasks_(machines) { }
 
-void Solution::addTask(const int& machine, const Task& task) {
+void Solution::addTask(const int& machine, Task* task) {
   tasks_[machine].emplace_back(task);
 }
 
-std::vector<Task> Solution::getTasks(const int& machine) const {
+std::vector<Task*> Solution::getTasks(const int& machine) const {
   return tasks_[machine];
+}
+
+Task* Solution::getLastTask(const int& machine) {
+  return tasks_[machine].back();
+}
+
+std::ostream& operator<<(std::ostream& os, const Solution& solution) {
+  for (size_t i = 0; i < solution.tasks_.size(); ++i) {
+    os << "Machine " << i << ": ";
+    for (size_t j = 0; j < solution.tasks_[i].size(); ++j) {
+      os << solution.tasks_[i][j]->getId() << " ";
+    }
+    os << std::endl;
+  }
+  return os;
 }
