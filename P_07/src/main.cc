@@ -15,6 +15,8 @@
  */
 
 #include "../include/problem.hh"
+#include "../include/solution.hh"
+#include "../include/greedy.hh"
 
 #include <iostream>
 
@@ -29,6 +31,8 @@ int main(int argc, char* argv[]) {
   try {
     Problem problem(argv[1]);
     std::cout << problem;
+    Solution solution = Greedy().Run(problem);
+    std::cout << solution;
     return 0;
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
