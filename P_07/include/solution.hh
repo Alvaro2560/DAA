@@ -17,6 +17,7 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 
 class Task;
 
@@ -24,8 +25,12 @@ class Solution {
   public:
     Solution(const int& machines);
     ~Solution(void) = default;
-    void addTask(const int& machine, const Task& task);
-    std::vector<Task> getTasks(const int& machine) const;
+    void addTask(const int& machine, Task* task);
+    std::vector<Task*> getTasks(const int& machine) const;
+    Task* getLastTask(const int& machine);
+    friend std::ostream& operator<<(std::ostream& os, const Solution& solution);
   private:
-    std::vector<std::vector<Task>> tasks_;
+    std::vector<std::vector<Task*>> tasks_;
 };
+
+std::ostream& operator<<(std::ostream& os, const Solution& solution);
