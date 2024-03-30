@@ -29,16 +29,17 @@ class Problem {
   public:
     Problem(const std::string& file_name);
     int getMachines(void) const;
-    const std::vector<Task>& getTasks(void) const;
-    const Task& getTask(int id) const;
-    const std::vector<std::vector<int>>& getPreparationTimes(void) const;
+    const std::vector<Task*>& getTasks(void) const;
+    const Task* getTask(const int& id) const;
+    bool allTasksScheduled(void) const;
+    Task* getLowerTCTTask(const int& prev_task) const;
     friend std::ostream& operator<<(std::ostream& os, const Problem& problem);
     ~Problem(void);
   private:
     void ReadFile(const std::string& file_name);
   private:
     int machines_;
-    std::vector<Task> tasks_;
+    std::vector<Task*> tasks_;
 };
 
 std::ostream& operator<<(std::ostream& os, const Problem& problem);
