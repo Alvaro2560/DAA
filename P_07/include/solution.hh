@@ -21,6 +21,10 @@
 
 class Task;
 
+/**
+ * @class Solution
+ * @brief Class that represents a solution.
+ */
 class Solution {
   public:
     Solution(const int& machines);
