@@ -17,6 +17,7 @@
 #include "../include/problem.hh"
 #include "../include/solution.hh"
 #include "../include/greedy.hh"
+#include "../include/grasp.hh"
 
 #include <iostream>
 
@@ -30,8 +31,8 @@
 int main(int argc, char* argv[]) {
   try {
     Problem problem(argv[1]);
-    Algorithm* greedy = new Greedy();
-    Solution solution = greedy->Run(problem);
+    Algorithm* algorithm = new GRASP();
+    Solution solution = algorithm->Run(problem);
     std::cout << solution;
     return 0;
   } catch (const std::exception& e) {
