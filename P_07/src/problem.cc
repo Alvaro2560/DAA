@@ -63,15 +63,17 @@ void Problem::ReadFile(const std::string& file_name) {
       if (!(iss >> machines_)) {
         throw std::runtime_error("Error: Invalid format for machines.");
       }
-    } else if (key == "Pi") {
+    } else if (key[2] == ':') {
       int processing_time;
+      tasks_.emplace_back(new Task(0, 0));
+      tasks_[0]->setScheduled();
       for (int i = 1; i <= tasks; i++) {
         if (!(iss >> processing_time)) {
           throw std::runtime_error("Error: Invalid format for processing times.");
         }
         tasks_.emplace_back(new Task(i, processing_time));
       }
-    } else if (key == "Sij") {
+    } else if (key[3] == ':') {
       for (int i = 0; i < tasks + 1; i++) {
         if (!std::getline(file, line)) {
           throw std::runtime_error("Error: Unexpected end of file while reading preparation times.");
@@ -82,8 +84,7 @@ void Problem::ReadFile(const std::string& file_name) {
           if (!(iss_sij >> preparation_time)) {
             throw std::runtime_error("Error: Invalid format for preparation times.");
           }
-          tasks_[i]->addPreparationTime(j, preparation_time);
-          std::cout << i << " " << j << " " << preparation_time << std::endl;
+          tasks_[j]->addPreparationTime(i, preparation_time);
         }
       }
     } else {
