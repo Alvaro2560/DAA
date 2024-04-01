@@ -35,6 +35,16 @@ void Solution::addTask(const int& machine, Task* task) {
 }
 
 /**
+ * @brief Set the tasks of a machine.
+ * 
+ * @param machine Machine's id.
+ * @param tasks Tasks to set.
+ */
+void Solution::setTasks(const int& machine, std::vector<Task*> tasks) {
+  tasks_[machine] = tasks;
+}
+
+/**
  * @brief Get the tasks of a machine.
  * 
  * @param machine Machine's id.
@@ -90,6 +100,23 @@ void Solution::sumTCT(const int& machine) {
       tcts_[machine] += tasks_[machine][i]->getPreparationTime(tasks_[machine][i - 1]->getId()) + tasks_[machine][i]->getProcessingTime();
     }
   }
+}
+
+/**
+ * @brief Check if a task belongs to a machine.
+ * 
+ * @param machine Machine's id.
+ * @param task_id Task's id.
+ * @return true If the task belongs to the machine.
+ * @return false If the task does not belong to the machine.
+ */
+bool Solution::taskBelongsToMachine(const int& machine, const int& task_id) const {
+  for (size_t i = 0; i < tasks_[machine].size(); i++) {
+    if (tasks_[machine][i]->getId() == task_id) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
