@@ -2,3 +2,4 @@
 *.o
 a.out
 *.json
+P_0*/build/p*
