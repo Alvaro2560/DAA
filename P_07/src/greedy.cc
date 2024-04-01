@@ -25,19 +25,21 @@ Solution Greedy::Run(const Problem& problem) {
   Solution solution(problem.getMachines());
   std::vector<Task*> ordered_tasks = problem.getTasks();
   std::sort(ordered_tasks.begin(), ordered_tasks.end(), [](Task* task1, Task* task2) {
-    return task1->getPreparationTime(0) > task2->getPreparationTime(0);
+    return task1->getPreparationTime(0) + task1->getProcessingTime() < task2->getPreparationTime(0) + task2->getProcessingTime();
   });
-  for (int i = 0; i < problem.getMachines(); ++i) {
+  for (int i = 1; i <= problem.getMachines(); i++) {
     ordered_tasks[i]->setScheduled();
-    solution.addTask(i, ordered_tasks[i]);
+    solution.addTask(i - 1, ordered_tasks[i]);
+    solution.sumTCT(i - 1);
   }
-  int current_machine = 0;
   const int kMachines = problem.getMachines();
+  int current_machine = 0;
   while (!problem.allTasksScheduled()) {
     if (current_machine < kMachines) {
       Task* lower_tct_task = problem.getLowerTCTTask(solution.getLastTask(current_machine)->getId());
       lower_tct_task->setScheduled();
       solution.addTask(current_machine, lower_tct_task);
+      solution.sumTCT(current_machine);
       ++current_machine;
     } else {
       current_machine = 0;
