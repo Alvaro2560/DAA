@@ -30,8 +30,8 @@
 int main(int argc, char* argv[]) {
   try {
     Problem problem(argv[1]);
-    std::cout << problem;
-    Solution solution = Greedy().Run(problem);
+    Algorithm* greedy = new Greedy();
+    Solution solution = greedy->Run(problem);
     std::cout << solution;
     return 0;
   } catch (const std::exception& e) {
