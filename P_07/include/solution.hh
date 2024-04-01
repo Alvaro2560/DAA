@@ -28,9 +28,13 @@ class Solution {
     void addTask(const int& machine, Task* task);
     std::vector<Task*> getTasks(const int& machine) const;
     Task* getLastTask(const int& machine);
+    int getTCT(void) const;
+    int getTCT(const int& machine) const;
+    void sumTCT(const int& machine);
     friend std::ostream& operator<<(std::ostream& os, const Solution& solution);
   private:
     std::vector<std::vector<Task*>> tasks_;
+    std::vector<int> tcts_;
 };
 
 std::ostream& operator<<(std::ostream& os, const Solution& solution);
