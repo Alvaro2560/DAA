@@ -21,6 +21,12 @@
 
 #include <algorithm>
 
+/**
+ * @brief Run the greedy algorithm.
+ * 
+ * @param problem Problem to solve.
+ * @return Solution Solution to the problem.
+ */
 Solution Greedy::Run(const Problem& problem) {
   Solution solution(problem.getMachines());
   std::vector<Task*> ordered_tasks = problem.getTasks();
