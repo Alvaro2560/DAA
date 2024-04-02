@@ -30,10 +30,20 @@
  */
 int main(int argc, char* argv[]) {
   try {
+    srand(time(nullptr));
     Problem problem(argv[1]);
-    Algorithm* algorithm = new GRASP();
-    Solution solution = algorithm->Run(problem);
-    std::cout << solution;
+    Algorithm* algorithm;
+    if (std::string(argv[2]) == "--greedy") {
+      algorithm = new Greedy;
+      Solution solution = algorithm->Run(problem);
+      std::cout << solution;
+    } else if (std::string(argv[2]) == "--grasp") {
+      algorithm = new GRASP;
+      Solution solution = algorithm->Run(problem);
+      std::cout << solution;
+    } else {
+      std::cerr << "Invalid algorithm." << std::endl;
+    }
     return 0;
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
