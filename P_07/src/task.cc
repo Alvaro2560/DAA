@@ -71,7 +71,7 @@ bool Task::isScheduled(void) const {
  * @brief Set the task as scheduled.
  */
 void Task::setScheduled(void) {
-  scheduled_ = true;
+  scheduled_ = !scheduled_;
 }
 
 /**
