@@ -120,6 +120,18 @@ bool Solution::taskBelongsToMachine(const int& machine, const int& task_id) cons
 }
 
 /**
+ * @brief Overload of the operator =.
+ * 
+ * @param solution Solution to copy.
+ * @return Solution& Copied solution.
+ */
+Solution& Solution::operator=(const Solution& solution) {
+  tasks_ = solution.tasks_;
+  tcts_ = solution.tcts_;
+  return *this;
+}
+
+/**
  * @brief Overload of the operator <<.
  * 
  * @param os Output stream.
