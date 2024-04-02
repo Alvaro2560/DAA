@@ -37,6 +37,7 @@ class Solution {
     int getTCT(const int& machine) const;
     void sumTCT(const int& machine);
     bool taskBelongsToMachine(const int& machine, const int& task_id) const;
+    Solution& operator=(const Solution& solution);
     friend std::ostream& operator<<(std::ostream& os, const Solution& solution);
   private:
     std::vector<std::vector<Task*>> tasks_;
