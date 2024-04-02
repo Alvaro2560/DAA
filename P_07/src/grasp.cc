@@ -23,10 +23,22 @@
 #include <climits>
 #include <random>
 
+/**
+ * @brief Run the GRASP algorithm.
+ * 
+ * @param problem Problem to solve.
+ * @return Solution Solution to the problem.
+ */
 Solution GRASP::Run(const Problem& problem) {
   return Construct(problem);
 }
 
+/**
+ * @brief Construct a solution using the GRASP algorithm.
+ * 
+ * @param problem Problem to solve.
+ * @return Solution Solution to the problem.
+ */
 Solution GRASP::Construct(const Problem& problem) {
   Solution solution(problem.getMachines());
   std::vector<Task*> ordered_tasks = problem.getTasks();
