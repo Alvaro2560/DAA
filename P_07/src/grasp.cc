@@ -28,40 +28,47 @@ Solution GRASP::Run(const Problem& problem) {
 
 Solution GRASP::Construct(const Problem& problem) {
   Solution solution(problem.getMachines());
-  std::vector<Task*> tasks = problem.getTasks();
-  std::vector<Task*> remaining_tasks = tasks;
-  std::vector<int> machine_end_times(problem.getMachines(), 0);
-  std::random_device rd;
-  std::mt19937 random_engine(rd());
-  while (!remaining_tasks.empty()) {
-    std::vector<Task*> feasible_tasks;
-    for (Task* task : remaining_tasks) {
-      int task_start = task->getPreparationTime(0);
-      int task_duration = task->getProcessingTime();
-      for (int machine = 0; machine < problem.getMachines(); ++machine) {
-        int machine_end_time = machine_end_times[machine];
-        int task_end_time = machine_end_time + task_start + task_duration;
-        if (machine_end_time <= task_start) {
-          feasible_tasks.push_back(task);
-          break;
-        }
-      }
-    }
-    if (feasible_tasks.empty()) break; // Si no hay tareas factibles, salir del bucle
-    // Seleccionar una tarea aleatoria de entre las tareas factibles
-    std::uniform_int_distribution<int> distribution(0, feasible_tasks.size() - 1);
-    int random_index = distribution(random_engine);
-    Task* selected_task = feasible_tasks[random_index];
-    // Seleccionar la máquina con el TCT mínimo
-    int min_tct_machine = std::distance(machine_end_times.begin(), std::min_element(machine_end_times.begin(), machine_end_times.end()));
-    // Asignar la tarea seleccionada a la máquina con el TCT mínimo
-    selected_task->setScheduled();
-    solution.addTask(min_tct_machine, selected_task);
-    solution.sumTCT(min_tct_machine);
-    machine_end_times[min_tct_machine] += selected_task->getPreparationTime(0) + selected_task->getProcessingTime();
-    // Eliminar la tarea seleccionada de las tareas restantes
-    remaining_tasks.erase(std::remove(remaining_tasks.begin(), remaining_tasks.end(), selected_task), remaining_tasks.end());
+  std::vector<Task*> ordered_tasks = problem.getTasks();
+  std::sort(ordered_tasks.begin(), ordered_tasks.end(), [](Task* task1, Task* task2) {
+    return task1->getPreparationTime(0) + task1->getProcessingTime() < task2->getPreparationTime(0) + task2->getProcessingTime();
+  });
+  for (int i = 1; i <= problem.getMachines(); i++) {
+    ordered_tasks[i]->setScheduled();
+    solution.addTask(i - 1, ordered_tasks[i]);
+    solution.sumTCT(i - 1);
   }
-
+  const int kMachines = problem.getMachines();
+  int current_machine = 0;
+  for (size_t i = 0; i < 5; i++) {
+    Task* lower_tct_task = problem.getLowerTCTTask(solution.getLastTask(current_machine)->getId());
+    lower_tct_task->setScheduled();
+    solution.addTask(current_machine, lower_tct_task);
+    solution.sumTCT(current_machine);
+    ++current_machine;
+    if (current_machine == kMachines) {
+      current_machine = 0;
+    }
+  }
+  std::vector<Solution> candidates;
+  Solution solution_copy = solution;
+  for (size_t i = 0; i < 5; i++) {
+    if (current_machine < kMachines) {
+      Task* rand_task;
+      while (ordered_tasks[rand() % ordered_tasks.size()]->isScheduled()) {
+        rand_task = ordered_tasks[rand() % ordered_tasks.size()];
+      }
+      rand_task->setScheduled();
+      solution_copy.addTask(current_machine, rand_task);
+      candidates.emplace_back(solution);
+      ++current_machine;
+    } else {
+      current_machine = 0;
+    }
+  }
+  for (size_t i = 0; i < candidates.size(); i++) {
+    if (candidates[i].getTCT() < solution.getTCT()) {
+      solution = candidates[i];
+    }
+  }
   return solution;
 }
