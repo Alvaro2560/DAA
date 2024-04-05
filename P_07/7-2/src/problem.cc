@@ -21,6 +21,7 @@
 #include <sstream>
 #include <iostream>
 #include <climits>
+#include <algorithm>
 
 /**
  * @brief Construct a new Problem:: Problem object.
@@ -144,15 +145,39 @@ bool Problem::allTasksScheduled(void) const {
  * @return Task* Task with the lower total completion time.
  */
 Task* Problem::getLowerTCTTask(const int& prev_task) const {
-  Task* lower_tct_task;
-  int lower_tct = INT_MAX;
+  std::vector<Task*> candidates;
   for (Task* task : tasks_) {
-    if (!task->isScheduled() && (task->getPreparationTime(prev_task) + task->getProcessingTime()) < lower_tct) {
-      lower_tct = task->getPreparationTime(prev_task) + task->getProcessingTime();
-      lower_tct_task = task;
+    if (!task->isScheduled()) {
+      candidates.emplace_back(task);
     }
   }
-  return lower_tct_task;
+  std::sort(candidates.begin(), candidates.end(), [prev_task](Task* task1, Task* task2) {
+    return task1->getPreparationTime(prev_task) + task1->getProcessingTime() < task2->getPreparationTime(prev_task) + task2->getProcessingTime();
+  });
+  return candidates[0];
+}
+
+/**
+ * @brief Get the tasks with the lower total completion time.
+ * 
+ * @param prev_task Id of the previous task.
+ * @param tasks Number of tasks to get.
+ * @return std::vector<Task*> Tasks with the lower total completion time.
+ */
+std::vector<Task*> Problem::getLowerTCTTasks(const int& prev_task, const int& tasks) const {
+  std::vector<Task*> candidates;
+  for (Task* task : tasks_) {
+    if (!task->isScheduled()) {
+      candidates.emplace_back(task);
+    }
+  }
+  std::sort(candidates.begin(), candidates.end(), [prev_task](Task* task1, Task* task2) {
+    return task1->getPreparationTime(prev_task) + task1->getProcessingTime() < task2->getPreparationTime(prev_task) + task2->getProcessingTime();
+  });
+  if (tasks > (int)candidates.size()) {
+    return candidates;
+  }
+  return std::vector<Task*>(candidates.begin(), candidates.begin() + tasks);
 }
 
 /**

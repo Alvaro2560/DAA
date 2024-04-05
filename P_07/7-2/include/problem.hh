@@ -33,6 +33,7 @@ class Problem {
     const Task* getTask(const int& id) const;
     bool allTasksScheduled(void) const;
     Task* getLowerTCTTask(const int& prev_task) const;
+    std::vector<Task*> getLowerTCTTasks(const int& prev_task, const int& tasks) const;
     friend std::ostream& operator<<(std::ostream& os, const Problem& problem);
     ~Problem(void);
   private:
