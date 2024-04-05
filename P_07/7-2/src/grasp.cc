@@ -50,67 +50,22 @@ Solution GRASP::Construct(const Problem& problem) {
     solution.addTask(i - 1, ordered_tasks[i]);
     solution.sumTCT(i - 1);
   }
-  std::vector<Solution*> candidates(5);
-  for (int i = 0; i < 5; i++) {
-    candidates[i] = new Solution(problem.getMachines());
-  }
-  for (size_t i = 0; i < 5; i++) {
-    for (int j = 1; j <= problem.getMachines(); j++) {
-      ordered_tasks[i]->setScheduled();
-      candidates[i]->addTask(j - 1, ordered_tasks[j]);
-      candidates[i]->sumTCT(j - 1);
-    }
-  }
   const int kMachines = problem.getMachines();
   int current_machine = 0;
-  std::vector<Task*> scheduled_tasks;
-  for (size_t i = 0; i < 5; i++) {
-    for (int j = 0; j < kMachines; j++) {
-      Task* lower_tct_task = problem.getLowerTCTTask(solution.getLastTask(current_machine)->getId());
-      candidates[i]->addTask(current_machine, lower_tct_task);
-      candidates[i]->sumTCT(current_machine);
+  while (!problem.allTasksScheduled()) {
+    if (current_machine < kMachines) {
+      std::vector<Task*> candidates = problem.getLowerTCTTasks(solution.getLastTask(current_machine)->getId(), 3);
+      Task* lower_tct_task = candidates[rand() % candidates.size()];
+      if (lower_tct_task == nullptr) {
+        break;
+      }
       lower_tct_task->setScheduled();
-      scheduled_tasks.emplace_back(lower_tct_task);
+      solution.addTask(current_machine, lower_tct_task);
+      solution.sumTCT(current_machine);
       ++current_machine;
-      if (current_machine == kMachines) {
-        current_machine = 0;
-      }
-    }
-    for (size_t j = 0; j < scheduled_tasks.size(); j++) {
-      scheduled_tasks[j]->setScheduled();
-    }
-    scheduled_tasks.clear();
-  }
-  // TODO: Ordenar las tareas por TCT, y de las 3 primeras escoger aleatoriamente.
-  for (size_t i = 0; i < 5; i++) {
-    for (size_t j = 0; j < 5; j++) {
-      if (current_machine < kMachines) {
-        Task* rand_task;
-        int index = rand() % ordered_tasks.size();
-        while (ordered_tasks[index]->isScheduled()) {
-          index = rand() % ordered_tasks.size();
-        }
-        rand_task = ordered_tasks[index];
-        rand_task->setScheduled();
-        scheduled_tasks.emplace_back(rand_task);
-        candidates[i]->addTask(current_machine, rand_task);
-        candidates[i]->sumTCT(current_machine);
-        ++current_machine;
-      } else {
-        current_machine = 0;
-      }
-    }
-    for (size_t j = 0; j < scheduled_tasks.size(); j++) {
-      scheduled_tasks[j]->setScheduled();
-    }
-    scheduled_tasks.clear();
-  }
-  int best_solution, max_tct = INT_MAX;
-  for (size_t i = 0; i < candidates.size(); i++) {
-    if (candidates[i]->getTCT() < max_tct) {
-      best_solution = i;
-      max_tct = candidates[i]->getTCT();
+    } else {
+      current_machine = 0;
     }
   }
-  return *candidates[best_solution];
+  return solution;
 }
