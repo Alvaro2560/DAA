@@ -35,6 +35,17 @@ void Solution::addTask(const int& machine, Task* task) {
 }
 
 /**
+ * @brief Add a task to a machine in a specific position.
+ * 
+ * @param machine Machine's id.
+ * @param task_id Task's id.
+ * @param position Position to add the task.
+ */
+void Solution::addTask(const int& machine, Task* task, const int& position) {
+  tasks_[machine].insert(tasks_[machine].begin() + position, task);
+}
+
+/**
  * @brief Set the tasks of a machine.
  * 
  * @param machine Machine's id.
@@ -42,6 +53,15 @@ void Solution::addTask(const int& machine, Task* task) {
  */
 void Solution::setTasks(const int& machine, std::vector<Task*> tasks) {
   tasks_[machine] = tasks;
+}
+
+/**
+ * @brief Get the number of machines.
+ * 
+ * @return int Number of machines.
+ */
+int Solution::getMachines(void) const {
+  return (int)tasks_.size();
 }
 
 /**
@@ -103,6 +123,33 @@ void Solution::sumTCT(const int& machine) {
 }
 
 /**
+ * @brief Calculate the total completion time of a machine.
+ * 
+ * @param machine Machine's id.
+ * @return int Total completion time of the machine.
+ */
+void Solution::calculateTCT(void) {
+  for (size_t i = 0; i < tcts_.size(); i++) {
+    tcts_[i] = 0;
+  }
+  for (size_t i = 0; i < tasks_.size(); i++) {
+    int tct = 0;
+    for (size_t tasks = 0; tasks < tasks_[i].size(); tasks++) {
+      int tct_machine = 0;
+      for (size_t j = 0; j <= tasks; j++) {
+        if (j == 0) {
+          tct_machine += tasks_[i][j]->getPreparationTime(0) + tasks_[i][j]->getProcessingTime();
+        } else {
+          tct_machine += tasks_[i][j]->getPreparationTime(tasks_[i][j - 1]->getId()) + tasks_[i][j]->getProcessingTime();
+        }
+      }
+      tct += tct_machine;
+    }
+    tcts_[i] = tct;
+  }
+}
+
+/**
  * @brief Check if a task belongs to a machine.
  * 
  * @param machine Machine's id.
@@ -117,6 +164,51 @@ bool Solution::taskBelongsToMachine(const int& machine, const int& task_id) cons
     }
   }
   return false;
+}
+
+/**
+ * @brief Remove a task from a machine.
+ * 
+ * @param machine Machine's id.
+ * @param task_index Task's index.
+ */
+void Solution::removeTask(const int& machine, const int& task_index) {
+  tasks_[machine].erase(tasks_[machine].begin() + task_index);
+  tcts_[machine] = 0;
+  calculateTCT();
+}
+
+/**
+ * @brief Swap two tasks of a machine.
+ * 
+ * @param machine Machine's id.
+ * @param task_index1 Index of the first task.
+ * @param task_index2 Index of the second task.
+ */
+void Solution::swapTasks(const int& machine, const int& task_index1, const int& task_index2) {
+  Task* task1 = tasks_[machine][task_index1];
+  Task* task2 = tasks_[machine][task_index2];
+  tasks_[machine][task_index1] = task2;
+  tasks_[machine][task_index2] = task1;
+  tcts_[machine] = 0;
+  calculateTCT();
+}
+
+/**
+ * @brief Swap two tasks of a machine.
+ * 
+ * @param machine Machine's id.
+ * @param task_index1 Index of the first task.
+ * @param task_index2 Index of the second task.
+ */
+void Solution::swapTasks(const int& machine1, const int& task_index1, const int& machine2, const int& task_index2) {
+  Task* task1 = tasks_[machine1][task_index1];
+  Task* task2 = tasks_[machine2][task_index2];
+  tasks_[machine1][task_index1] = task2;
+  tasks_[machine2][task_index2] = task1;
+  tcts_[machine1] = 0;
+  tcts_[machine2] = 0;
+  calculateTCT();
 }
 
 /**

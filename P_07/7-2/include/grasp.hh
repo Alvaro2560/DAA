@@ -18,6 +18,10 @@
 
 #include "algorithm.hh"
 
+/**
+ * @class GRASP
+ * @brief Class that represents the GRASP algorithm.
+ */
 class GRASP : public Algorithm {
   public:
     GRASP(void) = default;
@@ -25,4 +29,8 @@ class GRASP : public Algorithm {
     Solution Run(const Problem& problem) override;
   private:
     Solution Construct(const Problem& problem);
+    Solution LocalSearchReinsert(const Problem& problem, Solution& solution);
+    Solution LocalSearchReinsertBetweenMachines(const Problem& problem, Solution& solution);
+    Solution LocalSearchSwap(const Problem& problem, Solution& solution);
+    Solution LocalSearchSwapBetweenMachines(const Problem& problem, Solution& solution);
 };

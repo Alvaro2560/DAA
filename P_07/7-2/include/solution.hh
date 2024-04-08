@@ -30,13 +30,19 @@ class Solution {
     Solution(const int& machines);
     ~Solution(void) = default;
     void addTask(const int& machine, Task* task);
+    void addTask(const int& machine, Task* task, const int& position);
     void setTasks(const int& machine, std::vector<Task*> tasks);
+    int getMachines(void) const;
     std::vector<Task*> getTasks(const int& machine) const;
     Task* getLastTask(const int& machine);
     int getTCT(void) const;
     int getTCT(const int& machine) const;
     void sumTCT(const int& machine);
+    void calculateTCT(void);
     bool taskBelongsToMachine(const int& machine, const int& task_id) const;
+    void removeTask(const int& machine, const int& task_index);
+    void swapTasks(const int& machine, const int& task_index1, const int& task_index2);
+    void swapTasks(const int& machine1, const int& task_index1, const int& machine2, const int& task_index2);
     Solution& operator=(const Solution& solution);
     friend std::ostream& operator<<(std::ostream& os, const Solution& solution);
   private:

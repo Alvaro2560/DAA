@@ -64,7 +64,7 @@ void Problem::ReadFile(const std::string& file_name) {
       if (!(iss >> machines_)) {
         throw std::runtime_error("Error: Invalid format for machines.");
       }
-    } else if (key[2] == ':') {
+    } else if (key[2] == ':' || key[2] == '[') {
       int processing_time;
       tasks_.emplace_back(new Task(0, 0));
       tasks_[0]->setScheduled();
