@@ -37,28 +37,28 @@ Solution GRASP::Run(const Problem& problem) {
   bool improved = true;
   while (improved) {
     improved = false;
-    Solution reinsert_solution = LocalSearchReinsert(problem, constructed_solution);
+    Solution reinsert_solution = ReinsertIntra(problem, constructed_solution);
     current_tct = reinsert_solution.getTCT();
     if (current_tct < best_tct) {
       best_solution = reinsert_solution;
       best_tct = current_tct;
       improved = true;
     }
-    Solution reinsert_within_machine_solution = LocalSearchReinsertBetweenMachines(problem, constructed_solution);
+    Solution reinsert_within_machine_solution = ReinsertInter(problem, constructed_solution);
     current_tct = reinsert_within_machine_solution.getTCT();
     if (current_tct < best_tct) {
       best_solution = reinsert_within_machine_solution;
       best_tct = current_tct;
       improved = true;
     }
-    Solution swap_within_machine_solution = LocalSearchSwap(problem, constructed_solution);
+    Solution swap_within_machine_solution = SwapIntra(problem, constructed_solution);
     current_tct = swap_within_machine_solution.getTCT();
     if (current_tct < best_tct) {
       best_solution = swap_within_machine_solution;
       best_tct = current_tct;
       improved = true;
     }
-    Solution swap_between_machines_solution = LocalSearchSwapBetweenMachines(problem, constructed_solution);
+    Solution swap_between_machines_solution = SwapInter(problem, constructed_solution);
     current_tct = swap_between_machines_solution.getTCT();
     if (current_tct < best_tct) {
       best_solution = swap_between_machines_solution;
@@ -114,7 +114,7 @@ Solution GRASP::Construct(const Problem& problem) {
  * @param initial_solution Initial solution.
  * @return Solution Solution to the problem.
  */
-Solution GRASP::LocalSearchReinsert(const Problem& problem, Solution& initial_solution) {
+Solution GRASP::ReinsertIntra(const Problem& problem, Solution& initial_solution) {
   Solution best_solution = initial_solution;
   int best_tct = best_solution.getTCT();
   bool improved = true;
@@ -155,7 +155,7 @@ Solution GRASP::LocalSearchReinsert(const Problem& problem, Solution& initial_so
  * @param initial_solution Initial solution.
  * @return Solution Solution to the problem.
  */
-Solution GRASP::LocalSearchReinsertBetweenMachines(const Problem& problem, Solution& initial_solution) {
+Solution GRASP::ReinsertInter(const Problem& problem, Solution& initial_solution) {
     Solution best_solution = initial_solution;
     int best_tct = best_solution.getTCT();
     bool improved = true;
@@ -197,7 +197,7 @@ Solution GRASP::LocalSearchReinsertBetweenMachines(const Problem& problem, Solut
  * @param initial_solution Initial solution.
  * @return Solution Solution to the problem.
  */
-Solution GRASP::LocalSearchSwap(const Problem& problem, Solution& initial_solution) {
+Solution GRASP::SwapIntra(const Problem& problem, Solution& initial_solution) {
   Solution best_solution = initial_solution;
   int best_tct = best_solution.getTCT();
   bool improved = true;
@@ -232,7 +232,7 @@ Solution GRASP::LocalSearchSwap(const Problem& problem, Solution& initial_soluti
  * @param initial_solution Initial solution.
  * @return Solution Solution to the problem.
  */
-Solution GRASP::LocalSearchSwapBetweenMachines(const Problem& problem, Solution& initial_solution) {
+Solution GRASP::SwapInter(const Problem& problem, Solution& initial_solution) {
   Solution best_solution = initial_solution;
   int best_tct = best_solution.getTCT();
   bool improved = true;

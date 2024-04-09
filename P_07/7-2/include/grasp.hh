@@ -29,8 +29,8 @@ class GRASP : public Algorithm {
     Solution Run(const Problem& problem) override;
   private:
     Solution Construct(const Problem& problem);
-    Solution LocalSearchReinsert(const Problem& problem, Solution& solution);
-    Solution LocalSearchReinsertBetweenMachines(const Problem& problem, Solution& solution);
-    Solution LocalSearchSwap(const Problem& problem, Solution& solution);
-    Solution LocalSearchSwapBetweenMachines(const Problem& problem, Solution& solution);
+    Solution ReinsertIntra(const Problem& problem, Solution& solution);
+    Solution ReinsertInter(const Problem& problem, Solution& solution);
+    Solution SwapIntra(const Problem& problem, Solution& solution);
+    Solution SwapInter(const Problem& problem, Solution& solution);
 };
