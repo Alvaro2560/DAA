@@ -30,44 +30,29 @@
  * @return Solution Solution to the problem.
  */
 Solution GRASP::Run(const Problem& problem) {
+  // El algoritmo con mejores resultados es el Swap Inter.
   Solution constructed_solution = Construct(problem);
-  Solution best_solution = constructed_solution;
-  int best_tct = constructed_solution.getTCT();
-  int current_tct = best_tct;
-  bool improved = true;
-  while (improved) {
-    improved = false;
-    Solution reinsert_solution = ReinsertIntra(problem, constructed_solution);
-    current_tct = reinsert_solution.getTCT();
-    if (current_tct < best_tct) {
-      best_solution = reinsert_solution;
-      best_tct = current_tct;
-      improved = true;
-    }
-    Solution reinsert_within_machine_solution = ReinsertInter(problem, constructed_solution);
-    current_tct = reinsert_within_machine_solution.getTCT();
-    if (current_tct < best_tct) {
-      best_solution = reinsert_within_machine_solution;
-      best_tct = current_tct;
-      improved = true;
-    }
-    Solution swap_within_machine_solution = SwapIntra(problem, constructed_solution);
-    current_tct = swap_within_machine_solution.getTCT();
-    if (current_tct < best_tct) {
-      best_solution = swap_within_machine_solution;
-      best_tct = current_tct;
-      improved = true;
-    }
-    Solution swap_between_machines_solution = SwapInter(problem, constructed_solution);
-    current_tct = swap_between_machines_solution.getTCT();
-    if (current_tct < best_tct) {
-      best_solution = swap_between_machines_solution;
-      best_tct = current_tct;
-      improved = true;
-    }
-    constructed_solution = best_solution;
-  }
-  return best_solution;
+  Solution reinsert_intra_solution = ReinsertIntra(problem, constructed_solution);
+  Solution reinsert_inter_solution = ReinsertInter(problem, reinsert_intra_solution);
+  Solution swap_intra_solution = SwapIntra(problem, reinsert_inter_solution);
+  Solution swap_inter_solution = SwapInter(problem, swap_intra_solution);
+  std::cout << "Constructed Solution:\n" << constructed_solution << std::endl;
+  std::cout << "Reinsert Intra Solution:\n" << reinsert_intra_solution << std::endl;
+  int improvement_percentage = -(reinsert_intra_solution.getTCT() - constructed_solution.getTCT()) * 100 / constructed_solution.getTCT();
+  std::cout << "Improvement percentage: " << improvement_percentage << "%\n" << std::endl;
+  std::cout << "Reinsert Inter Solution:\n" << reinsert_inter_solution << std::endl;
+  improvement_percentage = -(reinsert_inter_solution.getTCT() - constructed_solution.getTCT()) * 100 / constructed_solution.getTCT();
+  std::cout << "Improvement percentage: " << improvement_percentage << "%\n" << std::endl;
+  std::cout << "Swap Intra Solution:\n" << swap_intra_solution << std::endl;
+  improvement_percentage = -(swap_intra_solution.getTCT() - constructed_solution.getTCT()) * 100 / constructed_solution.getTCT();
+  std::cout << "Improvement percentage: " << improvement_percentage << "%\n" << std::endl;
+  std::cout << "Swap Inter Solution:\n" << swap_inter_solution << std::endl;
+  improvement_percentage = -(swap_inter_solution.getTCT() - constructed_solution.getTCT()) * 100 / constructed_solution.getTCT();
+  std::cout << "Improvement percentage: " << improvement_percentage << "%\n" << std::endl;
+  std::vector<Solution> solutions = {constructed_solution, reinsert_intra_solution, reinsert_inter_solution, swap_intra_solution, swap_inter_solution};
+  return *std::min_element(solutions.begin(), solutions.end(), [](Solution solution1, Solution solution2) {
+    return solution1.getTCT() < solution2.getTCT();
+  });
 }
 
 /**
@@ -128,7 +113,7 @@ Solution GRASP::ReinsertIntra(const Problem& problem, Solution& initial_solution
         for (size_t position = 0; position < tasks.size(); position++) {
           Solution new_solution = best_solution;
           new_solution.addTask(machine, task_to_reinsert, position);
-          new_solution.calculateTCT();
+          new_solution.calculateTCT(); // Evaluación Movimiento
           if (new_solution.getTCT() < best_tct) {
             best_solution = new_solution;
             best_tct = new_solution.getTCT();
@@ -172,7 +157,7 @@ Solution GRASP::ReinsertInter(const Problem& problem, Solution& initial_solution
               Solution new_solution = best_solution;
               new_solution.removeTask(machine_from, i);
               new_solution.addTask(machine_to, task_to_reinsert, j);
-              new_solution.calculateTCT();
+              new_solution.calculateTCT(); // Evaluación Movimiento
               if (new_solution.getTCT() < best_tct) {
                 best_solution = new_solution;
                 best_tct = new_solution.getTCT();
@@ -209,7 +194,7 @@ Solution GRASP::SwapIntra(const Problem& problem, Solution& initial_solution) {
         for (size_t j = i + 1; j < tasks.size(); j++) {
           Solution new_solution = best_solution;
           new_solution.swapTasks(machine, i, j);
-          new_solution.calculateTCT();
+          new_solution.calculateTCT(); // Evaluación Movimiento
           if (new_solution.getTCT() < best_tct) {
             best_solution = new_solution;
             best_tct = new_solution.getTCT();
@@ -246,7 +231,7 @@ Solution GRASP::SwapInter(const Problem& problem, Solution& initial_solution) {
           for (size_t j = 0; j < tasks_b.size(); j++) {
             Solution new_solution = best_solution;
             new_solution.swapTasks(machine_a, i, machine_b, j);
-            new_solution.calculateTCT();
+            new_solution.calculateTCT(); // Evaluación Movimiento
             if (new_solution.getTCT() < best_tct) {
               best_solution = new_solution;
               best_tct = new_solution.getTCT();
