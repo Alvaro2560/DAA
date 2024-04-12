@@ -28,7 +28,6 @@ class GRASP : public Algorithm {
     ~GRASP(void) = default;
     Solution Run(const Problem& problem) override;
     Solution Construct(const Problem& problem);
-  private:
     Solution ReinsertIntra(const Problem& problem, Solution& solution);
     Solution ReinsertInter(const Problem& problem, Solution& solution);
     Solution SwapIntra(const Problem& problem, Solution& solution);
