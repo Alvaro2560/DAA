@@ -1,7 +1,7 @@
 CC=g++
 CXXFLAGS=-g -std=c++17 -Wall
 
-OBJS = ../src/main.o ../src/problem.o ../src/solution.o ../src/task.o ../src/greedy.o ../src/grasp.o
+OBJS = ../src/main.o ../src/problem.o ../src/solution.o ../src/task.o ../src/greedy.o ../src/grasp.o ../src/gvns.o
 
 all: ${OBJS}
 	$(CC) $(CXXFLAGS) -o p07 ${OBJS}
