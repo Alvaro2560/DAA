@@ -181,6 +181,15 @@ std::vector<Task*> Problem::getLowerTCTTasks(const int& prev_task, const int& ta
 }
 
 /**
+ * @brief Reset the problem instance.
+ */
+void Problem::reset(void) const {
+  for (size_t i = 1 ; i < tasks_.size(); i++) {
+    tasks_[i]->setScheduled();
+  }
+}
+
+/**
  * @brief Overload of the operator << for the Problem class.
  * 
  * @param os Output stream.
