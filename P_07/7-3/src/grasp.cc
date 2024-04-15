@@ -93,7 +93,7 @@ Solution GRASP::Construct(const Problem& problem) {
 }
 
 /**
- * @brief Perform a local search using the reinsert method.
+ * @brief Perform a local search using the reinsert within machine method.
  * 
  * @param problem Problem to solve.
  * @param initial_solution Initial solution.
@@ -134,7 +134,7 @@ Solution GRASP::ReinsertIntra(const Problem& problem, Solution& initial_solution
 }
 
 /**
- * @brief Perform a local search using the reinsert within machine method.
+ * @brief Perform a local search using the reinsert between machines method.
  * 
  * @param problem Problem to solve.
  * @param initial_solution Initial solution.

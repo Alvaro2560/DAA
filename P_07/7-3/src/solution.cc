@@ -123,10 +123,9 @@ void Solution::sumTCT(const int& machine) {
 }
 
 /**
- * @brief Calculate the total completion time of a machine.
+ * @brief Calculate the total completion time.
  * 
- * @param machine Machine's id.
- * @return int Total completion time of the machine.
+ * @return int Total completion time.
  */
 void Solution::calculateTCT(void) {
   for (size_t i = 0; i < tcts_.size(); i++) {
@@ -195,10 +194,11 @@ void Solution::swapTasks(const int& machine, const int& task_index1, const int& 
 }
 
 /**
- * @brief Swap two tasks of a machine.
+ * @brief Swap two tasks of different machines.
  * 
- * @param machine Machine's id.
+ * @param machine1 First machine's id.
  * @param task_index1 Index of the first task.
+ * @param machine2 Second machine's id.
  * @param task_index2 Index of the second task.
  */
 void Solution::swapTasks(const int& machine1, const int& task_index1, const int& machine2, const int& task_index2) {
