@@ -18,6 +18,9 @@
 
 #include "algorithm.hh"
 
+class Task;
+class Problem;
+
 /**
  * @class GVNS
  * @brief Class that represents the GVNS algorithm.
@@ -27,4 +30,8 @@ class GVNS : public Algorithm {
     GVNS(void) = default;
     ~GVNS(void) = default;
     Solution Run(const Problem& problem) override;
+  private:
+    Solution Shake(const Solution& solution, const int& k);
+    Solution ReinsertInter(const Solution& solution, const int& machine1, const int& task_index1, const int& machine2, const int& task_index2, Task* task);
+    Solution VND(const Problem& problem, const Solution& solution);
 };
