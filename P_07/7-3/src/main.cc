@@ -18,6 +18,7 @@
 #include "../include/solution.hh"
 #include "../include/greedy.hh"
 #include "../include/grasp.hh"
+#include "../include/gvns.hh"
 
 #include <iostream>
 
@@ -39,6 +40,10 @@ int main(int argc, char* argv[]) {
       std::cout << solution;
     } else if (std::string(argv[2]) == "--grasp") {
       algorithm = new GRASP;
+      Solution solution = algorithm->Run(problem);
+      std::cout << solution;
+    } else if (std::string(argv[2]) == "--gvns") {
+      algorithm = new GVNS;
       Solution solution = algorithm->Run(problem);
       std::cout << solution;
     } else {
