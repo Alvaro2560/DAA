@@ -34,8 +34,10 @@ Solution GVNS::Run(const Problem& problem) {
   const int kMaxIterations = 10, kMaxK = 7;
   int iterations = 0;
   std::vector<Solution> solutions;
+  // MODIFICACIÓN
+  Solution solution = GRASP().Construct(problem);
+  solution = GRASP().ReinsertIntra(problem, solution);
   do {
-    Solution solution = GRASP().Construct(problem);
     int k = 1;
     do {
       Solution shaked_solution = Shake(solution, k);
@@ -111,16 +113,11 @@ Solution GVNS::VND(const Problem& problem, const Solution& solution) {
   int k = 0;
   do {
     switch (k) {
+      // MODIFICACIÓN
       case 0:
         new_solution = GRASP().ReinsertInter(problem, new_solution);
         break;
       case 1:
-        new_solution = GRASP().SwapIntra(problem, new_solution);
-        break;
-      case 2:
-        new_solution = GRASP().ReinsertIntra(problem, new_solution);
-        break;
-      case 3:
         new_solution = GRASP().SwapInter(problem, new_solution);
         break;
     }
@@ -130,6 +127,6 @@ Solution GVNS::VND(const Problem& problem, const Solution& solution) {
     } else {
       k++;
     }
-  } while (k < 4);
+  } while (k < 2);
   return old_solution;
 }
