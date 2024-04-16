@@ -21,6 +21,7 @@
 #include "../include/gvns.hh"
 
 #include <iostream>
+#include <filesystem>
 
 /**
  * @brief Main function of the program.
@@ -34,20 +35,30 @@ int main(int argc, char* argv[]) {
     srand(time(nullptr));
     Problem problem(argv[1]);
     Algorithm* algorithm;
-    if (std::string(argv[2]) == "--greedy") {
+    if (argc != 3) {
+      std::cerr << "Usage: " << argv[0] << " <input_directory> <algorithm>" << std::endl;
+      return 1;
+    } if (std::string(argv[2]) == "--greedy") {
       algorithm = new Greedy;
-      Solution solution = algorithm->Run(problem);
-      std::cout << solution;
     } else if (std::string(argv[2]) == "--grasp") {
       algorithm = new GRASP;
-      Solution solution = algorithm->Run(problem);
-      std::cout << solution;
     } else if (std::string(argv[2]) == "--gvns") {
       algorithm = new GVNS;
-      Solution solution = algorithm->Run(problem);
-      std::cout << solution;
     } else {
       std::cerr << "Invalid algorithm." << std::endl;
+    }
+    std::string input_directory = argv[1];
+    std::vector<std::string> files;
+    for (const auto& entry : std::filesystem::directory_iterator(input_directory)) {
+      files.emplace_back(entry.path().string());
+    }
+    std::cout << "Problema\t\t\tm    Ejecución\tTCT\tCPU" << std::endl;
+    int execution = 0;
+    for (const auto& file : files) {
+      execution++;
+      problem = Problem(file);
+      Solution solution = algorithm->Run(problem);
+      std::cout << file << "\t" << problem.getMachines() << "\t" << execution << "\t" << solution.getTCT() << "\t" << algorithm->getTime() << std::endl;
     }
     return 0;
   } catch (const std::exception& e) {

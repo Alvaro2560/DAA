@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <climits>
 #include <random>
+#include <chrono>
 
 /**
  * @brief Run the GRASP algorithm.
@@ -30,29 +31,42 @@
  * @return Solution Solution to the problem.
  */
 Solution GRASP::Run(const Problem& problem) {
-  // El algoritmo con mejores resultados es el Swap Inter.
-  Solution constructed_solution = Construct(problem);
-  Solution reinsert_intra_solution = ReinsertIntra(problem, constructed_solution);
-  Solution reinsert_inter_solution = ReinsertInter(problem, reinsert_intra_solution);
-  Solution swap_intra_solution = SwapIntra(problem, reinsert_inter_solution);
-  Solution swap_inter_solution = SwapInter(problem, swap_intra_solution);
-  std::cout << "Constructed Solution:\n" << constructed_solution << std::endl;
-  std::cout << "Reinsert Intra Solution:\n" << reinsert_intra_solution << std::endl;
-  int improvement_percentage = -(reinsert_intra_solution.getTCT() - constructed_solution.getTCT()) * 100 / constructed_solution.getTCT();
-  std::cout << "Improvement percentage: " << improvement_percentage << "%\n" << std::endl;
-  std::cout << "Reinsert Inter Solution:\n" << reinsert_inter_solution << std::endl;
-  improvement_percentage = -(reinsert_inter_solution.getTCT() - constructed_solution.getTCT()) * 100 / constructed_solution.getTCT();
-  std::cout << "Improvement percentage: " << improvement_percentage << "%\n" << std::endl;
-  std::cout << "Swap Intra Solution:\n" << swap_intra_solution << std::endl;
-  improvement_percentage = -(swap_intra_solution.getTCT() - constructed_solution.getTCT()) * 100 / constructed_solution.getTCT();
-  std::cout << "Improvement percentage: " << improvement_percentage << "%\n" << std::endl;
-  std::cout << "Swap Inter Solution:\n" << swap_inter_solution << std::endl;
-  improvement_percentage = -(swap_inter_solution.getTCT() - constructed_solution.getTCT()) * 100 / constructed_solution.getTCT();
-  std::cout << "Improvement percentage: " << improvement_percentage << "%\n" << std::endl;
-  std::vector<Solution> solutions = {constructed_solution, reinsert_intra_solution, reinsert_inter_solution, swap_intra_solution, swap_inter_solution};
-  return *std::min_element(solutions.begin(), solutions.end(), [](Solution solution1, Solution solution2) {
-    return solution1.getTCT() < solution2.getTCT();
-  });
+  auto start = std::chrono::high_resolution_clock::now();
+  Solution best_solution(problem.getMachines());
+  int best_tct = INT_MAX;
+  bool improved = true;
+  best_solution = Construct(problem);
+  while (improved) {
+    improved = false;
+    best_tct = best_solution.getTCT();
+    Solution reinsert_intra_solution = ReinsertIntra(problem, best_solution);
+    if (reinsert_intra_solution.getTCT() < best_tct) {
+      best_solution = reinsert_intra_solution;
+      best_tct = reinsert_intra_solution.getTCT();
+      improved = true;
+    }
+    Solution reinsert_inter_solution = ReinsertInter(problem, best_solution);
+    if (reinsert_inter_solution.getTCT() < best_tct) {
+      best_solution = reinsert_inter_solution;
+      best_tct = reinsert_inter_solution.getTCT();
+      improved = true;
+    }
+    Solution swap_intra_solution = SwapIntra(problem, best_solution);
+    if (swap_intra_solution.getTCT() < best_tct) {
+      best_solution = swap_intra_solution;
+      best_tct = swap_intra_solution.getTCT();
+      improved = true;
+    }
+    Solution swap_inter_solution = SwapInter(problem, best_solution);
+    if (swap_inter_solution.getTCT() < best_tct) {
+      best_solution = swap_inter_solution;
+      best_tct = swap_inter_solution.getTCT();
+      improved = true;
+    }
+  }
+  auto end = std::chrono::high_resolution_clock::now();
+  time_ = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+  return best_solution;
 }
 
 /**

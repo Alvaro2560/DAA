@@ -28,4 +28,7 @@ class Algorithm {
     Algorithm(void) = default;
     ~Algorithm(void) = default;
     virtual Solution Run(const Problem& problem) = 0;
+    float getTime(void) const { return time_; }
+  protected:
+    float time_;
 };

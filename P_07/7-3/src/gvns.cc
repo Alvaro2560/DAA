@@ -21,6 +21,7 @@
 #include "../include/task.hh"
 
 #include <algorithm>
+#include <chrono>
 
 /**
  * @brief Runs the GVNS algorithm.
@@ -29,6 +30,7 @@
  * @return Solution Best solution found.
  */
 Solution GVNS::Run(const Problem& problem) {
+  auto start = std::chrono::high_resolution_clock::now();
   const int kMaxIterations = 10, kMaxK = 7;
   int iterations = 0;
   std::vector<Solution> solutions;
@@ -52,6 +54,8 @@ Solution GVNS::Run(const Problem& problem) {
   std::sort(solutions.begin(), solutions.end(), [](const Solution& a, const Solution& b) {
     return a.getTCT() < b.getTCT();
   });
+  auto end = std::chrono::high_resolution_clock::now();
+  time_ = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
   return solutions[0];
 }
 
@@ -127,5 +131,5 @@ Solution GVNS::VND(const Problem& problem, const Solution& solution) {
       k++;
     }
   } while (k < 4);
-  return new_solution;
+  return old_solution;
 }

@@ -20,6 +20,7 @@
 #include "../include/task.hh"
 
 #include <algorithm>
+#include <chrono>
 
 /**
  * @brief Run the greedy algorithm.
@@ -28,6 +29,7 @@
  * @return Solution Solution to the problem.
  */
 Solution Greedy::Run(const Problem& problem) {
+  auto start = std::chrono::high_resolution_clock::now();
   Solution solution(problem.getMachines());
   std::vector<Task*> ordered_tasks = problem.getTasks();
   std::sort(ordered_tasks.begin(), ordered_tasks.end(), [](Task* task1, Task* task2) {
@@ -51,5 +53,7 @@ Solution Greedy::Run(const Problem& problem) {
       current_machine = 0;
     }
   }
+  auto end = std::chrono::high_resolution_clock::now();
+  time_ = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
   return solution;
 }
