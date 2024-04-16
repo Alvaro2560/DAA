@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     for (const auto& entry : std::filesystem::directory_iterator(input_directory)) {
       files.emplace_back(entry.path().string());
     }
-    std::cout << "Problema\t\t\tm    Ejecución\tTCT\tCPU" << std::endl;
+    std::cout << "Problema\t\t\tm    Ejecución\tTCT\tCPU (ms)" << std::endl;
     int execution = 0;
     for (const auto& file : files) {
       execution++;
