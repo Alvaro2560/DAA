@@ -3,3 +3,4 @@
 a.out
 *.json
 P_0*/build/p*
+P_0*/*-*/build/p*
