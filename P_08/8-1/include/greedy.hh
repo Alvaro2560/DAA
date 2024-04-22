@@ -31,7 +31,6 @@ class Greedy : public Algorithm {
     Greedy(void) = default;
     ~Greedy(void) = default;
     Solution Run(const Problem& problem) override;
-  private:
     double CalculateEuclideanDistance(const Element& element1, const Element& element2);
     Element CalculateCentroid(const std::vector<Element>& elements);
 };
