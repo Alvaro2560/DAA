@@ -17,6 +17,7 @@
 #include "../include/greedy.hh"
 #include "../include/problem.hh"
 #include "../include/solution.hh"
+#include "../include/local-search.hh"
 
 #include <iostream>
 
@@ -29,6 +30,10 @@ int main(int argc, char** argv) {
     Algorithm* algorithm;
     if (std::string(argv[3]) == "--greedy") {
       algorithm = new Greedy();
+    } else if (std::string(argv[3]) == "--local-search") {
+      algorithm = new LocalSearch();
+    } else {
+      throw std::invalid_argument("Invalid algorithm.");
     }
     Solution solution = algorithm->Run(problem);
     std::cout << solution;
