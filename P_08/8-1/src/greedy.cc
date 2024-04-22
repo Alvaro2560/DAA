@@ -33,7 +33,7 @@ Solution Greedy::Run(const Problem& problem) {
   while ((int)solution.size() < problem.getDimension()) {
     double maxDistance = -1.0;
     int maxIndex = -1;
-    for (size_t i = 0; i < elements.size(); ++i) {
+    for (size_t i = 0; i < elements.size(); i++) {
       double distance = CalculateEuclideanDistance(elements[i], center);
       if (distance > maxDistance) {
         maxDistance = distance;
