@@ -19,6 +19,12 @@
 #include "../include/problem.hh"
 #include "../include/solution.hh"
 
+/**
+ * @brief Runs the local search algorithm.
+ * 
+ * @param problem Problem to solve.
+ * @return Solution Solution to the problem.
+ */
 Solution LocalSearch::Run(const Problem& problem) {
   Solution initial_solution = Greedy().Run(problem);
   Solution best_solution = initial_solution;

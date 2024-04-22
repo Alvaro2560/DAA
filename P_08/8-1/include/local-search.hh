@@ -18,6 +18,10 @@
 
 #include "algorithm.hh"
 
+/**
+ * @class LocalSearch
+ * @brief Class that represents a local search algorithm.
+ */
 class LocalSearch : public Algorithm {
   public:
     LocalSearch(void) = default;
