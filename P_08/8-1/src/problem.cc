@@ -38,6 +38,9 @@ Problem::Problem(const std::string& filename, const int& dimension) : dimension_
     for (int j = 0; j < k; j++) {
       std::string number;
       file >> number;
+      if (number.find(',') != std::string::npos) {
+        number.replace(number.find(','), 1, ".");
+      }
       elements_[i][j] = std::stod(number);
     }
   }
