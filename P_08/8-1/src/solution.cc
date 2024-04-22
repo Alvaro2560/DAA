@@ -44,6 +44,15 @@ void Solution::addElement(const Element& element) {
 }
 
 /**
+ * @brief Removes an element from the solution.
+ * 
+ * @param index Index of the element to be removed.
+ */
+void Solution::removeElement(const size_t index) {
+  elements_.erase(elements_.begin() + index);
+}
+
+/**
  * @brief Returns the number of elements in the solution.
  * 
  * @return size_t Number of elements in the solution.

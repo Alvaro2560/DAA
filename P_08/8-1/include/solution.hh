@@ -32,6 +32,7 @@ class Solution {
     std::vector<Element> getElements(void) const;
     void setElements(const std::vector<Element>& elements);
     void addElement(const Element& element);
+    void removeElement(const size_t index);
     size_t size(void) const;
     friend std::ostream& operator<<(std::ostream& os, const Solution& solution);
   private:
