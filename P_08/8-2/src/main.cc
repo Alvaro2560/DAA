@@ -18,11 +18,13 @@
 #include "../include/problem.hh"
 #include "../include/solution.hh"
 #include "../include/local-search.hh"
+#include "../include/grasp.hh"
 
 #include <iostream>
 
 int main(int argc, char** argv) {
   try {
+    srand(time(nullptr));
     if (argc != 4) {
       throw std::invalid_argument("Usage: ./p08 <filename> <solution_dimension> <algorithm>");
     }
@@ -32,6 +34,8 @@ int main(int argc, char** argv) {
       algorithm = new Greedy();
     } else if (std::string(argv[3]) == "--local-search") {
       algorithm = new LocalSearch();
+    } else if (std::string(argv[3]) == "--grasp") {
+      algorithm = new GRASP();
     } else {
       throw std::invalid_argument("Invalid algorithm.");
     }
