@@ -80,3 +80,19 @@ Element Greedy::CalculateCentroid(const std::vector<Element>& elements) {
   }
   return centroid;
 }
+
+/**
+ * @brief Calculates the total distance of a set of elements to a centroid.
+ * 
+ * @param elements Elements to calculate the total distance.
+ * @return double Total distance of the elements to the centroid.
+ */
+double Greedy::TotalDistance(const std::vector<Element>& elements) {
+  double total_distance = 0.0;
+  for (size_t i = 0; i < elements.size(); i++) {
+    for (size_t j = i + 1; j < elements.size(); j++) {
+      total_distance += CalculateEuclideanDistance(elements[i], elements[j]);
+    }
+  }
+  return total_distance;
+}

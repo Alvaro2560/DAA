@@ -33,4 +33,5 @@ class Greedy : public Algorithm {
     Solution Run(const Problem& problem) override;
     double CalculateEuclideanDistance(const Element& element1, const Element& element2);
     Element CalculateCentroid(const std::vector<Element>& elements);
+    double TotalDistance(const std::vector<Element>& elements);
 };

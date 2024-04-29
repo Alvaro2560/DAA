@@ -77,11 +77,6 @@ std::ostream& operator<<(std::ostream& os, const Solution& solution) {
     os << std::endl;
   }
   os << "Distance: ";
-  Element center = Greedy().CalculateCentroid(solution.getElements());
-  double distance = 0;
-  for (const auto& element : solution.getElements()) {
-    distance += Greedy().CalculateEuclideanDistance(element, center);
-  }
-  os << distance << std::endl;
+  os << Greedy().TotalDistance(solution.getElements()) << std::endl;
   return os;
 }

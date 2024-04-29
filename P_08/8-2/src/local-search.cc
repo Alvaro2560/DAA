@@ -35,17 +35,17 @@ Solution LocalSearch::Run(const Problem& problem) {
     new_problem.removeElement(element);
   }
   bool improved = true;
+  Element center = Greedy().CalculateCentroid(initial_solution.getElements());
   while (improved) {
     improved = false;
-    for (size_t i = 0; i < best_solution.size(); i++) {
+    for (size_t i = 0; i < initial_solution.size(); i++) {
       for (const Element& candidate : new_problem.getElements()) {
-        Solution new_solution = best_solution;
+        Solution new_solution = initial_solution;
         new_solution.removeElement(i);
         new_solution.addElement(candidate);
-        // TODO: Cambiar para que itere sobre todas las combinaciones de elementos sin calcular el centroide en cada iteración.
-        Element center = Greedy().CalculateCentroid(new_solution.getElements());
-        double new_distance = Greedy().CalculateEuclideanDistance(candidate, center);
-        if (new_distance > Greedy().CalculateEuclideanDistance(best_solution.getElements()[i], center)) {
+        double new_distance = Greedy().TotalDistance(new_solution.getElements());
+        double best_distance = Greedy().TotalDistance(best_solution.getElements());
+        if (new_distance > best_distance) {
           best_solution = new_solution;
           improved = true;
         }
