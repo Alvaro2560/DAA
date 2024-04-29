@@ -28,20 +28,20 @@
  */
 Solution Greedy::Run(const Problem& problem) {
   Solution solution;
-  std::vector<Element> elements = problem.getElements();
+  std::vector<Element> problem_elements = problem.getElements();
   Element center = CalculateCentroid(problem.getElements());
   while ((int)solution.size() < problem.getDimension()) {
     double maxDistance = -1.0;
     int maxIndex = -1;
-    for (size_t i = 0; i < elements.size(); i++) {
-      double distance = CalculateEuclideanDistance(elements[i], center);
+    for (size_t i = 0; i < problem_elements.size(); i++) {
+      double distance = CalculateEuclideanDistance(problem_elements[i], center);
       if (distance > maxDistance) {
         maxDistance = distance;
         maxIndex = i;
       }
     }
-    solution.addElement(elements[maxIndex]);
-    elements.erase(elements.begin() + maxIndex);
+    solution.addElement(problem_elements[maxIndex]);
+    problem_elements.erase(problem_elements.begin() + maxIndex);
     center = CalculateCentroid(solution.getElements());
   }
   return solution;
@@ -56,7 +56,7 @@ Solution Greedy::Run(const Problem& problem) {
  */
 double Greedy::CalculateEuclideanDistance(const Element& element1, const Element& element2) {
   double distance = 0.0;
-  for (size_t i = 0; i < element1.size(); ++i) {
+  for (size_t i = 0; i < element1.size(); i++) {
     distance += std::pow(element1[i] - element2[i], 2);
   }
   return std::sqrt(distance);
@@ -71,11 +71,11 @@ double Greedy::CalculateEuclideanDistance(const Element& element1, const Element
 Element Greedy::CalculateCentroid(const std::vector<Element>& elements) {
   Element centroid(elements[0].size(), 0.0);
   for (const Element& element : elements) {
-    for (size_t i = 0; i < element.size(); ++i) {
+    for (size_t i = 0; i < element.size(); i++) {
       centroid[i] += element[i];
     }
   }
-  for (size_t i = 0; i < centroid.size(); ++i) {
+  for (size_t i = 0; i < centroid.size(); i++) {
     centroid[i] /= elements.size();
   }
   return centroid;

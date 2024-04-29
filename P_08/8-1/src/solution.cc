@@ -15,6 +15,7 @@
  */
 
 #include "../include/solution.hh"
+#include "../include/greedy.hh"
 
 /**
  * @brief Returns the elements of the solution.
@@ -75,5 +76,12 @@ std::ostream& operator<<(std::ostream& os, const Solution& solution) {
     }
     os << std::endl;
   }
+  os << "Distance: ";
+  Element center = Greedy().CalculateCentroid(solution.getElements());
+  double distance = 0;
+  for (const auto& element : solution.getElements()) {
+    distance += Greedy().CalculateEuclideanDistance(element, center);
+  }
+  os << distance << std::endl;
   return os;
 }

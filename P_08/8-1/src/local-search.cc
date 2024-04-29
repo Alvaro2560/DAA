@@ -19,6 +19,8 @@
 #include "../include/problem.hh"
 #include "../include/solution.hh"
 
+#include <iostream>
+
 /**
  * @brief Runs the local search algorithm.
  * 
@@ -27,15 +29,20 @@
  */
 Solution LocalSearch::Run(const Problem& problem) {
   Solution initial_solution = Greedy().Run(problem);
+  Problem new_problem = problem;
   Solution best_solution = initial_solution;
+  for (const Element& element : initial_solution.getElements()) {
+    new_problem.removeElement(element);
+  }
   bool improved = true;
   while (improved) {
     improved = false;
     for (size_t i = 0; i < best_solution.size(); i++) {
-      for (const Element& candidate : problem.getElements()) {
+      for (const Element& candidate : new_problem.getElements()) {
         Solution new_solution = best_solution;
         new_solution.removeElement(i);
         new_solution.addElement(candidate);
+        // TODO: Cambiar para que itere sobre todas las combinaciones de elementos sin calcular el centroide en cada iteración.
         Element center = Greedy().CalculateCentroid(new_solution.getElements());
         double new_distance = Greedy().CalculateEuclideanDistance(candidate, center);
         if (new_distance > Greedy().CalculateEuclideanDistance(best_solution.getElements()[i], center)) {

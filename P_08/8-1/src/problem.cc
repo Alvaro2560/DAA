@@ -66,6 +66,20 @@ std::vector<Element> Problem::getElements(void) const {
 }
 
 /**
+ * @brief Remove an element from the problem.
+ * 
+ * @param element Element to remove.
+ */
+void Problem::removeElement(const Element& element) {
+  for (size_t i = 0; i < elements_.size(); ++i) {
+    if (elements_[i] == element) {
+      elements_.erase(elements_.begin() + i);
+      return;
+    }
+  }
+}
+
+/**
  * @brief Overload of the operator <<.
  * 
  * @param os Output stream.

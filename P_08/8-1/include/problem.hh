@@ -32,6 +32,7 @@ class Problem {
     ~Problem(void) = default;
     int getDimension(void) const;
     std::vector<Element> getElements(void) const;
+    void removeElement(const Element& element);
     friend std::ostream& operator<<(std::ostream& os, const Problem& problem);
   private:
     int dimension_;
