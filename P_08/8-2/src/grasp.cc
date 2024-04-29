@@ -74,7 +74,7 @@ Solution GRASP::Construct(const Problem& problem) {
       index = rand() % element_distances.size();
     }
     solution.addElement(element_distances[index].first);
-    problem_elements.erase(problem_elements.begin() + index);
+    problem_elements.erase(std::find(problem_elements.begin(), problem_elements.end(), element_distances[index].first));
     element_distances.clear();
   }
   return solution;
