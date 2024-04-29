@@ -66,12 +66,21 @@ std::vector<Element> Problem::getElements(void) const {
 }
 
 /**
+ * @brief Add an element to the problem.
+ * 
+ * @param element Element to add.
+ */
+void Problem::addElement(const Element& element) {
+  elements_.emplace_back(element);
+}
+
+/**
  * @brief Remove an element from the problem.
  * 
  * @param element Element to remove.
  */
 void Problem::removeElement(const Element& element) {
-  for (size_t i = 0; i < elements_.size(); ++i) {
+  for (size_t i = 0; i < elements_.size(); i++) {
     if (elements_[i] == element) {
       elements_.erase(elements_.begin() + i);
       return;

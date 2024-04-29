@@ -63,6 +63,47 @@ size_t Solution::size(void) const {
 }
 
 /**
+ * @brief Swaps two elements of the solution.
+ * 
+ * @param index1 Index of the first element.
+ * @param index2 Index of the second element.
+ */
+void Solution::SwapElements(const size_t index1, const size_t index2) {
+  std::swap(elements_[index1], elements_[index2]);
+}
+
+/**
+ * @brief Returns the total distance of the solution.
+ * 
+ * @return double Total distance of the solution.
+ */
+double Solution::TotalDistance(void) const {
+  return Greedy().TotalDistance(elements_);
+}
+
+/**
+ * @brief Overload of the operator < for the Solution class.
+ * 
+ * @param solution Solution to compare.
+ * @return true If the current solution is less than the other.
+ * @return false If the current solution is not less than the other.
+ */
+bool Solution::operator<(const Solution& solution) const {
+  return Greedy().TotalDistance(elements_) < Greedy().TotalDistance(solution.getElements());
+}
+
+/**
+ * @brief Overload of the operator == for the Solution class.
+ * 
+ * @param solution Solution to compare.
+ * @return true If the current solution is equal to the other.
+ * @return false If the current solution is not equal to the other.
+ */
+bool Solution::operator==(const Solution& solution) const {
+  return Greedy().TotalDistance(elements_) == Greedy().TotalDistance(solution.getElements());
+}
+
+/**
  * @brief Overload of the operator << for the Solution class.
  * 
  * @param os Output stream.

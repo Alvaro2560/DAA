@@ -34,6 +34,10 @@ class Solution {
     void addElement(const Element& element);
     void removeElement(const size_t index);
     size_t size(void) const;
+    void SwapElements(const size_t index1, const size_t index2);
+    double TotalDistance(void) const;
+    bool operator<(const Solution& solution) const;
+    bool operator==(const Solution& solution) const;
     friend std::ostream& operator<<(std::ostream& os, const Solution& solution);
   private:
     std::vector<Element> elements_;

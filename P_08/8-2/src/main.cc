@@ -19,6 +19,7 @@
 #include "../include/solution.hh"
 #include "../include/local-search.hh"
 #include "../include/grasp.hh"
+#include "../include/tabu-search.hh"
 
 #include <iostream>
 
@@ -36,6 +37,8 @@ int main(int argc, char** argv) {
       algorithm = new LocalSearch();
     } else if (std::string(argv[3]) == "--grasp") {
       algorithm = new GRASP();
+    } else if (std::string(argv[3]) == "--tabu-search") {
+      algorithm = new TabuSearch();
     } else {
       throw std::invalid_argument("Invalid algorithm.");
     }
