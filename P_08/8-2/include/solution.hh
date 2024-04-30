@@ -33,6 +33,7 @@ class Solution {
     void setElements(const std::vector<Element>& elements);
     void addElement(const Element& element);
     void removeElement(const size_t index);
+    void removeElement(const Element& element);
     size_t size(void) const;
     void SwapElements(const size_t index1, const size_t index2);
     double TotalDistance(void) const;

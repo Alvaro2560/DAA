@@ -17,6 +17,8 @@
 #include "../include/solution.hh"
 #include "../include/greedy.hh"
 
+#include <algorithm>
+
 /**
  * @brief Returns the elements of the solution.
  * 
@@ -51,6 +53,15 @@ void Solution::addElement(const Element& element) {
  */
 void Solution::removeElement(const size_t index) {
   elements_.erase(elements_.begin() + index);
+}
+
+/**
+ * @brief Removes an element from the solution.
+ * 
+ * @param element Element to be removed.
+ */
+void Solution::removeElement(const Element& element) {
+  elements_.erase(std::remove(elements_.begin(), elements_.end(), element), elements_.end());
 }
 
 /**

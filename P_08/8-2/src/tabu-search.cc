@@ -30,23 +30,29 @@
  */
 Solution TabuSearch::Run(const Problem& problem) {
   Solution best_solution = GRASP().Construct(problem);
-  Solution current_solution = best_solution;
-  Problem copy_problem = problem;
-  for (const Element& element : best_solution.getElements()) {
-    copy_problem.removeElement(element);
-  }
-  const int kMaxIterations = 1000;
-  int iterations = 0;
-  while (iterations < kMaxIterations) {
-    Solution new_solution = LocalSearch(copy_problem, current_solution);
-    Move move = CheckMove(current_solution, new_solution);
-    UpdateTabuList(move);
-    if (new_solution.TotalDistance() > best_solution.TotalDistance()) {
-      best_solution = new_solution;
+  int solutions = 0;
+  while (solutions < 100) {
+    Solution current_solution = GRASP().Construct(problem);
+    Problem copy_problem = problem;
+    for (const Element& element : best_solution.getElements()) {
+      copy_problem.removeElement(element);
     }
-    current_solution = new_solution;
-    iterations++;
-    ReduceIterations();
+    const int kMaxIterations = 1000;
+    int iterations = 0, not_improving = 0;
+    while (iterations < kMaxIterations && not_improving < 50) {
+      Solution new_solution = LocalSearch(copy_problem, current_solution);
+      Move move = CheckMove(current_solution, new_solution);
+      UpdateTabuList(move);
+      if (new_solution.TotalDistance() > best_solution.TotalDistance()) {
+        best_solution = new_solution;
+      } else {
+        not_improving++;
+      }
+      current_solution = new_solution;
+      iterations++;
+      ReduceIterations();
+    }
+    solutions++;
   }
   return best_solution;
 }
