@@ -20,6 +20,7 @@
 #include "../include/local-search.hh"
 #include "../include/grasp.hh"
 #include "../include/tabu-search.hh"
+#include "../include/branch-bound.hh"
 
 #include <iostream>
 
@@ -39,6 +40,8 @@ int main(int argc, char** argv) {
       algorithm = new GRASP();
     } else if (std::string(argv[3]) == "--tabu-search") {
       algorithm = new TabuSearch();
+    } else if (std::string(argv[3]) == "--branch-bound") {
+      algorithm = new BranchBound();
     } else {
       throw std::invalid_argument("Invalid algorithm.");
     }
