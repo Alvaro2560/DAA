@@ -23,7 +23,15 @@
 #include "../include/branch-bound.hh"
 
 #include <iostream>
+#include <chrono>
 
+/**
+ * @brief Main function of the project.
+ * 
+ * @param argc Number of arguments.
+ * @param argv Arguments.
+ * @return int Exit code.
+ */
 int main(int argc, char** argv) {
   try {
     srand(time(nullptr));
@@ -45,8 +53,12 @@ int main(int argc, char** argv) {
     } else {
       throw std::invalid_argument("Invalid algorithm.");
     }
+    auto start = std::chrono::high_resolution_clock::now();
     Solution solution = algorithm->Run(problem);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     std::cout << solution;
+    std::cout << "Time: " << duration.count() << "ms" << std::endl;
     return 0;
   } catch(const std::exception& e) {
     std::cerr << e.what() << '\n';

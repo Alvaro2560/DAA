@@ -37,6 +37,7 @@ class Solution {
     size_t size(void) const;
     void SwapElements(const size_t index1, const size_t index2);
     double TotalDistance(void) const;
+    void clear(void);
     bool operator<(const Solution& solution) const;
     bool operator==(const Solution& solution) const;
     friend std::ostream& operator<<(std::ostream& os, const Solution& solution);

@@ -93,6 +93,13 @@ double Solution::TotalDistance(void) const {
 }
 
 /**
+ * @brief Clears the solution.
+ */
+void Solution::clear(void) {
+  elements_.clear();
+}
+
+/**
  * @brief Overload of the operator < for the Solution class.
  * 
  * @param solution Solution to compare.
